@@ -1,0 +1,187 @@
+/*
+ =========================================
+ 🌐 Waybar - Tema Padronizado Global
+ Compatível com GTK (sem variáveis CSS)
+ =========================================
+*/
+
+/* Paleta base (referência)
+   Fundo principal: rgba(30, 30, 46, 0.8)
+   Fundo alternativo: rgba(49, 50, 68, 0.8)
+   Borda: rgba(80, 80, 90, 0.4)
+   Texto: #cdd6f4
+   Texto secundário: #a6adc8
+   Azul: #89b4fa
+   Verde: #a6e3a1
+   Rosa: #f38ba8
+   Laranja: #fab387
+   Amarelo: #f9e2af
+   Rosa claro: #f5c2e7
+*/
+
+/* ============================
+   🔤 GLOBAL
+   ============================ */
+* {
+    border: none;
+    border-radius: 12px;
+    font-family: "JetBrains Mono Nerd Font";
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 0;
+}
+
+/* ============================
+   🪟 CONTAINER PRINCIPAL
+   ============================ */
+window#waybar {
+    background: transparent;
+    color: #cdd6f4;
+}
+
+#waybar {
+    background: rgba(30, 30, 46, 0.8);
+    border: 1px solid rgba(80, 80, 90, 0.4);
+    border-radius: 16px;
+    margin: 8px 8px 0px 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================
+   💬 TOOLTIP
+   ============================ */
+tooltip {
+    background: rgba(30, 30, 46, 0.9);
+    border: 1px solid rgba(80, 80, 90, 0.4);
+    border-radius: 10px;
+}
+
+/* ============================
+   🧭 WORKSPACES
+   ============================ */
+#workspaces {
+    background: transparent;
+    margin: 4px 8px;
+    padding: 0;
+}
+
+#workspaces button {
+    padding: 8px 12px;
+    margin: 4px 2px;
+    background: rgba(30, 30, 46, 0.5);
+    color: #a6adc8;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+    color: #cdd6f4;
+    background: rgba(137, 180, 250, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#workspaces button.focused {
+    color: #cdd6f4;
+    background: rgba(235, 160, 172, 0.3);
+}
+
+#workspaces button.urgent {
+    color: #11111b;
+    background: rgba(166, 227, 161, 0.6);
+}
+
+#workspaces button:hover {
+    background: rgba(49, 50, 68, 0.8);
+    color: #cdd6f4;
+}
+
+/* ============================
+   🔧 MÓDULOS PADRÃO
+   ============================ */
+#window,
+#clock,
+#battery,
+#pulseaudio,
+#network,
+#bluetooth,
+#tray,
+#backlight {
+    background: rgba(30, 30, 46, 0.4);
+    border: 1px solid rgba(80, 80, 90, 0.3);
+    border-radius: 10px;
+    padding: 6px 12px;
+    margin: 4px 2px;
+}
+
+/* Tray */
+#tray {
+    margin-right: 8px;
+}
+
+/* Window */
+#window {
+    background: rgba(49, 50, 68, 0.4);
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+/* ============================
+   ⏰ MÓDULOS ESPECÍFICOS
+   ============================ */
+#clock {
+    color: #fab387;
+    background: rgba(250, 179, 135, 0.1);
+    border: 1px solid rgba(250, 179, 135, 0.2);
+}
+
+#network {
+    color: #f9e2af;
+    background: rgba(249, 226, 175, 0.1);
+    border: 1px solid rgba(249, 226, 175, 0.2);
+}
+
+#pulseaudio {
+    color: #89b4fa;
+    background: rgba(137, 180, 250, 0.1);
+    border: 1px solid rgba(137, 180, 250, 0.2);
+}
+
+#pulseaudio.muted {
+    color: #a6adc8;
+    background: rgba(166, 173, 200, 0.1);
+}
+
+#backlight {
+    color: #f5c2e7;
+    background: rgba(245, 194, 231, 0.1);
+    border: 1px solid rgba(245, 194, 231, 0.2);
+}
+
+#battery {
+    color: #a6e3a1;
+    background: rgba(166, 227, 161, 0.1);
+    border: 1px solid rgba(166, 227, 161, 0.2);
+}
+
+#battery.charging {
+    color: #a6e3a1;
+    background: rgba(166, 227, 161, 0.2);
+}
+
+#battery.warning:not(.charging) {
+    background: rgba(243, 139, 168, 0.3);
+    color: #f38ba8;
+    border: 1px solid rgba(243, 139, 168, 0.4);
+}
+
+/* ============================
+   ✨ EFEITOS DE HOVER
+   ============================ */
+#clock:hover,
+#battery:hover,
+#pulseaudio:hover,
+#network:hover,
+#backlight:hover {
+    background: rgba(49, 50, 68, 0.6);
+    transition: all 0.2s ease;
+}
