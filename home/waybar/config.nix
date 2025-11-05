@@ -90,11 +90,11 @@
         };
 
         # Brilho
-        "backlight" = {
-          device = "intel_backlight";
-          format = "{icon} {percent}%";
-          format-icons = ["" "" "" "" "" "" "" "" ""];
-        };
+        #"backlight" = {
+        #  device = "intel_backlight";
+        #  format = "{icon} {percent}%";
+        #  format-icons = ["" "" "" "" "" "" "" "" ""];
+        #};
 
         # Bateria
         "battery" = {

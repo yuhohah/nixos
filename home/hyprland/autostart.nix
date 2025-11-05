@@ -6,7 +6,7 @@
       "swww init"
       "swww img ~/Pictures/wallpaper/1-osaka-jade-bg.jpg"
       "vicinae server"
-      "numlockx on"
+      #"numlockx on"
       #"export PATH="$HOME/.local/bin:$PATH""
       # "wofi --show drun"  # ← NÃO FAÇA ISSO (abre na inicialização!)
     ];

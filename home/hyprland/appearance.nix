@@ -10,13 +10,6 @@
       no_hardware_cursors = true;  # Importante para evitar bugs
       default_monitor = "";
     };
-    
-    env = [
-      "XCURSOR_SIZE,24"
-      "XCURSOR_THEME,Bibata-Modern-Classic"
-    ];
-
-
 
     general = {
       gaps_in = 5;
