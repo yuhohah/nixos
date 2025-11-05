@@ -72,7 +72,7 @@
       };
       sensitivity = 0;
       accel_profile = "flat"; 
-       force_no_accel = true;
+      force_no_accel = true;
     };
   };
 }

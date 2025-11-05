@@ -10,12 +10,12 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 32;  # Aumentei um pouco para melhor visualização
+        height = 24;  # Aumentei um pouco para melhor visualização
         spacing = 4;
-        margin-top = 6;    # Espaço do topo
+        margin-top = 12;    # Espaço do topo
         margin-bottom = 0;
-        margin-left = 6;   # Espaço das laterais
-        margin-right = 6;
+        margin-left = 12;   # Espaço das laterais
+        margin-right = 12;
 
 
         interval = 1;

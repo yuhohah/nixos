@@ -29,9 +29,13 @@
 
   home.stateVersion = "25.05";
 
-  programs.git.enable = true;
   programs.zsh.enable = true;
 
+  programs.git = {
+    enable = true;
+    userName = "Seu Nome";  # ← Mude aqui
+    userEmail = "seu.email@exemplo.com";
+  };
 
   # ========================================
   # CONFIGURAÇÃO DO CURSOR
