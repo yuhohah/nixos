@@ -9,7 +9,8 @@
 
   fonts.packages = with pkgs; [
     # Fontes de ícones
-    #nerd-fonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.ubuntu
     font-awesome
     material-design-icons
     
@@ -20,7 +21,7 @@
   ];
 
   fonts.fontconfig = {
-    
+    enable = true;
     defaultFonts = {
       monospace = [ "JetBrainsMono Nerd Font Mono" "Noto Color Emoji" ];
       sansSerif = [ "Ubuntu Nerd Font" "Noto Color Emoji" ];

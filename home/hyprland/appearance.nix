@@ -2,6 +2,22 @@
 
 {
   wayland.windowManager.hyprland.settings = {
+
+    # ========================================
+    # CURSOR
+    # ========================================
+    cursor = {
+      no_hardware_cursors = true;  # Importante para evitar bugs
+      default_monitor = "";
+    };
+    
+    env = [
+      "XCURSOR_SIZE,24"
+      "XCURSOR_THEME,Bibata-Modern-Classic"
+    ];
+
+
+
     general = {
       gaps_in = 5;
       gaps_out = 10;
@@ -55,6 +71,8 @@
         natural_scroll = true;
       };
       sensitivity = 0;
+      accel_profile = "flat"; 
+       force_no_accel = true;
     };
   };
 }

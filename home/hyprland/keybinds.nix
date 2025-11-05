@@ -46,7 +46,12 @@
       "$mod SHIFT, 0, movetoworkspace, 10"
 
       # Screenshot
-      ", Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot_$(date +'%Y-%m-%d_%H-%M-%S').png"
+      #", Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot_$(date +'%Y-%m-%d_%H-%M-%S').png"
+      ", PRINT, exec, screenshot smart"           # Print = screenshot inteligente com editor
+      "SHIFT, PRINT, exec, screenshot region"     # Shift+Print = selecionar região
+      "CTRL, PRINT, exec, screenshot fullscreen"  # Ctrl+Print = tela cheia
+      "ALT, PRINT, exec, screenshot windows"      # Alt+Print = selecionar janela
+
 
       # Reload
       "$mod, R, exec, hyprctl reload"
@@ -119,7 +124,7 @@
 
       # Control scratchpad
       #"$mod, S, Toggle scratchpad, togglespecialworkspace, scratchpad"
-      ", PRINT, Screenshot with editing, exec, screenshot"
+      ", PRINT, Screenshot with editing, exec, screenshot smart"
 
 
     

@@ -32,5 +32,59 @@
   programs.git.enable = true;
   programs.zsh.enable = true;
 
+
+  # ========================================
+  # CONFIGURAÇÃO DO CURSOR
+  # ========================================
+  
+  home.pointerCursor = {
+    gtk.enable = true;
+    x11.enable = true;
+    
+    # Escolha um dos temas abaixo:
+    
+    # Opção 1: Bibata Modern (popular, moderno)
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Classic";
+    size = 24;
+    
+    # Opção 2: Catppuccin (combina com seu tema)
+    # package = pkgs.catppuccin-cursors.mochaDark;
+    # name = "catppuccin-mocha-dark-cursors";
+    # size = 24;
+    
+    # Opção 3: Nordzy (elegante)
+    # package = pkgs.nordzy-cursor-theme;
+    # name = "Nordzy-cursors";
+    # size = 24;
+    
+    # Opção 4: Phinger (minimalista)
+    # package = pkgs.phinger-cursors;
+    # name = "phinger-cursors-light";
+    # size = 24;
+  };
+
+  # Variáveis de ambiente para Wayland
+  home.sessionVariables = {
+    XCURSOR_SIZE = "24";
+    XCURSOR_THEME = "Bibata-Modern-Classic";  # Mude se escolher outro tema
+  };
+
+  # ========================================
+  # CONFIGURAÇÃO DO SCRIPT DE SCREENSHOT
+  # ========================================
+  
+  # 1. Copiar o script para o home
+  home.file.".local/bin/screenshot" = {
+    source = ./scripts/screenshot.sh;
+    executable = true;
+  };
+
+  # 2. Criar diretório de screenshots
+  home.file."Pictures/.keep".text = "";
+
+  # 3. Adicionar o diretório de scripts ao PATH
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
 }
 
