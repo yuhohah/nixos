@@ -57,7 +57,7 @@ tooltip {
     margin: 2px 2px;
     background: transparent;
     color: #89b4fa;  /* Azul - cor única do sistema */
-    border-radius: 6px;
+    border-radius: 0px;
     transition: all 0.2s ease;
 }
 

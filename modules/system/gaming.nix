@@ -10,7 +10,6 @@
     
     # Mesa
     mesa
-  
     
     # Drivers AMD
     amdvlk
@@ -28,8 +27,6 @@
     gamescope
   ];
 
-
-  
   # Gamemode
   programs.gamemode = {
     enable = true;

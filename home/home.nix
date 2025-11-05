@@ -33,8 +33,8 @@
 
   programs.git = {
     enable = true;
-    userName = "Seu Nome";  # ← Mude aqui
-    userEmail = "seu.email@exemplo.com";
+    userName = "yuhohah";  # ← Mude aqui
+    userEmail = "luandepaulamota@hotmail.com";
   };
 
   # ========================================
@@ -81,6 +81,12 @@
   # 1. Copiar o script para o home
   home.file.".local/bin/screenshot" = {
     source = ./scripts/screenshot.sh;
+    executable = true;
+  };
+
+  # Adicione junto com o script de screenshot
+  home.file.".local/bin/wallpaper" = {
+    source = ./scripts/wallpaper.sh;
     executable = true;
   };
 
