@@ -96,5 +96,11 @@
   # 3. Adicionar o diretório de scripts ao PATH
   home.sessionPath = [ "$HOME/.local/bin" ];
 
+  #Notificacao daemon
+  services.mako = {
+    enable = true;
+    defaultTimeout = 4000;
+  };
+
 }
 

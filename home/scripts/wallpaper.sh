@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+WALLPAPER_DIR="$HOME/Pictures/wallpaper"
 
 # Se passar um arquivo como argumento
 if [ -n "$1" ]; then
@@ -19,5 +19,5 @@ if [ -n "$WALLPAPER" ]; then
         --transition-duration 2
     echo "Wallpaper changed to: $WALLPAPER"
 else
-    echo "No wallpapers found in $WALLPAPER_DIR"
+    echo "No wallpaper found in $WALLPAPER_DIR"
 fi

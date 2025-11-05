@@ -1,6 +1,7 @@
 #!/bin/bash
 
-[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
+#[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
+XDG_PICTURES_DIR="$HOME/Pictures/Screenshots"
 OUTPUT_DIR="${XDG_PICTURES_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
 
 if [[ ! -d "$OUTPUT_DIR" ]]; then
