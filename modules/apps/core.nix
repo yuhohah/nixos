@@ -5,9 +5,9 @@
     tree
     neovim
     alacritty
-    kitty
+
     waybar
-    wofi
+
     swww 
     nautilus
     steam
@@ -16,7 +16,7 @@
     fuzzel
     numlockx
     unstable.vicinae
-
+    btop
 
     bash
     grim

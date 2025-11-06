@@ -4,6 +4,7 @@
     vlc
     qbittorrent
     vesktop
+    obs-studio
 
   ];
 

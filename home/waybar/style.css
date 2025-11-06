@@ -21,7 +21,7 @@
    🪟 CONTAINER PRINCIPAL
    ============================ */
 window#waybar {
-    background: transparent;
+    background: rgba(30, 30, 30, 0.95);
     color: #89b4fa;
 }
 

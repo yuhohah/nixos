@@ -17,7 +17,7 @@
     
     # Ferramentas de diagnóstico
     glxinfo
-  
+    rocmPackages.rocm-smi
     gpu-viewer
     
     # Otimização para jogos
