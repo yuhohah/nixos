@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #[[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
 XDG_PICTURES_DIR="$HOME/Pictures/Screenshots"
@@ -76,7 +76,7 @@ grim -g "$SELECTION" - |
   satty --filename - \
     --output-filename "$OUTPUT_DIR/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png" \
     --early-exit \
-    --actions-on-enter save-to-clipboard \
+    --action-on-enter save-to-clipboard \
     --save-after-copy \
     --copy-command 'wl-copy'
 else

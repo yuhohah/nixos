@@ -18,6 +18,8 @@
     ./hyprland/monitors.nix
     ./waybar/config.nix
     ./alacritty/default.nix
+
+    ./satty/config.nix
     #./modules/apps/vscode.nix
     #./modules/apps/vesktop.nix
     #./modules/apps/kitty.nix
