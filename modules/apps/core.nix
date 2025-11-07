@@ -15,6 +15,7 @@
     unstable.vicinae
     btop
     bash
+
     grim
     slurp
     wl-clipboard
@@ -22,7 +23,8 @@
     satty
     jq
     libnotify
-   
+    hyprland
+    
     fuzzel
    
   ];

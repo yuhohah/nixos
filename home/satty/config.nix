@@ -20,25 +20,25 @@
     copy-command = "wl-copy"
     
     # Ferramenta padrão ao abrir
-    init-tool = "brush"
+    #init-tool = "brush"
     
     # Tipo de destaque padrão
     primary-highlighter = "block"
     
-    [ui]
-    # Fonte
-    font-family = "JetBrainsMono Nerd Font Mono"
+    #[ui]
+    [font]
+    family = "JetBrainsMono Nerd Font Mono"
     
     # Tamanho da fonte
-    font-size = 12
+    #font-size = 12
     
     # Mostrar barra de ferramentas
-    show-toolbox = true
+    #show-toolbox = true
     
     # Tamanho inicial da janela (ajuste conforme seu monitor)
     # Para monitor 1920x1080, recomendo:
-    default-width = 1200
-    default-height = 800
+    #default-width = 1200
+    #default-height = 800
     
     # Para monitor maior (2560x1440), use:
     # default-width = 1600

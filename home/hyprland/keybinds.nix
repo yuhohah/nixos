@@ -22,12 +22,13 @@
       "$mod, T, togglefloating"
 
       # Screenshot
-      #", Print, exec, grim -g \"$(slurp)\" ~/Pictures/screenshot_$(date +'%Y-%m-%d_%H-%M-%S').png"
-      ", PRINT, exec, screenshot smart"           # Print = screenshot inteligente com editor
-      "SHIFT, PRINT, exec, screenshot region"     # Shift+Print = selecionar região
-      "CTRL, PRINT, exec, screenshot fullscreen"  # Ctrl+Print = tela cheia
-      "ALT, PRINT, exec, screenshot windows"      # Alt+Print = selecionar janela
+      ", PRINT, exec, /home/luan/.local/bin/screenshot smart"           # Print = screenshot inteligente com editor
+      "SHIFT, PRINT, exec, /home/luan/.local/bin/screenshot region"     # Shift+Print = selecionar região
+      "CTRL, PRINT, exec, /home/luan/.local/bin/screenshot fullscreen"  # Ctrl+Print = tela cheia
+      "ALT, PRINT, exec, /home/luan/.local/bin/screenshot windows"      # Alt+Print = selecionar janela
 
+      #Change Wallpaper
+      "$mod, HOME, exec, /home/luan/.local/bin/wallpaper"
 
       # Reload
       "$mod, R, exec, hyprctl reload"
@@ -101,8 +102,6 @@
 
       # Control scratchpad
       #"$mod, S, Toggle scratchpad, togglespecialworkspace, scratchpad"
-      #", PRINT, Screenshot with editing, exec, screenshot smart"
-
     
       # TAB between workspaces
       "$mod, TAB, Next workspace, workspace, e+1"
@@ -155,12 +154,12 @@
       "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
 
       #Apps 
-      "$mod, F, File manager, exec, uwsm-app -- nautilus --new-window"
+      "$mod, E, File manager, exec, -- nautilus --new-window"
       "$mod, B, Browser, exec, chromium"
       "$mod SHIFT, B, Browser (private), exec, chromium --private"
-      "$mod, T, Activity, exec, alacritty -e btop"
-      #"$mod SHIFT, O, Obsidian, exec, omarchy-launch-or-focus \"^obsidian$\" \"uwsm-app -- obsidian -disable-gpu --enable-wayland-ime\""
-      #"$mod SHIFT, M, Music, exec, omarchy-launch-or-focus spotify"
+      "$mod, code:34, Activity, exec, alacritty -e btop"
+      "$mod SHIFT, O, Obsidian, exec, obsidian -disable-gpu"
+      "$mod SHIFT, M, Music, exec, spotify"
     ];
   };
 }
