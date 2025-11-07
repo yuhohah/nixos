@@ -7,11 +7,6 @@
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     vicinae.url = "github:vicinaehq/vicinae";
-    #elephant.url = "github:abenz1267/elephant";
-    #walker = {
-    #  url = "github:abenz1267/walker";
-    #  inputs.elephant.follows = "elephant";
-    #};
   };
 
   
@@ -33,7 +28,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.luan = { lib, ...}: {
               imports = [ ./home/home.nix];
-              #inputs.walker.homeManagerModules.default];
               home.homeDirectory = lib.mkForce "/home/luan";
             };
           }

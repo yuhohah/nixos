@@ -1,23 +1,19 @@
 { pkgs, unstable, ... }:
 {
   environment.systemPackages = with pkgs; [
+    #Principais Dependencias do Sistema
     wget
     tree
     neovim
     alacritty
-
     waybar
-
     swww 
     nautilus
-    steam
     pavucontrol
     home-manager
-    fuzzel
     numlockx
     unstable.vicinae
     btop
-
     bash
     grim
     slurp
@@ -26,6 +22,9 @@
     satty
     jq
     libnotify
+   
+    fuzzel
+   
   ];
 }
 

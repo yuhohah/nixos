@@ -11,7 +11,8 @@
     text-secondary = "a6adc8";  # texto secundário
     
     # Cores de destaque
-    accent = "89b4fa";  # azul (cor principal da waybar)
+    accent = "#a6e3a1";  # azul (cor principal Do Sistema)
+
     rose   = "f5c2e7";  # rosa
     green  = "a6e3a1";  # verde
     yellow = "f9e2af";  # amarelo

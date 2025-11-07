@@ -91,7 +91,7 @@
   };
 
   # 2. Criar diretório de screenshots
-  home.file."Pictures/.keep".text = "";
+  home.file."Pictures/Screenshots/.keep".text = "";
 
   # 3. Adicionar o diretório de scripts ao PATH
   home.sessionPath = [ "$HOME/.local/bin" ];

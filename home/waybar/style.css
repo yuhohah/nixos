@@ -56,23 +56,23 @@ tooltip {
     padding: 4px 10px;
     margin: 2px 2px;
     background: transparent;
-    color: #89b4fa;  /* Azul - cor única do sistema */
+    color: #a6e3a1;  /* Azul - cor única do sistema */
     border-radius: 0px;
     transition: all 0.2s ease;
 }
 
 #workspaces button.active {
-    color: #89b4fa;
+    color: #a6e3a1;
     background: rgba(137, 180, 250, 0.2);
 }
 
 #workspaces button.focused {
-    color: #89b4fa;
+    color: #a6e3a1;
     background: rgba(137, 180, 250, 0.25);
 }
 
 #workspaces button.urgent {
-    color: #89b4fa;
+    color: #a6e3a1;
     background: rgba(137, 180, 250, 0.4);
 }
 
@@ -96,7 +96,7 @@ tooltip {
     border-radius: 6px;
     padding: 2px 10px;
     margin: 2px 2px;
-    color: #89b4fa;  /* Azul - cor única para tudo */
+    color: #a6e3a1;  /* Azul - cor única para tudo */
 }
 
 /* Tray */
@@ -118,11 +118,11 @@ tooltip {
 }
 
 #battery.charging {
-    color: #89b4fa;
+    color: #a6e3a1;
 }
 
 #battery.warning:not(.charging) {
-    color: #89b4fa;
+    color: #a6e3a1;
     animation: blink 1s ease-in-out infinite;
 }
 

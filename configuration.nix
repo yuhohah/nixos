@@ -16,7 +16,8 @@
     ./modules/apps/dev.nix
     ./modules/apps/browsers.nix
   ];
-   boot.loader = {
+
+  boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };

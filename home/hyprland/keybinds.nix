@@ -103,7 +103,6 @@
       #"$mod, S, Toggle scratchpad, togglespecialworkspace, scratchpad"
       #", PRINT, Screenshot with editing, exec, screenshot smart"
 
-
     
       # TAB between workspaces
       "$mod, TAB, Next workspace, workspace, e+1"
@@ -132,7 +131,6 @@
       "$mod, mouse_down, Scroll active workspace forward, workspace, e+1"
       "$mod, mouse_up, Scroll active workspace backward, workspace, e-1"
 
-
       # Toggle groups
       "$mod, G, Toggle window grouping, togglegroup"
       "$mod ALT, G, Move active window out of group, moveoutofgroup"
@@ -155,6 +153,14 @@
       "$mod ALT, 3, Switch to group window 3, changegroupactive, 3"
       "$mod ALT, 4, Switch to group window 4, changegroupactive, 4"
       "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
+
+      #Apps 
+      "$mod, F, File manager, exec, uwsm-app -- nautilus --new-window"
+      "$mod, B, Browser, exec, chromium"
+      "$mod SHIFT, B, Browser (private), exec, chromium --private"
+      "$mod, T, Activity, exec, alacritty -e btop"
+      #"$mod SHIFT, O, Obsidian, exec, omarchy-launch-or-focus \"^obsidian$\" \"uwsm-app -- obsidian -disable-gpu --enable-wayland-ime\""
+      #"$mod SHIFT, M, Music, exec, omarchy-launch-or-focus spotify"
     ];
   };
 }
