@@ -19,6 +19,7 @@
     ./waybar/config.nix
     ./alacritty/default.nix
 
+    ./vesktop/config.nix    
     ./satty/config.nix
     #./modules/apps/vscode.nix
     #./modules/apps/vesktop.nix
@@ -27,11 +28,29 @@
     
   ];
 
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    enableAutosuggestions = true;
+    syntaxHighlighting.enable = true;
+    
+    # Configuração do .zshrc
+    initExtra = ''
+      # Executar fastfetch ao iniciar o terminal
+      if command -v fastfetch &> /dev/null; then
+        fastfetch
+      fi
+    '';
 
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" "sudo" "docker" ];
+      theme = "robbyrussell";
+    };
+  };
 
   home.stateVersion = "25.05";
 
-  programs.zsh.enable = true;
 
   programs.git = {
     enable = true;

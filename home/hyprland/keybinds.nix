@@ -181,7 +181,7 @@
       #Apps 
       "$mod, E, File manager, exec, -- nautilus --new-window"
       "$mod, B, Browser, exec, chromium"
-      "$mod SHIFT, B, Browser (private), exec, chromium --private"
+      "$mod SHIFT, B, Browser (private), exec, chromium --incognito"
       "$mod, code:34, Activity, exec, alacritty -e btop"
       "$mod SHIFT, O, Obsidian, exec, obsidian -disable-gpu"
       "$mod SHIFT, M, Music, exec, spotify"

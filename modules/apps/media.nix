@@ -5,6 +5,7 @@
     qbittorrent
     vesktop
     obs-studio
+    gimp
 
   ];
 

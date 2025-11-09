@@ -18,7 +18,7 @@
     hypridle
     hyprlock
 
-    #Screenshot
+    #Dependencias do Screenshot
     grim
     slurp
     wl-clipboard
@@ -27,7 +27,15 @@
     jq
     libnotify
     hyprland
+
+    wireplumber    # gerenciador de sessão do pipewire
+    xdg-desktop-portal-hyprland  # portal para screen sharing
+    xdg-desktop-portal-gtk       # portal GTK (fallback)
     
+    
+    #Lixo legal
+    fastfetch
+
     fuzzel
    
   ];
