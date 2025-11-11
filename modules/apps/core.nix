@@ -15,7 +15,10 @@
     unstable.vicinae
     btop
     bash
+    hypridle
+    hyprlock
 
+    #Screenshot
     grim
     slurp
     wl-clipboard

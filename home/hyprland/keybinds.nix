@@ -47,6 +47,31 @@
 
       # Lock
       "$mod, L, exec, swaylock"
+
+      # ========================================
+      # CONTROLES DE NOTEBOOK
+      # ========================================
+      
+      # Volume
+      ", XF86AudioRaiseVolume, exec, pamixer -i 5"
+      ", XF86AudioLowerVolume, exec, pamixer -d 5"
+      ", XF86AudioMute, exec, pamixer -t"
+      ", XF86AudioMicMute, exec, pamixer --default-source -t"
+
+      # Brilho
+      ", XF86MonBrightnessUp, exec, brightnessctl s +10%"
+      ", XF86MonBrightnessDown, exec, brightnessctl s 10%-"
+      
+      # Brilho alternativo (Fn+F5/F6 em alguns notebooks)
+      ", XF86KbdBrightnessUp, exec, brightnessctl -d *::kbd_backlight set +10%"
+      ", XF86KbdBrightnessDown, exec, brightnessctl -d *::kbd_backlight set 10%-"
+
+      # Media controls
+      ", XF86AudioPlay, exec, playerctl play-pause"
+      ", XF86AudioPause, exec, playerctl play-pause"
+      ", XF86AudioNext, exec, playerctl next"
+      ", XF86AudioPrev, exec, playerctl previous"
+      ", XF86AudioStop, exec, playerctl stop"
     ];
 
     bindmd = [
