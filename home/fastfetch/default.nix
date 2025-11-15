@@ -7,9 +7,10 @@ programs.fastfetch = {
       "$schema" = "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json";
       logo = {
         type = "file";
-        source = "./logo.txt";
+        source = "logo.txt";
         color = {
           "1" = "green";
+          "2" = "cyan";
         };
         padding = {
           top = 2;
@@ -21,7 +22,7 @@ programs.fastfetch = {
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌──────────────────────Hardware──────────────────────┐";
+          format = "┌──────────────────────Hardware──────────────────────┐";
         }
         {
           type = "host";
@@ -62,12 +63,12 @@ programs.fastfetch = {
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
         }
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌──────────────────────Software──────────────────────┐";
+          format = "┌──────────────────────Software──────────────────────┐";
         }
         {
           type = "os";
@@ -116,12 +117,12 @@ programs.fastfetch = {
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
         }
         "break"
         {
           type = "custom";
-          format = "\u001b[90m┌────────────────────Uptime / Age────────────────────┐";
+          format = "┌────────────────────Uptime / Age────────────────────┐";
         }
         {
           type = "command";
@@ -136,7 +137,7 @@ programs.fastfetch = {
         }
         {
           type = "custom";
-          format = "\u001b[90m└────────────────────────────────────────────────────┘";
+          format = "└────────────────────────────────────────────────────┘";
         }
         "break"
         {
