@@ -35,7 +35,7 @@
     syntaxHighlighting.enable = true;
     
     # Configuração do .zshrc
-    initExtra = ''
+    initContent = ''
       # Executar fastfetch ao iniciar o terminal
       if command -v fastfetch &> /dev/null; then
         fastfetch

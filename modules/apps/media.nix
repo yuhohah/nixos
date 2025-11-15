@@ -6,7 +6,7 @@
     vesktop
     obs-studio
     gimp
-
+    spotify
   ];
 
   fonts.packages = with pkgs; [
