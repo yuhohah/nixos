@@ -31,15 +31,13 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     
     # Configuração do .zshrc
-    initContent = ''
-      # Executar fastfetch ao iniciar o terminal
-      if command -v fastfetch &> /dev/null; then
+    initContent = ''    
         fastfetch
-      fi
+      
     '';
 
     oh-my-zsh = {
