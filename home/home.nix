@@ -21,6 +21,7 @@
 
     ./vesktop/config.nix    
     ./satty/config.nix
+    ./fastfetch/default.nix
     #./modules/apps/vscode.nix
     #./modules/apps/vesktop.nix
     #./modules/apps/kitty.nix
