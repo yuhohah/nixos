@@ -17,6 +17,7 @@
     bash
     hypridle
     hyprlock
+    terminaltexteffects
 
     #Dependencias do Screenshot
     grim

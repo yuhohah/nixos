@@ -16,6 +16,7 @@
     ./hyprland/autostart.nix
     ./hyprland/keybinds.nix
     ./hyprland/monitors.nix
+    ./hyprland/hypridle.nix
     ./waybar/config.nix
     ./alacritty/default.nix
 

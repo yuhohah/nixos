@@ -8,7 +8,7 @@
       "vicinae server"
       #"numlockx on"
       #"export PATH="$HOME/.local/bin:$PATH""
-      # "wofi --show drun"  # ← NÃO FAÇA ISSO (abre na inicialização!)
+      "hypridle"
     ];
   };
 }
