@@ -164,4 +164,11 @@
     };
   };
 
+  #security.pam.services.hyprlock = {
+  #  text = ''
+  #    # Autenticação via senha do usuário
+  #    auth include login
+  #  '';
+  #};
+
 }

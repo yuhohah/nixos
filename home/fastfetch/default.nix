@@ -13,7 +13,7 @@ home.file.".config/fastfetch/logo.txt".text = ''
 ░ ░ ▒  ░░░▒░ ░ ░   ▒   ▒▒ ░░ ░░   ░ ▒░
   ░ ░    ░░░ ░ ░   ░   ▒      ░   ░ ░ 
     ░  ░   ░           ░  ░         ░ 
-'';
+''; 
 
 programs.fastfetch = {
     enable = true;
