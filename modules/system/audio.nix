@@ -44,6 +44,11 @@
     };
   };
 
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+  };
+
   # Variáveis de ambiente para o portal
   environment.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
