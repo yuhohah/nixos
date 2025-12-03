@@ -25,7 +25,12 @@
     mangohud
     goverlay
     gamescope
+
+    waydroid
   ];
+
+
+
 
   # Gamemode
   programs.gamemode = {
@@ -55,4 +60,5 @@
   
   # Serviços de jogos
   services.joycond.enable = true;
+  services.ratbagd.enable = true;
 }

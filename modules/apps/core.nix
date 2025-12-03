@@ -33,6 +33,8 @@
     xdg-desktop-portal-hyprland  # portal para screen sharing
     xdg-desktop-portal-gtk       # portal GTK (fallback)
     
+    libratbag
+    piper 
     
     #Lixo legal
     fastfetch
