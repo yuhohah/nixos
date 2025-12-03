@@ -23,6 +23,14 @@
     };
   };
 
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 80 443 ]; 
+    allowedUDPPorts = [ ];
+    # Adicione esta linha para permitir a internet no Waydroid
+    trustedInterfaces = [ "waydroid0" ];
+  };
+
   # Configurações de proxy (opcional)
   # networking.proxy.default = "http://user:pass@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost";
