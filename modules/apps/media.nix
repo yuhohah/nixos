@@ -17,7 +17,7 @@
     material-design-icons
     
     # Fontes emojis
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     
   
   ];

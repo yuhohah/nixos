@@ -15,6 +15,7 @@
     ./modules/apps/media.nix
     ./modules/apps/dev.nix
     ./modules/apps/browsers.nix
+    ./modules/apps/waydroid.nix
   ];
 
   boot.loader = {
@@ -35,11 +36,6 @@
     wantedBy = [ "graphical-session.target" ];
   };
 
-  nix.gc = {
-    enable = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
-  };
 
 
   nix.settings = {

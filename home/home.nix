@@ -11,7 +11,8 @@
   };
 
   imports = [
-    
+    ./theme.nix
+
     ./hyprland/appearance.nix
     ./hyprland/autostart.nix
     ./hyprland/keybinds.nix
@@ -29,6 +30,17 @@
 
     
   ];
+
+  xdg.mimeApps = {
+  enable = true;
+  defaultApplications = {
+    "text/html" = "chromium-browser.desktop";
+    "x-scheme-handler/http" = "chromium-browser.desktop";
+    "x-scheme-handler/https" = "chromium-browser.desktop";
+    "x-scheme-handler/about" = "chromium-browser.desktop";
+    "x-scheme-handler/unknown" = "chromium-browser.desktop";
+  };
+};
 
   programs.zsh = {
     enable = true;
@@ -54,8 +66,11 @@
 
   programs.git = {
     enable = true;
-    userName = "yuhohah";  # ← Mude aqui
-    userEmail = "luandepaulamota@hotmail.com";
+    settings ={
+      user.name = "yuhohah";  # ← Mude aqui
+      user.email = "luandepaulamota@hotmail.com";
+    };
+   
   };
 
   # ========================================
@@ -65,28 +80,11 @@
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
-    
-    # Escolha um dos temas abaixo:
-    
-    # Opção 1: Bibata Modern (popular, moderno)
+
     package = pkgs.bibata-cursors;
     name = "Bibata-Modern-Classic";
     size = 24;
     
-    # Opção 2: Catppuccin (combina com seu tema)
-    # package = pkgs.catppuccin-cursors.mochaDark;
-    # name = "catppuccin-mocha-dark-cursors";
-    # size = 24;
-    
-    # Opção 3: Nordzy (elegante)
-    # package = pkgs.nordzy-cursor-theme;
-    # name = "Nordzy-cursors";
-    # size = 24;
-    
-    # Opção 4: Phinger (minimalista)
-    # package = pkgs.phinger-cursors;
-    # name = "phinger-cursors-light";
-    # size = 24;
   };
 
   # Variáveis de ambiente para Wayland

@@ -8,6 +8,7 @@
       enable = true;
       allowedTCPPorts = [ 22 80 443 ]; # exemplo
       allowedUDPPorts = [ ];
+      trustedInterfaces = [ "waydroid0" ];
     };
   };
 
@@ -21,14 +22,6 @@
       LC_NUMERIC = "pt_BR.UTF-8";
       LC_MEASUREMENT = "pt_BR.UTF-8";
     };
-  };
-
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 80 443 ]; 
-    allowedUDPPorts = [ ];
-    # Adicione esta linha para permitir a internet no Waydroid
-    trustedInterfaces = [ "waydroid0" ];
   };
 
   # Configurações de proxy (opcional)

@@ -12,11 +12,10 @@
     mesa
     
     # Drivers AMD
-    amdvlk
     rocmPackages.clr.icd
     
     # Ferramentas de diagnóstico
-    glxinfo
+    mesa-demos
     rocmPackages.rocm-smi
     gpu-viewer
     

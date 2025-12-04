@@ -4,7 +4,7 @@
     vscode
     obsidian
     lmstudio
-    
+    antigravity
   ];
 }
 
