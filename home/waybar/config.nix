@@ -111,7 +111,7 @@
 
         # Rede
         "network" = {
-          format-wifi = " {essid}";
+          format-wifi = " {signalStrength}%";
           format-ethernet = " {ifname}";
           format-disconnected = " Disconnected";
           tooltip-format = "{ifname} via {gwaddr}";
