@@ -106,7 +106,57 @@
   # 3. Adicionar o diretório de scripts ao PATH
   home.sessionPath = [ "$HOME/.local/bin" ];
 
+  # 1. O Script de Animação
+  home.file.".local/bin/term-saver" = {
+    text = ''
+      #!/usr/bin/env bash
+      LOGO_FILE="$HOME/.config/fastfetch/logo.txt"
+      EFFECTS=("beams" "decrypt" "rain" "middleout" "spotlights")
+      
+      while true; do
+        EFFECT=''${EFFECTS[$RANDOM % ''${#EFFECTS}]}
+        clear
+        # Usa a cor verde (a6e3a1) e texto (cdd6f4) do seu tema
+        cat "$LOGO_FILE" | terminaltexteffects --effect "$EFFECT" \
+            --final-gradient-stops a6e3a1 cdd6f4 \
+            --final-gradient-steps 12
+        sleep 1
+      done
+    '';
+    executable = true;
+  };
 
+  # 2. A Configuração Específica do Alacritty para Screensaver
+  # Baseado no seu arquivo screensaver.nix
+  home.file.".config/alacritty/screensaver.toml".text = ''
+    [colors.primary]
+    background = "#000000"
+    foreground = "#a6e3a1"
+
+    [window]
+    opacity = 1.0
+    padding = { x = 0, y = 0 }
+    decorations = "None"
+    startup_mode = "Fullscreen"
+    dynamic_title = false
+
+    [font]
+    size = 18.0
+    normal = { family = "JetBrainsMono Nerd Font Mono" }
+
+    [cursor]
+    style = { shape = "Hidden" }
+  '';
+
+  # 3. Um script lançador para abrir o Alacritty com essa config
+  home.file.".local/bin/run-screensaver" = {
+    text = ''
+      #!/usr/bin/env bash
+      # Lança o Alacritty apontando para o config de screensaver e rodando o script de animação
+      alacritty --config-file ~/.config/alacritty/screensaver.toml -e ~/.local/bin/term-saver
+    '';
+    executable = true;
+  };
 
 }
 
