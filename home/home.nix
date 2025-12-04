@@ -24,6 +24,7 @@
     ./vesktop/config.nix    
     ./satty/config.nix
     ./fastfetch/default.nix
+    ./mako/default.nix
     #./modules/apps/vscode.nix
     #./modules/apps/vesktop.nix
     #./modules/apps/kitty.nix
@@ -31,16 +32,6 @@
     
   ];
 
-  xdg.mimeApps = {
-  enable = true;
-  defaultApplications = {
-    "text/html" = "chromium-browser.desktop";
-    "x-scheme-handler/http" = "chromium-browser.desktop";
-    "x-scheme-handler/https" = "chromium-browser.desktop";
-    "x-scheme-handler/about" = "chromium-browser.desktop";
-    "x-scheme-handler/unknown" = "chromium-browser.desktop";
-  };
-};
 
   programs.zsh = {
     enable = true;
