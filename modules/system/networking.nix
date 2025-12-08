@@ -2,7 +2,7 @@
 
 {
   networking = {
-    hostName = "nixos-btw";        # nome do host
+
     networkmanager.enable = true;  # gerenciador de rede
     firewall = {
       enable = true;

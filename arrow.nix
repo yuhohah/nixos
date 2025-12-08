@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  networking.hostName = "nixos-btw";
+  networking.hostName = "arrow";
   imports = [
     ./hardware-configuration.nix
     
@@ -11,12 +11,12 @@
     ./modules/system/greetd.nix
     ./modules/system/gaming.nix
     ./modules/system/users.nix
+    ./modules/system/logind.nix # Notebook specific
 
     ./modules/apps/core.nix
     ./modules/apps/media.nix
     ./modules/apps/dev.nix
     ./modules/apps/browsers.nix
-    ./modules/apps/waydroid.nix
   ];
 
   boot.loader = {
@@ -48,8 +48,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 
   
 }
-
