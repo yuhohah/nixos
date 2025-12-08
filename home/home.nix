@@ -108,21 +108,7 @@
 
   # 1. O Script de Animação
   home.file.".local/bin/term-saver" = {
-    text = ''
-      #!/usr/bin/env bash
-      LOGO_FILE="$HOME/.config/fastfetch/logo.txt"
-      EFFECTS=("beams" "decrypt" "rain" "middleout" "spotlights")
-      
-      while true; do
-        EFFECT=''${EFFECTS[$RANDOM % ''${#EFFECTS}]}
-        clear
-        # Usa a cor verde (a6e3a1) e texto (cdd6f4) do seu tema
-        cat "$LOGO_FILE" | terminaltexteffects --effect "$EFFECT" \
-            --final-gradient-stops a6e3a1 cdd6f4 \
-            --final-gradient-steps 12
-        sleep 1
-      done
-    '';
+    source = ./scripts/term-saver.sh;
     executable = true;
   };
 
@@ -135,17 +121,17 @@
 
     [window]
     opacity = 1.0
-    padding = { x = 0, y = 0 }
+    padding = { x = 0, y = 200 }
     decorations = "None"
     startup_mode = "Fullscreen"
     dynamic_title = false
 
     [font]
-    size = 18.0
+    size = 30.0
     normal = { family = "JetBrainsMono Nerd Font Mono" }
 
     [cursor]
-    style = { shape = "Hidden" }
+    style = { shape = "Beam", blinking = "Never" }
   '';
 
   # 3. Um script lançador para abrir o Alacritty com essa config

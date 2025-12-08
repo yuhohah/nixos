@@ -19,11 +19,12 @@
       # Listeners - Ações baseadas em tempo de inatividade
       listener = [
         # Após 5 minutos: Diminui brilho para 10%
-        #{
-        #  timeout = 300;  # 5 minutos
-        #  on-timeout = "brightnessctl -s set 10%";
-        #  on-resume = "brightnessctl -r";
-        #}
+        # Após 5 minutos: Screensaver
+        {
+          timeout = 300;  # 5 minutos
+          on-timeout = "~/.local/bin/run-screensaver";
+          on-resume = "pkill -f 'alacritty.*screensaver'";
+        }
         
         # Após 10 minutos: Desliga tela
         {
