@@ -34,8 +34,8 @@
     # Configurações extras
     extraConfig = ''
       # Tempo antes de suspender quando inativo (0 = desabilitado)
-      idleAction = "suspend";
-      idleActionSec = "30min";        # Suspende após 30min de inatividade
+      #idleAction = "suspend";
+      #idleActionSec = "30min";        # Suspende após 30min de inatividade
       
       # Tempo de espera antes de aplicar ação de inatividade
       HoldoffTimeoutSec=30s
