@@ -11,7 +11,7 @@
     ./modules/system/greetd.nix
     ./modules/system/gaming.nix
     ./modules/system/users.nix
-    ./modules/system/logind.nix # Notebook specific
+    #./modules/system/logind.nix # Notebook specific
 
     ./modules/apps/core.nix
     ./modules/apps/media.nix
