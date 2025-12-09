@@ -4,7 +4,6 @@
 
   environment.systemPackages = with pkgs; [
     chromium
-    brave
     tor-browser
   ];
 
