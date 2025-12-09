@@ -47,6 +47,7 @@
     };
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  hardware.enableRedistributableFirmware = true;
 
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.11";
