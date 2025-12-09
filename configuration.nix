@@ -45,7 +45,7 @@
       auto-optimise-store = true;
     };
   # Kernel mais recente
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "25.05";

@@ -3,7 +3,7 @@
 {
   networking.hostName = "arrow";
   imports = [
-    ./hardware-configuration.nix
+    ./hardware-arrow.nix
     
     ./modules/system/networking.nix
     ./modules/system/audio.nix
