@@ -1,0 +1,17 @@
+[colors.primary]
+background = "#000000"
+foreground = "#a6e3a1"
+
+[window]
+opacity = 1.0
+padding = { x = 0, y = 200 }
+decorations = "None"
+startup_mode = "Fullscreen"
+dynamic_title = false
+
+[font]
+size = 30.0
+normal = { family = "JetBrainsMono Nerd Font Mono" }
+
+[cursor]
+style = { shape = "Beam", blinking = "Never" }
