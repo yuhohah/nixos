@@ -25,7 +25,7 @@
     goverlay
     gamescope
 
-    waydroid
+    # waydroid (managed by module)
   ];
 
 

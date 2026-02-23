@@ -4,6 +4,7 @@
     vscode
     obsidian
     antigravity
+    godot
   ];
 }
 

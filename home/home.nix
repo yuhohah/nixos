@@ -114,33 +114,11 @@
 
   # 2. A Configuração Específica do Alacritty para Screensaver
   # Baseado no seu arquivo screensaver.nix
-  home.file.".config/alacritty/screensaver.toml".text = ''
-    [colors.primary]
-    background = "#000000"
-    foreground = "#a6e3a1"
-
-    [window]
-    opacity = 1.0
-    padding = { x = 0, y = 200 }
-    decorations = "None"
-    startup_mode = "Fullscreen"
-    dynamic_title = false
-
-    [font]
-    size = 30.0
-    normal = { family = "JetBrainsMono Nerd Font Mono" }
-
-    [cursor]
-    style = { shape = "Beam", blinking = "Never" }
-  '';
+  home.file.".config/alacritty/screensaver.toml".source = ./alacritty/screensaver.toml;
 
   # 3. Um script lançador para abrir o Alacritty com essa config
   home.file.".local/bin/run-screensaver" = {
-    text = ''
-      #!/usr/bin/env bash
-      # Lança o Alacritty apontando para o config de screensaver e rodando o script de animação
-      alacritty --config-file ~/.config/alacritty/screensaver.toml -e ~/.local/bin/term-saver
-    '';
+    source = ./scripts/run-screensaver.sh;
     executable = true;
   };
 

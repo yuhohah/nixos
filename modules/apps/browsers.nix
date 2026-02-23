@@ -4,7 +4,7 @@
 
   environment.systemPackages = with pkgs; [
     chromium
-    tor-browser
+    #tor-browser
   ];
 
   nixpkgs.config = {

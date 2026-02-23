@@ -20,9 +20,9 @@
 
         interval = 1;
 
-        modules-left = [ "hyprland/workspaces" ];
+        modules-left = [ "hyprland/workspaces" "mpris" ];
         modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "backlight" "network" "tray" ];
+        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "network" "tray" ];
 
         # Módulo Hyprland - Workspaces
         "hyprland/workspaces" = {
@@ -43,31 +43,46 @@
           };
         };
 
-        # Módulo Hyprland - Janela Ativa
-        #"hyprland/window" = {
-         # format = "{}";
-        #  max-length = 50;
-       #   separate-outputs = true;
-      #  };
+        # MPRIS (Media Player)
+        "mpris" = {
+          format = "{player_icon} {title}";
+          format-paused = "{status_icon} <i>{title}</i>";
+          player-icons = {
+            default = "▶";
+            mpv = "🎵";
+          };
+          status-icons = {
+            paused = "⏸";
+          };
+          # ignored-players = ["firefox"];
+          max-length = 30;
+        };
+
+        # Clipboard (Custom)
+        "custom/clipboard" = {
+          format = "📋";
+          on-click = "cliphist list | wofi --dmenu | cliphist decode | wl-copy";
+          tooltip = false;
+        };
 
         # Relógio
         "clock" = {
+          interval = 1;
           format = "{:%H:%M:%S}";
           #format-alt = "{%d/%m/%Y}";
           format-alt = "{:%A, %d de %B de %Y}";
           tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
-            mode = "month";
+            mode = "year";
             mode-mon-col = 3;
             weeks-pos = "right";
             on-scroll = 1;
-            on-click-right = "mode";
             format = {
-              months = "<span color='#ffead3'><b>{}</b></span>";
-              days = "<span color='#ecc6d9'><b>{}</b></span>";
-              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+              months = "<span color='#f5e0dc'><b>{}</b></span>";
+              days = "<span color='#cdd6f4'><b>{}</b></span>";
+              weeks = "<span color='#94e2d5'><b>W{}</b></span>";
+              weekdays = "<span color='#f9e2af'><b>{}</b></span>";
+              today = "<span color='#f38ba8'><b><u>{}</u></b></span>";
             };
           };
         };
@@ -119,7 +134,7 @@
           tooltip-format-ethernet = "{ifname} ";
           tooltip-format-disconnected = "Disconnected";
           max-length = 50;
-          on-click = "nm-connection-editor";
+          on-click = "alacritty -e nmtui";
         };
 
         # Tray

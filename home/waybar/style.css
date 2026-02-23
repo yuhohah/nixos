@@ -1,7 +1,7 @@
 /*
  =========================================
- 🌐 Waybar - Tema Minimalista
- Uma cor, fundo transparente, compacto
+ 🌐 Waybar - Dank Material Style
+ "Pills" aesthetics: rounded, opaque, floating
  =========================================
 */
 
@@ -10,10 +10,11 @@
    ============================ */
 * {
     border: none;
-    border-radius: 8px;
+    border-radius: 16px;
+    /* Pill shape */
     font-family: "JetBrainsMono Nerd Font Mono";
     font-weight: bold;
-    font-size: 13px;
+    font-size: 14px;
     min-height: 0;
 }
 
@@ -21,100 +22,117 @@
    🪟 CONTAINER PRINCIPAL
    ============================ */
 window#waybar {
-    background: rgba(30, 30, 30, 0.95);
-    color: #89b4fa;
+    background: transparent;
+    /* Bar itself is transparent */
+    color: #cdd6f4;
 }
 
 #waybar {
-    background: rgba(30, 30, 30, 0.95);  /* Cinza transparente */
-    border: none;
-    border-radius: 12px;
-    margin: 8px 12px 0px 12px;
-    padding: 2px 0px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+    background: transparent;
 }
 
 /* ============================
    💬 TOOLTIP
    ============================ */
 tooltip {
-    background: rgba(30, 30, 46, 0.9);
-    border: 1px solid rgba(80, 80, 90, 0.4);
-    border-radius: 8px;
+    background: #1e1e2e;
+    border: 1px solid #cba6f7;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+tooltip label {
+    color: #cdd6f4;
+    padding: 5px;
 }
 
 /* ============================
    🧭 WORKSPACES
    ============================ */
 #workspaces {
-    background: transparent;
-    margin: 2px 6px;
-    padding: 0;
+    background: #1e1e2e;
+    margin: 5px 5px;
+    padding: 5px 5px;
+    border-radius: 20px;
+    opacity: 0.9;
 }
 
 #workspaces button {
-    padding: 4px 10px;
-    margin: 2px 2px;
+    padding: 0 10px;
     background: transparent;
-    color: #a6e3a1;  /* Azul - cor única do sistema */
-    border-radius: 0px;
-    transition: all 0.2s ease;
+    color: #a6adc8;
+    border-radius: 16px;
+    transition: all 0.3s ease;
 }
 
 #workspaces button.active {
-    color: #a6e3a1;
-    background: rgba(137, 180, 250, 0.2);
-}
-
-#workspaces button.focused {
-    color: #a6e3a1;
-    background: rgba(137, 180, 250, 0.25);
-}
-
-#workspaces button.urgent {
-    color: #a6e3a1;
-    background: rgba(137, 180, 250, 0.4);
+    color: #1e1e2e;
+    background: #cba6f7;
+    /* Mauve accent */
+    min-width: 40px;
 }
 
 #workspaces button:hover {
-    background: rgba(137, 180, 250, 0.15);
+    background: #313244;
 }
 
 /* ============================
-   🔧 MÓDULOS - TODOS COM A MESMA COR
+   🔧 MODULES - PILLS
    ============================ */
-#window,
 #clock,
 #battery,
 #pulseaudio,
 #network,
-#bluetooth,
 #tray,
-#backlight {
-    background: transparent;
-    border: none;
-    border-radius: 6px;
-    padding: 2px 10px;
-    margin: 2px 2px;
-    color: #a6e3a1;  /* Azul - cor única para tudo */
-}
-
-/* Tray */
-#tray {
-    margin-right: 6px;
-}
-
-/* Window */
-#window {
-    margin-left: 6px;
-    margin-right: 6px;
+#backlight,
+#mpris,
+#custom-clipboard {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 5px 15px;
+    margin: 5px 5px;
+    border-radius: 20px;
+    opacity: 0.9;
 }
 
 /* ============================
-   📊 ESTADOS ESPECIAIS
+   🎨 SPECIFIC WIDGET COLORS
    ============================ */
+
+/* Clock is special */
+#clock {
+    background: #1e1e2e;
+    color: #f5c2e7;
+    /* Pink */
+    font-weight: 800;
+}
+
+/* Audio */
+#pulseaudio {
+    color: #89b4fa;
+    /* Blue */
+}
+
 #pulseaudio.muted {
-    color: #6c7086;  /* Cinza quando mutado */
+    color: #6c7086;
+    background: #313244;
+}
+
+/* Network */
+#network {
+    color: #a6e3a1;
+    /* Green */
+}
+
+#network.disconnected {
+    color: #f38ba8;
+    /* Red */
+}
+
+/* Battery */
+#battery {
+    color: #fab387;
+    /* Peach */
 }
 
 #battery.charging {
@@ -122,24 +140,46 @@ tooltip {
 }
 
 #battery.warning:not(.charging) {
-    color: #a6e3a1;
+    color: #f38ba8;
     animation: blink 1s ease-in-out infinite;
+}
+
+/* Clipboard */
+#custom-clipboard {
+    color: #f2cdcd;
+    /* Flamingo */
+}
+
+/* MPRIS */
+#mpris {
+    color: #cba6f7;
+    /* Mauve */
+}
+
+#mpris.paused {
+    color: #a6adc8;
+}
+
+/* Tray */
+#tray {
+    padding: 5px 15px;
+}
+
+/* ============================
+   ✨ HOVER EFFECTS
+   ============================ */
+#clock:hover,
+#battery:hover,
+#pulseaudio:hover,
+#network:hover,
+#workspaces:hover {
+    opacity: 1.0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 @keyframes blink {
     50% {
         opacity: 0.5;
     }
-}
-
-/* ============================
-   ✨ EFEITOS DE HOVER
-   ============================ */
-#clock:hover,
-#battery:hover,
-#pulseaudio:hover,
-#network:hover,
-#backlight:hover {
-    background: rgba(137, 180, 250, 0.1);
-    transition: all 0.2s ease;
 }

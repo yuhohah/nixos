@@ -9,54 +9,46 @@
     vicinae.url = "github:vicinaehq/vicinae";
   };
 
-  
-
-  outputs = { nixpkgs, nixpkgs-unstable, home-manager, vicinae, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
-      unstable = import nixpkgs-unstable { inherit system; config.allowUnfree = true; }; 
-    in {
-      # --- HOST 1: nixos-btw ---
-      nixosConfigurations."nixos-btw" = nixpkgs.lib.nixosSystem {
+      unstable = import nixpkgs-unstable {
         inherit system;
-        modules = [
-          ./configuration.nix
-        
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.luan = { lib, ...}: {
-              imports = [ ./home/home.nix];
-              home.homeDirectory = lib.mkForce "/home/luan";
-            };
-          }
-        ];
-        specialArgs = { inherit unstable; };
+        config.allowUnfree = true;
       };
-    
+    in {
+      nixosConfigurations = {
+        # --- HOST 1: nixos-btw ---
+        "nixos-btw" = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs unstable; };
+          modules = [
+            ./configuration.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs unstable; };
+              home-manager.users.luan = import ./home/home.nix;
+            }
+          ];
+        };
 
-    # --- HOST 2: arrow  ---
-      nixosConfigurations."arrow" = nixpkgs.lib.nixosSystem {
-        inherit system;
-        modules = [
-          # Apontar para o novo arquivo de config principal
-          ./arrow.nix
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.luan = { lib, ...}: {
-              # Você pode usar o mesmo home.nix se as configs do usuário
-              # forem iguais, ou criar um novo (ex: ./home/home-arrow.nix)
-              imports = [ ./home/home.nix ]; 
-              home.homeDirectory = lib.mkForce "/home/luan";
-            };
-          }
-        ];
-        specialArgs = { inherit unstable; };
+        # --- HOST 2: arrow  ---
+        "arrow" = nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = { inherit inputs unstable; };
+          modules = [
+            ./arrow.nix
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = { inherit inputs unstable; };
+              home-manager.users.luan = import ./home/home.nix;
+            }
+          ];
+        };
       };
     };
 }

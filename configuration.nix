@@ -11,6 +11,7 @@
     ./modules/system/greetd.nix
     ./modules/system/gaming.nix
     ./modules/system/users.nix
+    ./modules/system/gvfs.nix
 
     ./modules/apps/core.nix
     ./modules/apps/media.nix
@@ -48,6 +49,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
   system.stateVersion = "25.05";
 
   
