@@ -12,5 +12,7 @@
       enableWideVine = true;  # Habilita suporte ao DRM
     };
   };
+
+  environment.variables.CHROME_FLAGS = "--password-store=basic";
 }
 

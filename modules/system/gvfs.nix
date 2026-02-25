@@ -4,8 +4,8 @@
   # Enable GVfs for Nautilus' admin protocol and other features
   services.gvfs.enable = true;
 
-  # Enable Gnome Keyring for storing passwords
-  services.gnome.gnome-keyring.enable = true;
+  # Disable Gnome Keyring for storing passwords
+  services.gnome.gnome-keyring.enable = false;
 
   # Enable Polkit for authentication
   security.polkit.enable = true;
