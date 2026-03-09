@@ -56,9 +56,9 @@
     };
 
     input = {
-      kb_layout = "us";
-      kb_variant = "intl";
-      kb_options = "caps:escape";
+      kb_layout = "us,br,es";
+      kb_variant = "intl,abnt2";
+      kb_options = "caps:escape, grp:alt_shift_toggle";
       follow_mouse = 1;
       touchpad = {
         natural_scroll = true;

@@ -49,7 +49,9 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   hardware.enableRedistributableFirmware = true;
 
+  networking.networkmanager.enable = true;
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [ ];
   system.stateVersion = "25.11";
 
   
