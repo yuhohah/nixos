@@ -5,6 +5,7 @@
     obsidian
     antigravity
     godot
+    lua
   ];
 }
 

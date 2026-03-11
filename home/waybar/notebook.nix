@@ -110,7 +110,7 @@
           tooltip-format-ethernet = "{ifname} ";
           tooltip-format-disconnected = "Disconnected";
           max-length = 50;
-          on-click = "nm-connection-editor";
+          on-click = "alacritty -e nmtui";
         };
 
         # Tray

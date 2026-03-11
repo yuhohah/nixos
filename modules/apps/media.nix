@@ -7,7 +7,7 @@
     obs-studio
     gimp
     spotify
-    #stremio
+    lutris
   ];
 
   fonts.packages = with pkgs; [
