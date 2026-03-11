@@ -55,7 +55,7 @@
   fileSystems."/mnt/disk" = {
     device = "/dev/disk/by-uuid/CA28A08128A06E5F";
     fsType = "ntfs-3g";
-    options = [ "rw" "uid=1000" "gid=100" "dmask=0022" "fmask=0133" ];
+    options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=000" "allow_other" ];
   };
 }
 
