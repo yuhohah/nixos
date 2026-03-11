@@ -18,7 +18,7 @@
     ./hyprland/autostart.nix
     ./hyprland/keybinds.nix
     ./hyprland/monitors.nix
-    ./hyprland/windowrules.nix
+    #./hyprland/windowrules.nix
     ./hyprland/hypridle.nix
     ./waybar/notebook.nix
     ./alacritty/default.nix
