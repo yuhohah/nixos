@@ -19,6 +19,7 @@
     ./hyprland/keybinds.nix
     ./hyprland/monitors.nix
     ./hyprland/hypridle.nix
+    ./hyprland/hyprlock.nix
     ./waybar/notebook.nix
     ./alacritty/default.nix
 
@@ -55,6 +56,12 @@
 
   home.stateVersion = "25.05";
 
+  services.udiskie = {
+    enable = true;
+    automount = true;
+    notify = true;
+    tray = "auto";
+  };
 
   programs.git = {
     enable = true;

@@ -46,7 +46,7 @@
       ", XF86MonBrightnessDown, exec, brightnessctl s 10%-"
 
       # Lock
-      "$mod, L, exec, swaylock"
+      "$mod, L, exec, hyprlock"
 
       # ========================================
       # CONTROLES DE NOTEBOOK
@@ -65,6 +65,9 @@
       # Brilho alternativo (Fn+F5/F6 em alguns notebooks)
       ", XF86KbdBrightnessUp, exec, brightnessctl -d *::kbd_backlight set +10%"
       ", XF86KbdBrightnessDown, exec, brightnessctl -d *::kbd_backlight set 10%-"
+
+      # Lock screen (Fn+F10)
+      ", XF86ScreenSaver, exec, hyprlock"
 
       # Media controls
       ", XF86AudioPlay, exec, playerctl play-pause"

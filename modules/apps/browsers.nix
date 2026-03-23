@@ -4,6 +4,7 @@
 
   environment.systemPackages = with pkgs; [
     chromium
+    vivaldi 
     #tor-browser
   ];
 

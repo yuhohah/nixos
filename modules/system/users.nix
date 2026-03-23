@@ -7,7 +7,7 @@
     isNormalUser = true;
     description = "Luan";
     group = "luan";
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" ];
+    extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "usb" ];
     home = "/home/luan";
     packages = with pkgs; [ tree ];
   };

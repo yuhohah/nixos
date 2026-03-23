@@ -18,7 +18,9 @@
     hypridle
     hyprlock
     terminaltexteffects
-
+    ntfs3g
+    exfat
+    
     #Dependencias do Screenshot
     grim
     slurp
@@ -42,5 +44,7 @@
     fuzzel
    
   ];
-}
 
+  # Habilita a autenticação PAM para o hyprlock (necessário para desbloquear a tela)
+  security.pam.services.hyprlock = {};
+}

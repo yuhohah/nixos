@@ -11,7 +11,8 @@
     ./modules/system/greetd.nix
     #./modules/system/gaming.nix
     ./modules/system/users.nix
-    #./modules/system/logind.nix # Notebook specific
+    ./modules/system/gvfs.nix
+    ./modules/system/logind.nix # Notebook specific
 
     ./modules/apps/laptop.nix
     ./modules/apps/core.nix
@@ -25,20 +26,8 @@
     efi.canTouchEfiVariables = true;
   };
 
-  systemd.user.services.numlock = {
-    enable = true;
-    description = "Activate NumLock";
-    after = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.numlockx}/bin/numlockx on";
-      RemainAfterExit = true;
-    };
-    wantedBy = [ "graphical-session.target" ];
-  };
-
-
+  networking.nameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
+  services.resolved.enable = true;
 
   nix.settings = {
       experimental-features = [ "nix-command" "flakes" ];
@@ -47,6 +36,8 @@
     };
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
+  
   hardware.enableRedistributableFirmware = true;
 
   networking.networkmanager.enable = true;
