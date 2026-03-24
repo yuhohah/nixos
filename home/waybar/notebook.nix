@@ -44,7 +44,7 @@
         "clock" = {
           format = "{:%H:%M:%S}";
           format-alt = "{:%A, %d de %B de %Y}";
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          tooltip-format = "<tt><medium>{calendar}</medium></tt>";
           calendar = {
             mode = "month";
             mode-mon-col = 3;
@@ -113,10 +113,6 @@
           on-click = "alacritty -e nmtui";
         };
 
-        # Tray
-        "tray" = {
-          spacing = 10;
-        };
       };
     };
   };

@@ -39,6 +39,7 @@
   boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
   
   hardware.enableRedistributableFirmware = true;
+  services.acpid.enable = true;
 
   networking.networkmanager.enable = true;
   nixpkgs.config.allowUnfree = true;
