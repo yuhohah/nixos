@@ -38,13 +38,18 @@
     wantedBy = [ "graphical-session.target" ];
   };
 
-
-
   nix.settings = {
       experimental-features = [ "nix-command" "flakes" ];
       accept-flake-config = true;
       auto-optimise-store = true;
     };
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
