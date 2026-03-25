@@ -23,24 +23,18 @@
         {
           ignore_inhibit = true;
           timeout = 150; # 2,5 minutos
-          on-timeout = "brightnessctl set 10% && ~/.local/bin/run-screensaver";
-          on-resume = "brightnessctl set 60% && pkill -f 'alacritty.*screensaver'";
+          on-timeout = "brightnessctl set 10% && hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
+          on-resume = "brightnessctl set 60% && hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
         }
         
         # Após 10 minutos: Desliga tela
         {
           timeout = 480;  # 8 minutos
-          on-timeout = "hyprctl dispatch dpms off";
+          on-timeout = "hyprctl dispatch dpms off && hyprlock";
           on-resume = "hyprctl dispatch dpms on";
         }
         
-        # Após 15 minutos: Trava a sessão
-        {
-          timeout = 720;  # 12 minutos
-          on-timeout = "loginctl lock-session";
-        }
-        
-        # Após 30 minutos: Suspende o sistema
+         # Após 30 minutos: Suspende o sistema
         {
           timeout = 900;  # 15 minutos
           on-timeout = "systemctl suspend";

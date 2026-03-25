@@ -6,6 +6,7 @@
     antigravity
     godot
     lua
+    love
   ];
 }
 

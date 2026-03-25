@@ -28,9 +28,6 @@
     # waydroid (managed by module)
   ];
 
-
-
-
   # Gamemode
   programs.gamemode = {
     enable = true;

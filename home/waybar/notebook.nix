@@ -113,6 +113,10 @@
           on-click = "alacritty -e nmtui";
         };
 
+        # Tray
+        "tray" = {
+          spacing = 10;
+        };
       };
     };
   };

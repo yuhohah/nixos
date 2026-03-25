@@ -24,39 +24,6 @@
   };
 
   # ========================================
-  # XDG DESKTOP PORTAL (para screen sharing)
-  # ========================================
-  
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-hyprland
-      pkgs.xdg-desktop-portal-gtk
-    ];
-    config = {
-      common = {
-        default = [ "hyprland" "gtk" ];
-      };
-      hyprland = {
-        default = [ "hyprland" "gtk" ];
-      };
-    };
-  };
-
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-  };
-
-  # Variáveis de ambiente para o portal
-  environment.sessionVariables = {
-    XDG_CURRENT_DESKTOP = "Hyprland";
-    XDG_SESSION_TYPE = "wayland";
-    XDG_SESSION_DESKTOP = "Hyprland";
-  };
-
-  # ========================================
   # REALTIME AUDIO (opcional, melhora latência)
   # ========================================
   
