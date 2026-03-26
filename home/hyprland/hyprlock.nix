@@ -1,10 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # ========================================
-  # HYPRLOCK - TELA DE BLOQUEIO
-  # ========================================
-  
   programs.hyprlock = {
     enable = true;
     

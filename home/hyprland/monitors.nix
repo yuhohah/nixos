@@ -22,10 +22,11 @@ let
     monitor = [
       #,preferred,auto,1" # Auto-detectar com scale 1
       "eDP-1, 1920x1080, 0x0, 1"
+      "HDMI-A-1,1920x1080@144,1920x0,1"
     ];
     workspace = [
       "1, monitor:eDP-1"
-      "2, monitor:eDP-1"
+      #"2, monitor:eDP-1"
     ];
   };
 

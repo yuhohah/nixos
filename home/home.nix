@@ -1,4 +1,4 @@
-{ config, pkgs, unstable, ... }:
+{ config, pkgs, unstable, hostName, ... }:
 
 {
   home.username = "luan";

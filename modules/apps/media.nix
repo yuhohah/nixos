@@ -20,7 +20,6 @@
     # Fontes emojis
     noto-fonts-color-emoji
     
-  
   ];
 
   fonts.fontconfig = {

@@ -11,7 +11,6 @@
     nautilus
     pavucontrol
     home-manager
-    numlockx
     unstable.vicinae
     btop
     bash

@@ -21,7 +21,7 @@
         # --- HOST 1: nixos-btw ---
         "nixos-btw" = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs unstable; };
+          specialArgs = { inherit inputs unstable; hostName = "nixos-btw";};
           modules = [
             ./configuration.nix
             home-manager.nixosModules.home-manager
@@ -37,7 +37,7 @@
         # --- HOST 2: arrow  ---
         "arrow" = nixpkgs.lib.nixosSystem {
           inherit system;
-          specialArgs = { inherit inputs unstable; };
+          specialArgs = { inherit inputs unstable; hostName = "arrow";};
           modules = [
             ./arrow.nix
             home-manager.nixosModules.home-manager

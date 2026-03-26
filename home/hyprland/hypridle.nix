@@ -30,7 +30,7 @@
         # Após 10 minutos: Desliga tela
         {
           timeout = 480;  # 8 minutos
-          on-timeout = "hyprctl dispatch dpms off && hyprlock";
+          on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
           on-resume = "hyprctl dispatch dpms on";
         }
         

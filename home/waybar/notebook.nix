@@ -44,7 +44,7 @@
         "clock" = {
           format = "{:%H:%M:%S}";
           format-alt = "{:%A, %d de %B de %Y}";
-          tooltip-format = "<tt><medium>{calendar}</medium></tt>";
+          tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
             mode = "month";
             mode-mon-col = 3;
@@ -52,11 +52,11 @@
             on-scroll = 1;
             on-click-right = "mode";
             format = {
-              months = "<span color='#ffead3'><b>{}</b></span>";
-              days = "<span color='#ecc6d9'><b>{}</b></span>";
-              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+              months = "<span color='#ffffffff'><b>{}</b></span>";
+              days = "<span color='#f33a97ff'><b>{}</b></span>";
+              weeks = "<span color='#3675fcff'><b>W{}</b></span>";
+              weekdays = "<span color='#f7f200ff'><b>{}</b></span>";
+              today = "<span color='#a6e3a1'><b><u>{}</u></b></span>";
             };
           };
         };

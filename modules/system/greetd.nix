@@ -4,9 +4,15 @@
 
   services.greetd = {
     enable = true;
-    settings.default_session = {
-      command = "Hyprland";
-      user = "luan";
+    settings = {
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        user = "greeter";
+      };
+      initial_session = {
+        command = "Hyprland";
+        user = "luan";
+      };
     };
   };
 

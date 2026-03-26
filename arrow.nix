@@ -9,10 +9,8 @@
     ./modules/system/audio.nix
     ./modules/system/hyprland.nix
     ./modules/system/greetd.nix
-    #./modules/system/gaming.nix
     ./modules/system/users.nix
     ./modules/system/gvfs.nix
-    ./modules/system/logind.nix # Notebook specific
 
     ./modules/apps/laptop.nix
     ./modules/apps/core.nix

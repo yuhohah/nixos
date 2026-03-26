@@ -189,5 +189,9 @@
       "$mod SHIFT, O, Obsidian, exec, obsidian -disable-gpu"
       "$mod SHIFT, M, Music, exec, spotify"
     ];
+
+    bindl = [
+      ", switch:on:Lid Switch, exec, loginctl lock-session"
+    ];
   };
 }

@@ -33,18 +33,18 @@
       layer = "overlay";
       
       # Configurações Extras por Urgência
-      extraConfig = ''
-        [urgency=high]
-        border-color=#f38ba8
-        default-timeout=0
-        
-        [urgency=low]
-        border-color=#1e1e2e
-        default-timeout=2000
-        
-        [mode=do-not-disturb]
-        invisible=1
-      '';
+      #extraConfig = ''
+      #  [urgency=high]
+      #  border-color=#f38ba8
+      #  default-timeout=0
+      #  
+      #  [urgency=low]
+      #  border-color=#1e1e2e
+      #  default-timeout=2000
+      #  
+      #  [mode=do-not-disturb]
+      #  invisible=1
+      #'';
     };
   };
 }
