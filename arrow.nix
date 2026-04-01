@@ -38,7 +38,6 @@
     options = "--delete-older-than 7d";
   };
 
-  nix.settings.auto-optimise-store = true;
   
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;

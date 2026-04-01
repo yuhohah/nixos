@@ -19,7 +19,7 @@
 
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "pulseaudio" "backlight" "battery" "network" "tray" ];
+        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "battery" "network" "tray" ];
 
         # Workspaces
         "hyprland/workspaces" = {

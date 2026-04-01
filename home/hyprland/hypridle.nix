@@ -1,10 +1,54 @@
-{ config, pkgs, ... }:
+{ config, pkgs, osConfig, lib, ... }:
 
-{
-  # ========================================
-  # HYPRIDLE - GERENCIADOR DE INATIVIDADE
-  # ========================================
+
+let
+  hostname = osConfig.networking.hostName;
+
+  arrow = {
+    listener = [
+      {
+        ignore_inhibit = true;
+        timeout = 150; 
+        on-timeout = "brightnessctl set 10% && hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
+        on-resume = "brightnessctl set 60% && hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
+      }
+      {
+        timeout = 480;  
+        on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
+        on-resume = "hyprctl dispatch dpms on";
+      }
+      {
+        timeout = 900;  
+        on-timeout = "systemctl suspend";
+      }
+    ];
+  };
+
+  nixos-btw = {
+    listener = [
+      {
+        ignore_inhibit = true;
+        timeout = 600;
+        on-timeout = "hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
+        on-resume = "hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
+      }
+      {
+        timeout = 900;
+        on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
+        on-resume = "hyprctl dispatch dpms on";
+      }
+      {
+        timeout = 1200;
+        on-timeout = "systemctl suspend";
+      }
+    ];
+  };
+
+  # Seleciona a config baseada no hostname
+  listenerConfig = if hostname == "arrow" then arrow else nixos-btw;
   
+in
+{
   services.hypridle = {
     enable = true;
     
@@ -17,32 +61,8 @@
       };
 
       # Listeners - Ações baseadas em tempo de inatividade
-      listener = [
-        # Após 5 minutos: Diminui brilho para 10%
-        # Após 5 minutos: Screensaver
-        {
-          ignore_inhibit = true;
-          timeout = 150; # 2,5 minutos
-          on-timeout = "brightnessctl set 10% && hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
-          on-resume = "brightnessctl set 60% && hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
-        }
-        
-        # Após 10 minutos: Desliga tela
-        {
-          timeout = 480;  # 8 minutos
-          on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
-          on-resume = "hyprctl dispatch dpms on";
-        }
-        
-         # Após 30 minutos: Suspende o sistema
-        {
-          timeout = 900;  # 15 minutos
-          on-timeout = "systemctl suspend";
-        }
-      ];
+      listener = listenerConfig.listener;
     };
   };
-
-
 
 }
