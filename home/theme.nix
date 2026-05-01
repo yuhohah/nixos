@@ -8,10 +8,7 @@
     enable = true;
     
     # Define o tema escuro
-    theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
-    };
+    colorScheme = "dark";
 
     # Define o tema de ícones (opcional, mas recomendado para consistência)
     iconTheme = {

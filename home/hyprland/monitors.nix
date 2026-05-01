@@ -7,7 +7,7 @@ let
   nixos-btw = {
     monitor = [
       "HDMI-A-1,1920x1080@144,0x0,1"
-      "HDMI-A-2,1920x1080@74.973,1920x0,1"
+      "HDMI-A-2,1920x1080@74.973,-1920x0,1"
     ];
     workspace = [
       "1, monitor:HDMI-A-1"
