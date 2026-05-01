@@ -7,6 +7,7 @@
     godot
     lua
     love
+    android-studio
   ];
 }
 
