@@ -7,7 +7,7 @@
     neovim
     alacritty
     waybar
-    swww 
+    awww 
     nautilus
     pavucontrol
     home-manager
