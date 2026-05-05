@@ -10,6 +10,7 @@
       "mako"
       "hypridle"
       "hyprlock"
+      "battery-alert"
     ];
   };
 }

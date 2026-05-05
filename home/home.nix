@@ -109,6 +109,12 @@
     executable = true;
   };
 
+  # Script de alerta de bateria
+  home.file.".local/bin/battery-alert" = {
+    source = ./scripts/battery-alert.sh;
+    executable = true;
+  };
+
   # 2. Criar diretório de screenshots
   home.file."Pictures/Screenshots/.keep".text = "";
 

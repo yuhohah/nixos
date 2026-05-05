@@ -52,11 +52,11 @@
             on-scroll = 1;
             on-click-right = "mode";
             format = {
-              months = "<span color='#ffffffff'><b>{}</b></span>";
-              days = "<span color='#f33a97ff'><b>{}</b></span>";
-              weeks = "<span color='#3675fcff'><b>W{}</b></span>";
-              weekdays = "<span color='#f7f200ff'><b>{}</b></span>";
-              today = "<span color='#a6e3a1'><b><u>{}</u></b></span>";
+              months = "<span color='#f5e0dc'><b>{}</b></span>";
+              days = "<span color='#cdd6f4'><b>{}</b></span>";
+              weeks = "<span color='#94e2d5'><b>W{}</b></span>";
+              weekdays = "<span color='#f9e2af'><b>{}</b></span>";
+              today = "<span color='#cba6f7'><b><u>{}</u></b></span>";
             };
           };
         };

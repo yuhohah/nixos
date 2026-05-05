@@ -82,7 +82,7 @@
               days = "<span color='#cdd6f4'><b>{}</b></span>";
               weeks = "<span color='#94e2d5'><b>W{}</b></span>";
               weekdays = "<span color='#f9e2af'><b>{}</b></span>";
-              today = "<span color='#f38ba8'><b><u>{}</u></b></span>";
+              today = "<span color='#cba6f7'><b><u>{}</u></b></span>";
             };
           };
         };

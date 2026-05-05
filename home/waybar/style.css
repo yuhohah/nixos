@@ -1,7 +1,7 @@
 /*
  =========================================
- 🌐 Waybar - Dank Material Style
- "Pills" aesthetics: rounded, opaque, floating
+ 🌐 Waybar - Frosted Glass Style
+ "Pills" aesthetics: translucent, blurred, floating
  =========================================
 */
 
@@ -35,10 +35,10 @@ window#waybar {
    💬 TOOLTIP
    ============================ */
 tooltip {
-    background: #1e1e2e;
-    border: 1px solid #cba6f7;
+    background: rgba(30, 30, 46, 0.75);
+    border: 1px solid rgba(203, 166, 247, 0.35);
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 tooltip label {
@@ -50,11 +50,12 @@ tooltip label {
    🧭 WORKSPACES
    ============================ */
 #workspaces {
-    background: #1e1e2e;
+    background: rgba(30, 30, 46, 0.65);
     margin: 5px 5px;
     padding: 5px 5px;
     border-radius: 20px;
-    opacity: 0.9;
+    border: 1px solid rgba(205, 214, 244, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 #workspaces button {
@@ -73,7 +74,15 @@ tooltip label {
 }
 
 #workspaces button:hover {
-    background: #313244;
+    background: rgba(203, 166, 247, 0.2);
+    color: #cdd6f4;
+    box-shadow: inset 0 0 5px rgba(203, 166, 247, 0.3);
+}
+
+#workspaces button.active:hover {
+    background: #cba6f7;
+    color: #1e1e2e;
+    box-shadow: 0 0 8px rgba(203, 166, 247, 0.6);
 }
 
 /* ============================
@@ -87,12 +96,14 @@ tooltip label {
 #backlight,
 #mpris,
 #custom-clipboard {
-    background: #1e1e2e;
+    background: rgba(30, 30, 46, 0.65);
     color: #cdd6f4;
     padding: 5px 15px;
     margin: 5px 5px;
     border-radius: 20px;
-    opacity: 0.9;
+    border: 1px solid rgba(205, 214, 244, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    transition: all 0.3s ease;
 }
 
 /* ============================
@@ -101,7 +112,7 @@ tooltip label {
 
 /* Clock is special */
 #clock {
-    background: #1e1e2e;
+    background: rgba(30, 30, 46, 0.7);
     color: #f5c2e7;
     /* Pink */
     font-weight: 800;
@@ -115,7 +126,7 @@ tooltip label {
 
 #pulseaudio.muted {
     color: #6c7086;
-    background: #313244;
+    background: rgba(49, 50, 68, 0.6);
 }
 
 /* Network */
@@ -172,10 +183,13 @@ tooltip label {
 #battery:hover,
 #pulseaudio:hover,
 #network:hover,
-#workspaces:hover {
-    opacity: 1.0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+#backlight:hover,
+#mpris:hover,
+#tray:hover,
+#custom-clipboard:hover {
+    background: rgba(30, 30, 46, 0.85);
+    border-color: rgba(203, 166, 247, 0.25);
+    box-shadow: 0 2px 12px rgba(203, 166, 247, 0.08), 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes blink {

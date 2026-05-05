@@ -15,18 +15,35 @@
       gaps_in = 5;
       gaps_out = 10;
       border_size = 3;
-      "col.active_border" = "rgba(a6e3a1ff)";
+      # "col.active_border" = "rgba(a6e3a1ff)";  # verde (backup)
+      "col.active_border" = "rgba(cba6f7ff)";     # mauve (accent principal)
       "col.inactive_border" = "rgba(595959aa)";
       layout = "dwindle";
     };
 
     decoration = {
-      rounding = 8;
+      rounding = 12;
+
+      # Opacidade sutil para revelar o blur através das janelas
+      active_opacity = 0.95;
+      inactive_opacity = 0.85;
+      fullscreen_opacity = 1.0;
+
       blur = {
         enabled = true;
-        size = 8;
+        size = 6;
         passes = 3;
         new_optimizations = true;
+        vibrancy = 0.1696;        # efeito de vidro fosco
+        noise = 0.02;             # granulado sutil para sofisticação
+        xray = false;
+      };
+
+      shadow = {
+        enabled = true;
+        range = 12;
+        render_power = 3;
+        color = "rgba(1a1a2eee)";
       };
     };
 

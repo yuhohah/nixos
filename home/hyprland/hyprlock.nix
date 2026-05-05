@@ -40,7 +40,8 @@
           fade_on_empty = false;
           font_color = "rgb(cdd6f4)";
           inner_color = "rgb(30, 30, 46)";
-          outer_color = "rgb(166, 227, 161)";  # Verde (sua cor)
+          # outer_color = "rgb(166, 227, 161)";  # verde (backup)
+          outer_color = "rgb(203, 166, 247)";     # mauve (accent)
           outline_thickness = 3;
           placeholder_text = "<span foreground='##a6adc8'>Senha...</span>";
           shadow_passes = 2;
@@ -56,7 +57,7 @@
         {
           path = "~/Pictures/profile/perfil.png";
           border_size = 2;
-          border_color = "rgba(255, 255, 255, .75)";
+          border_color = "rgba(205, 214, 244, 0.75)";  # catppuccin text
           size = 95;
           rounding = -1;
           rotate = 0;
@@ -75,7 +76,7 @@
         # Relógio
         {
           monitor = "";
-          text = "cmd[update:1000] echo \"<span foreground='##a6e3a1'>$(date +'%H:%M:%S')</span>\"";
+          text = "cmd[update:1000] echo \"<span foreground='##cba6f7'>$(date +'%H:%M:%S')</span>\"";
           color = "rgb(205, 214, 244)";
           font_size = 70;
           font_family = "JetBrainsMono Nerd Font Mono";
@@ -88,7 +89,7 @@
         {
           monitor = "";
           text = "cmd[update:3600000] echo \"<span foreground='##a6adc8'>$(date +'%A, %d de %B')</span>\"";
-          color = "rgba(29, 37, 63, 1)";
+          color = "rgb(cdd6f4)";
           font_size = 20;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "0, 100";
@@ -100,7 +101,8 @@
         {
           monitor = "";
           text = "$USER";
-          color = "rgba(166, 227, 161)";
+          # color = "rgba(166, 227, 161)";  # verde (backup)
+          color = "rgba(203, 166, 247, 1)";     # mauve (accent)
           font_size = 18;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "0, -60";
@@ -111,8 +113,8 @@
         # Status da bateria (se for notebook)
         {
           monitor = "";
-          text = "cmd[update:5000] echo \"<span foreground='##a6e3a1'>󰁹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";
-          color = "rgba(20, 26, 46, 1)";
+          text = "cmd[update:5000] echo \"<span foreground='##cba6f7'>󰁹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";
+          color = "rgb(cdd6f4)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "30, -30";
@@ -124,7 +126,7 @@
         {
           monitor = "";
           text = "cmd[update:60000] echo \"<span foreground='##fab387'>󱫐 $(uptime -p | sed 's/up //')</span>\"";
-          color = "rgba(16, 25, 53, 1)";
+          color = "rgb(cdd6f4)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "-30, -30";
