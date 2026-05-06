@@ -28,17 +28,17 @@ let
     listener = [
       {
         ignore_inhibit = true;
-        timeout = 600;
+        timeout = 1500;
         on-timeout = "hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
         on-resume = "hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
       }
       {
-        timeout = 900;
+        timeout = 2500;
         on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
         on-resume = "hyprctl dispatch dpms on";
       }
       {
-        timeout = 1200;
+        timeout = 35000;
         on-timeout = "systemctl suspend";
       }
     ];
