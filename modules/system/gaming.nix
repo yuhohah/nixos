@@ -43,6 +43,12 @@
     };
   };
 
+  # Otimização para usuários de AMD (Mesa)
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   # Steam
   programs.steam = {
     enable = true;
@@ -53,6 +59,14 @@
 
   # Controles
   hardware.steam-hardware.enable = true;
+  
+  environment.sessionVariables = {
+    PROTON_USE_NTSYNC = "1";
+    # Melhora a compilação de shaders em GPUs AMD
+    RADV_PERFTEST = "ngc,sam"; 
+    # Reduz latência no processamento de frames
+    mesa_glthread = "true";
+  };
   
   # Serviços de jogos
   services.joycond.enable = true;

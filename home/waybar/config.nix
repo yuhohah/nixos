@@ -17,9 +17,6 @@
         margin-left = 12;   # Espaço das laterais
         margin-right = 12;
 
-
-        interval = 1;
-
         modules-left = [ "hyprland/workspaces" "mpris" ];
         modules-center = [ "clock" ];
         modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "network" "tray" ];
@@ -61,7 +58,7 @@
         # Clipboard (Custom)
         "custom/clipboard" = {
           format = "📋";
-          on-click = "cliphist list | wofi --dmenu | cliphist decode | wl-copy";
+          on-click = "vicinae vicinae://extensions/vicinae/clipboard/history";
           tooltip = false;
         };
 

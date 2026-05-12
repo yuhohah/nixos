@@ -1,6 +1,7 @@
 { config, pkgs, ... }:
 
 {
+  xdg.configFile."vicinae/settings.json".force = true;
   xdg.configFile."vicinae/settings.json".text = builtins.toJSON {
     theme = {
       dark = {

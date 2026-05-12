@@ -51,7 +51,28 @@
   };
 
   # Kernel mais recente
+  # boot.kernelPackages = pkgs.linuxPackages_zen;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Kernel modules para jogos e Waydroid
+  boot.kernelModules = [ "ntsync" "binder_linux" ];
+
+  boot.specialFileSystems."/dev/binderfs" = {
+  device = "binder";
+  fsType = "binder";
+  options = [ "max=10" ];
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /dev/binderfs 0755 root root -"
+    "L+ /dev/binder /dev/binderfs/binder"
+  ];
+
+  boot.kernelParams = [ "binder.devices=binder,controls,stats,features" ];
+  boot.kernel.sysctl = {
+    "vm.max_map_count" = 2147483642; # Necessário para muitos motores modernos
+    # "kernel.sched_rt_runtime_us" = -1; # Evita que o scheduler interrompa processos em tempo real
+  };
 
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ];

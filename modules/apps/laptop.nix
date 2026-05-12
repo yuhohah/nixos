@@ -29,10 +29,6 @@
     #acpilight          # Alternativa ao brightnessctl
     lm_sensors         # Sensores de temperatura
     
-    # Clipboard
-    wl-clipboard       # Clipboard para Wayland
-    cliphist           # Histórico de clipboard
-    
     # Sistema
     usbutils           # lsusb
     pciutils           # lspci

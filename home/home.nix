@@ -21,13 +21,14 @@
     #./hyprland/windowrules.nix
     ./hyprland/hypridle.nix
     ./hyprland/hyprlock.nix
-    ./waybar/notebook.nix
+    ./waybar/config.nix
     ./alacritty/default.nix
 
     ./vesktop/config.nix    
     ./satty/config.nix
     ./fastfetch/default.nix
     ./mako/default.nix
+    ./vicinae/default.nix
     #./modules/apps/vscode.nix
     #./modules/apps/vesktop.nix
     #./modules/apps/kitty.nix

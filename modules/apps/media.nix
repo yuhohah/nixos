@@ -7,7 +7,7 @@
     obs-studio
     gimp
     spotify
-    lutris
+    #lutris
   ];
 
   fonts.packages = with pkgs; [
