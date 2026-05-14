@@ -24,7 +24,7 @@
           inherit system;
           specialArgs = { inherit inputs unstable; hostName = "nixos-btw";};
           modules = [
-            ./configuration.nix
+            ./hosts/nixos-btw/default.nix
             hermes-agent.nixosModules.default
             home-manager.nixosModules.home-manager
             {
@@ -41,7 +41,7 @@
           inherit system;
           specialArgs = { inherit inputs unstable; hostName = "arrow";};
           modules = [
-            ./arrow.nix
+            ./hosts/arrow/default.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

@@ -3,7 +3,7 @@
 {
   networking.hostName = "nixos-btw";
   imports = [
-    ./hardware-configuration.nix
+    ./hosts/nixos-btw/hardware-configuration.nix
     
     ./modules/system/networking.nix
     ./modules/system/audio.nix
