@@ -65,6 +65,12 @@
     tray = "auto";
   };
 
+  services.activitywatch = {
+    enable = true;
+    # Isso garante que ele inicie automaticamente na sua sessão
+    package = pkgs.activitywatch;
+  };
+
   programs.git = {
     enable = true;
     settings ={

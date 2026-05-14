@@ -21,12 +21,18 @@
     
     # WirePlumber (gerenciador de sessão)
     wireplumber.enable = true;
+
+    # Isso impede que o PipeWire tente mudar as configurações enquanto o jogo roda
+    extraConfig.pipewire-pulse."92-low-latency" = {
+      "pulse.properties" = {
+        "pulse.min.req" = "32/48000";
+        "pulse.default.req" = "32/48000";
+        "pulse.max.req" = "32/48000";
+        "pulse.min.quantum" = "32/48000";
+      };
+    };
   };
 
-  # ========================================
-  # REALTIME AUDIO (opcional, melhora latência)
-  # ========================================
-  
   security.rtkit.enable = true;
 }
 

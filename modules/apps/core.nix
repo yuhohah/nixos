@@ -30,6 +30,10 @@
     libnotify
     hyprland
 
+    #Dependencias do activity watch
+    activitywatch
+    aw-watcher-window-wayland
+
     wireplumber    # gerenciador de sessão do pipewire
     xdg-desktop-portal-hyprland  # portal para screen sharing
     xdg-desktop-portal-gtk       # portal GTK (fallback)

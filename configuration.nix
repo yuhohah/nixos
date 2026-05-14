@@ -18,24 +18,12 @@
     ./modules/apps/dev.nix
     ./modules/apps/browsers.nix
     ./modules/apps/waydroid.nix
+    ./modules/apps/hermes.nix
   ];
 
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
-  };
-
-  systemd.user.services.numlock = {
-    enable = true;
-    description = "Activate NumLock";
-    after = [ "graphical-session.target" ];
-    wants = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.numlockx}/bin/numlockx on";
-      RemainAfterExit = true;
-    };
-    wantedBy = [ "graphical-session.target" ];
   };
 
   nix.settings = {
@@ -51,24 +39,12 @@
   };
 
   # Kernel mais recente
-  # boot.kernelPackages = pkgs.linuxPackages_zen;
+  # boot.kernelPackages = pkgs.linuxPackages_zen; 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel modules para jogos e Waydroid
   boot.kernelModules = [ "ntsync" "binder_linux" ];
 
-  boot.specialFileSystems."/dev/binderfs" = {
-  device = "binder";
-  fsType = "binder";
-  options = [ "max=10" ];
-  };
-
-  systemd.tmpfiles.rules = [
-    "d /dev/binderfs 0755 root root -"
-    "L+ /dev/binder /dev/binderfs/binder"
-  ];
-
-  boot.kernelParams = [ "binder.devices=binder,controls,stats,features" ];
   boot.kernel.sysctl = {
     "vm.max_map_count" = 2147483642; # Necessário para muitos motores modernos
     # "kernel.sched_rt_runtime_us" = -1; # Evita que o scheduler interrompa processos em tempo real

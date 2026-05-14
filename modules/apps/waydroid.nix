@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   virtualisation.waydroid.enable = true;
+  virtualisation.waydroid.package = pkgs.waydroid-nftables;
 
   # Dependencies for waydroid-extras script (GAPPS/libhoudini)
   environment.systemPackages = with pkgs; [

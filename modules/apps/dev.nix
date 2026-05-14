@@ -8,6 +8,7 @@
     lua
     love
     android-studio
+    lmstudio
   ];
 }
 
