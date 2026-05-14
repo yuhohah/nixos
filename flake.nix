@@ -31,7 +31,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs unstable; };
-              home-manager.users.luan = import ./home/home.nix;
+              home-manager.users.luan = import ./home/hosts/nixos-btw.nix;
             }
           ];
         };
@@ -42,12 +42,13 @@
           specialArgs = { inherit inputs unstable; hostName = "arrow";};
           modules = [
             ./hosts/arrow/default.nix
+            hermes-agent.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.extraSpecialArgs = { inherit inputs unstable; };
-              home-manager.users.luan = import ./home/home.nix;
+              home-manager.users.luan = import ./home/hosts/arrow.nix;
             }
           ];
         };

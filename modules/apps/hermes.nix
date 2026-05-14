@@ -1,20 +1,22 @@
-{ config, ... }: {
-  services.hermes-agent = {
-    enable = true;
-    addToSystemPackages = true;
+{ config, lib, pkgs, ... }: {
+  options.my.apps.hermes.enable = lib.mkEnableOption "Hermes Agent Config";
 
-    extraDependencyGroups = [ "messaging" ];
-    
-    settings.model = {
-      provider = "lmstudio";
-      # Deixe em branco para auto-detectar o modelo carregado no LM Studio,
-      # ou coloque o nome exato: default = "lmstudio/nome-do-seu-modelo";
-      default = "lmstudio/auto";
-      base_url = "http://localhost:1234/v1";
-      context_length = 8192;
-      max_tokens = 1024; 
+  config = lib.mkIf config.my.apps.hermes.enable {
+    services.hermes-agent = {
+      enable = true;
+      addToSystemPackages = true;
+
+      extraDependencyGroups = [ "messaging" ];
+      
+      settings.model = {
+        provider = "lmstudio";
+        default = "lmstudio/auto";
+        base_url = "http://localhost:1234/v1";
+        context_length = 8192;
+        max_tokens = 1024; 
+      };
+
+      environmentFiles = [ "/var/lib/hermes/env" ];
     };
-
-    environmentFiles = [ "/var/lib/hermes/env" ];
   };
 }

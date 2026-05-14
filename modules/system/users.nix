@@ -1,27 +1,19 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  users.groups.luan = {};  # cria o grupo "luan"
+  options.my.system.users.enable = lib.mkEnableOption "Users Config";
 
-  users.users.luan = {
-    isNormalUser = true;
-    description = "Luan";
-    group = "luan";
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "usb" ];
-    home = "/home/luan";
-    homeMode = "700"; # Impede que outros usuários (como o convidado) acessem sua pasta
-    packages = with pkgs; [ tree ];
+  config = lib.mkIf config.my.system.users.enable {
+    users.groups.luan = {};
+
+    users.users.luan = {
+      isNormalUser = true;
+      description = "Luan";
+      group = "luan";
+      extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "usb" ];
+      home = "/home/luan";
+      homeMode = "700";
+      packages = with pkgs; [ tree ];
+    };
   };
-
-  # Guest User (Convidado)
-  #users.groups.convidado = {};
-
-  #users.users.convidado = {
-  #  isNormalUser = true;
-  #  description = "Convidado";
-  #  group = "convidado";
-  #  # Apenas grupos básicos, sem acesso root (wheel) ou dispositivos críticos
-  #  extraGroups = [ "networkmanager" "audio" "video" ];
-  #  home = "/home/convidado";
-  #};
 }

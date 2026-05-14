@@ -1,43 +1,48 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
+  imports = [
+    ./networking.nix
+    ./audio.nix
+    ./hyprland.nix
+    ./greetd.nix
+    ./users.nix
+    ./gvfs.nix
+    ./gaming.nix
 
-   imports = [
-    ./modules/system/common.nix
-    
-    ./modules/system/networking.nix
-    ./modules/system/audio.nix
-    ./modules/system/hyprland.nix
-    ./modules/system/greetd.nix
-    ./modules/system/users.nix
-    ./modules/system/gvfs.nix
-
-    ./modules/apps/core.nix
-    ./modules/apps/media.nix
-    ./modules/apps/dev.nix
-    ./modules/apps/browsers.nix
+    ../apps/core.nix
+    ../apps/media.nix
+    ../apps/dev.nix
+    ../apps/browsers.nix
+    ../apps/laptop.nix
+    ../apps/waydroid.nix
+    ../apps/hermes.nix
   ];
   
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-  };
+  options.my.system.core.enable = lib.mkEnableOption "Core System Config";
 
-  services.resolved.enable = true;
+  config = lib.mkIf config.my.system.core.enable {
+    boot.loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
 
-  nix.settings = {
+    services.resolved.enable = true;
+
+    nix.settings = {
       experimental-features = [ "nix-command" "flakes" ];
       accept-flake-config = true;
       auto-optimise-store = true;
     };
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 7d";
-  };
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
 
-  boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
-    
-  nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "25.11";
+    boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
+      
+    nixpkgs.config.allowUnfree = true;
+    system.stateVersion = "25.11"; # Retirado do common anterior
+  };
 }

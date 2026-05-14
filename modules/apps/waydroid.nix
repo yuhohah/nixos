@@ -1,19 +1,19 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
-  virtualisation.waydroid.enable = true;
-  virtualisation.waydroid.package = pkgs.waydroid-nftables;
+  options.my.apps.waydroid.enable = lib.mkEnableOption "Waydroid Config";
 
-  # Dependencies for waydroid-extras script (GAPPS/libhoudini)
-  environment.systemPackages = with pkgs; [
-    git
-    lzip
-    python3
-    curl
-    jq
-  ];
+  config = lib.mkIf config.my.apps.waydroid.enable {
+    virtualisation.waydroid.enable = true;
+    virtualisation.waydroid.package = pkgs.waydroid-nftables;
 
-  # Firewall rules for Waydroid (optional but often needed)
-  networking.firewall.trustedInterfaces = [ "waydroid0" ];
+    environment.systemPackages = with pkgs; [
+      git 
+      lzip 
+      python3 
+      curl 
+      jq
+    ];
 
-  
+    networking.firewall.trustedInterfaces = [ "waydroid0" ];
+  };
 }

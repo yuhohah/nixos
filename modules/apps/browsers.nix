@@ -1,19 +1,21 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
-  programs.firefox.enable = true;
+  options.my.apps.browsers.enable = lib.mkEnableOption "Browsers Config";
 
-  environment.systemPackages = with pkgs; [
-    chromium
-    vivaldi 
-    #tor-browser
-  ];
+  config = lib.mkIf config.my.apps.browsers.enable {
+    programs.firefox.enable = true;
 
-  nixpkgs.config = {
-    chromium = {
-      enableWideVine = true;  # Habilita suporte ao DRM
+    environment.systemPackages = with pkgs; [
+      chromium
+      vivaldi 
+    ];
+
+    nixpkgs.config = {
+      chromium = {
+        enableWideVine = true;
+      };
     };
+
+    environment.variables.CHROME_FLAGS = "--password-store=basic";
   };
-
-  environment.variables.CHROME_FLAGS = "--password-store=basic";
 }
-
