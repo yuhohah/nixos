@@ -5,6 +5,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/common.nix
+    ../../generation-tracker.nix
   ];
 
   my.system.core.enable = true;
