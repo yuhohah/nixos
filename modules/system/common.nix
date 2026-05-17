@@ -43,6 +43,6 @@
     boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
       
     nixpkgs.config.allowUnfree = true;
-    system.stateVersion = "25.11"; # Retirado do common anterior
+    system.stateVersion = "25.05"; # Retirado do common anterior
   };
 }

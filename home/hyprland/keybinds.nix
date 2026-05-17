@@ -116,6 +116,7 @@
       "$mod, code:16, Switch to workspace 7, workspace, 7"
       "$mod, code:17, Switch to workspace 8, workspace, 8"
       "$mod, code:18, Switch to workspace 9, workspace, 9"
+      "$mod, code:19, Switch to workspace 10, workspace, 10"
 
       # Move active window to workspace with SUPER + SHIFT + [1-9]
       "$mod SHIFT, code:10, Move window to workspace 1, movetoworkspace, 1"
