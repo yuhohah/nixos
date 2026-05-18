@@ -7,17 +7,15 @@
     settings = {
       general = {
         disable_loading_bar = false;
-        grace = 100000;  # Segundos de graça antes de pedir senha
+        grace = 100000;
         hide_cursor = true;
         no_fade_in = false;
       };
 
-      # ========================================
-      # BACKGROUND (Wallpaper desfocado)
-      # ========================================
+      # Background
       background = [
         {
-          path = "~/Pictures/wallpaper/1119050.jpg";  # Seu wallpaper
+          path = "~/Pictures/wallpaper/1119050.jpg";
           blur_passes = 2;
           blur_size = 1;
           noise = 0.0117;
@@ -28,9 +26,7 @@
         }
       ];
 
-      # ========================================
-      # INPUT FIELD (Campo de senha)
-      # ========================================
+      # Password field
       input-field = [
         {
           size = "300, 50";
@@ -40,8 +36,8 @@
           fade_on_empty = false;
           font_color = "rgb(cdd6f4)";
           inner_color = "rgb(30, 30, 46)";
-          # outer_color = "rgb(166, 227, 161)";  # verde (backup)
-          outer_color = "rgb(203, 166, 247)";     # mauve (accent)
+          # outer_color = "rgb(166, 227, 161)";  
+          outer_color = "rgb(203, 166, 247)";
           outline_thickness = 3;
           placeholder_text = "<span foreground='##a6adc8'>Senha...</span>";
           shadow_passes = 2;
@@ -50,14 +46,12 @@
         }
       ];
 
-      # ========================================
-      # IMAGE (Foto de perfil)
-      # ========================================
+      # User picture
       image = [
         {
           path = "~/Pictures/profile/perfil.png";
           border_size = 2;
-          border_color = "rgba(205, 214, 244, 0.75)";  # catppuccin text
+          border_color = "rgba(205, 214, 244, 0.75)"; 
           size = 95;
           rounding = -1;
           rotate = 0;
@@ -69,9 +63,6 @@
         }
       ];
 
-      # ========================================
-      # LABELS (Textos na tela)
-      # ========================================
       label = [
         # Relógio
         {
@@ -97,7 +88,7 @@
           valign = "center";
         }
         
-        # Nome do usuário
+        # Username
         {
           monitor = "";
           text = "$USER";
@@ -110,7 +101,7 @@
           valign = "center";
         }
         
-        # Status da bateria (se for notebook)
+        # Battery
         {
           monitor = "";
           text = "cmd[update:5000] echo \"<span foreground='##cba6f7'>󰁹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";

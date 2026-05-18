@@ -1,22 +1,19 @@
 { pkgs, ... }:
 
 {
-  # ========================================
-  # TEMA GTK (Gnome/Apps padrão)
-  # ========================================
   gtk = {
     enable = true;
     
     # Define o tema escuro
     colorScheme = "dark";
 
-    # Define o tema de ícones (opcional, mas recomendado para consistência)
+    # Icon Theme
     iconTheme = {
-      name = "Adwaita"; # ou Papirus-Dark, etc.
+      name = "Adwaita"; 
       package = pkgs.adwaita-icon-theme;
     };
 
-    # Força a preferência por tema escuro em arquivos de configuração
+    # Try dark mode
     gtk3.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1
@@ -30,21 +27,15 @@
     };
   };
 
-  # ========================================
-  # CONFIGURAÇÃO DCONF (Essencial para GTK4/Libadwaita)
-  # ========================================
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
     };
   };
 
-  # ========================================
-  # TEMA QT (KDE/Apps Qt)
-  # ========================================
   qt = {
     enable = true;
-    platformTheme.name = "gtk"; # Faz o Qt seguir o tema do GTK
+    platformTheme.name = "gtk";
     style.name = "adwaita-dark";
   };
 }

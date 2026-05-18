@@ -1,14 +1,14 @@
 {
   "meta": {
     "created_at": "2026-05-17T13:44:21Z",
-    "description": "NixOS generation tracker - commite este arquivo no git!"
+    "description": "NixOS generation tracker - Graveyard of Hosts!"
   },
   "hosts": {
     "nixos-btw": {
       "born_at": "2025-10-22T23:14:30Z",
-      "generations_count": 241,
-      "last_generation": 241,
-      "last_rebuild": "2026-05-18T00:42:22Z"
+      "generations_count": 246,
+      "last_generation": 246,
+      "last_rebuild": "2026-05-18T03:55:59Z"
     }
   },
   "graveyard": [
@@ -27,5 +27,5 @@
       "last_generation": 240
     }
   ],
-  "total": 720
+  "total": 725
 }

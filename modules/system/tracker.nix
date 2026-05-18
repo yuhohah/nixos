@@ -101,22 +101,22 @@ let
 
     echo ""
     echo "┌─────────────────────────────────────────┐"
-    echo "│         NixOS Generation Tracker         │"
+    echo "│         NixOS Generation Tracker        │"
     echo "├─────────────────────────────────────────┤"
-    printf "│  Host:          %-24s │\n" "$HOSTNAME"
-    printf "│  Nascido em:    %-24s │\n" "''${HOST_BIRTH:0:10}"
-    printf "│  Generation:    %-24s │\n" "#''${GEN_NUMBER}"
-    printf "│  +Delta:        %-24s │\n" "+''${DELTA}"
-    printf "│  Neste host:    %-24s │\n" "''${HOST_COUNT} generations"
+    printf "│  Host:          %-24s│\n" "$HOSTNAME"
+    printf "│  Since:         %-24s│\n" "''${HOST_BIRTH:0:10}"
+    printf "│  Generation:    %-24s│\n" "#''${GEN_NUMBER}"
+    printf "│  +Delta:        %-24s│\n" "+''${DELTA}"
+    printf "│  On this host:  %-24s│\n" "''${HOST_COUNT} generations"
     echo "├─────────────────────────────────────────┤"
-    printf "│  ★ TOTAL GLOBAL: %-23s │\n" "''${TOTAL} generations"
-    printf "│  Hosts vivos:   %-24s │\n" "$(echo "$UPDATED" | "$JQ" '.hosts | length')"
-    printf "│  Hosts mortos:  %-24s │\n" "''${GRAVEYARD_COUNT}"
+    printf "│  ★ TOTAL GEN:    %-23s│\n" "''${TOTAL} generations"
+    printf "│  Hosts alive:     %-24s│\n" "$(echo "$UPDATED" | "$JQ" '.hosts | length')"
+    printf "│  Hosts deceased:  %-24s│\n" "''${GRAVEYARD_COUNT}"
     echo "└─────────────────────────────────────────┘"
     echo ""
 
     # Hosts vivos
-    echo "Hosts ativos:"
+    echo "Hosts activos:"
     echo "$UPDATED" | "$JQ" -r '
       .hosts | to_entries[] |
       "  ● \(.key)  |  nascido: \(.value.born_at[:10])  |  \(.value.generations_count) generations"
@@ -144,13 +144,13 @@ let
     NOW=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
     if [[ ! -f "$DATA_FILE" ]]; then
-      echo "ERRO: $DATA_FILE não encontrado." >&2
+      echo "ERRO: $DATA_FILE not found." >&2
       exit 1
     fi
 
     EXISTS=$("$JQ" -r --arg h "$HOSTNAME" '.hosts[$h] != null' "$DATA_FILE")
     if [[ "$EXISTS" != "true" ]]; then
-      echo "ERRO: host '$HOSTNAME' não encontrado no JSON." >&2
+      echo "ERRO: host '$HOSTNAME' not found in JSON." >&2
       exit 1
     fi
 
@@ -169,8 +169,8 @@ let
       ' "$DATA_FILE")
 
     echo "$UPDATED" > "$DATA_FILE"
-    echo "✝ Host '$HOSTNAME' aposentado e movido para o cemitério."
-    echo "  Pode formatar agora. O histórico está salvo em $DATA_FILE"
+    echo "✝ Host '$HOSTNAME' deceased and moved to graveyard."
+    echo "  You can format now. The history is saved in $DATA_FILE"
   '';
 in
 {

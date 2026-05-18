@@ -6,20 +6,23 @@
   home.packages = with pkgs; [ brightnessctl networkmanagerapplet ];
 
   wayland.windowManager.hyprland = {
-  enable = true;
-  systemd.enable = true;  # opcional, mas recomendado
-  configType = "hyprlang";
-  # xwayland.enable = true;  # se precisar de X11 apps
+    enable = true;
+    systemd.enable = true;  # opcional, mas recomendado
+    configType = "hyprlang";
+    # xwayland.enable = true;  # se precisar de X11 apps
   };
 
   imports = [
     ./theme.nix
 
     #scripts
-    ../scripts/screenshot.nix
-    ../scripts/screensaver.nix
+    ./scripts/screenshot.nix
+    ./scripts/screensaver.nix
+    ./scripts/wallpaper.nix
   ];
 
+
+  wallpaper.dir = ../images/wallpaper;
 
   programs.zsh = {
     enable = true;
@@ -58,16 +61,12 @@
   programs.git = {
     enable = true;
     settings ={
-      user.name = "yuhohah";  # ← Mude aqui
+      user.name = "yuhohah";
       user.email = "luandepaulamota@hotmail.com";
     };
    
   };
 
-  # ========================================
-  # CONFIGURAÇÃO DO CURSOR
-  # ========================================
-  
   home.pointerCursor = {
     gtk.enable = true;
     x11.enable = true;
@@ -83,17 +82,5 @@
     XCURSOR_SIZE = "24";
     XCURSOR_THEME = "Bibata-Modern-Classic";  # Mude se escolher outro tema
   };
-
-  # Script de alerta de bateria
-  home.file.".local/bin/battery-alert" = {
-    source = ./scripts/battery-alert.sh;
-    executable = true;
-  };
-
-  # 3. Adicionar o diretório de scripts ao PATH
-  home.sessionPath = [ "$HOME/.local/bin" ];
-
-
-
 }
 

@@ -1,7 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # Waybar Configuration for Notebook
   programs.waybar = {
     enable = true;
     systemd.enable = true;

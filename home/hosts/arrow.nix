@@ -15,7 +15,6 @@
     
     # Apps
     ../alacritty/default.nix
-    # ../vesktop/config.nix # Desativado no laptop por padrão, descomente se quiser
     ../satty/config.nix
     ../fastfetch/default.nix
     ../vicinae/default.nix

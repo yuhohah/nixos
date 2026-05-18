@@ -22,35 +22,21 @@
       "$mod, T, togglefloating"
 
       # Screenshot
-      ", PRINT, exec, screenshot smart"           # Print = screenshot inteligente com editor
-      "SHIFT, PRINT, exec, /home/luan/.local/bin/screenshot region"     # Shift+Print = selecionar região
-      "CTRL, PRINT, exec, /home/luan/.local/bin/screenshot fullscreen"  # Ctrl+Print = tela cheia
-      "ALT, PRINT, exec, /home/luan/.local/bin/screenshot windows"      # Alt+Print = selecionar janela
+      ", PRINT, exec, screenshot smart"
 
-      #Change Wallpaper
-      "$mod, HOME, exec, /home/luan/.local/bin/wallpaper"
+      # Wallpaper
+      "$mod, HOME, exec, wallpaper"
 
       # Reload
       "$mod, R, exec, hyprctl reload"
 
-      # Sair
-      "$mod SHIFT, E, exec, hyprctl dispatch exit"
-
-      # Volume (pamixer)
-      ", XF86AudioRaiseVolume, exec, pamixer -i 5"
-      ", XF86AudioLowerVolume, exec, pamixer -d 5"
-      ", XF86AudioMute, exec, pamixer -t"
-
-      # Brilho
-      ", XF86MonBrightnessUp, exec, brightnessctl s +10%"
-      ", XF86MonBrightnessDown, exec, brightnessctl s 10%-"
+      # Exit
+      # "$mod SHIFT, E, exec, hyprctl dispatch exit"
 
       # Lock
       "$mod, L, exec, hyprlock"
 
-      # ========================================
       # CONTROLES DE NOTEBOOK
-      # ========================================
       
       # Volume
       ", XF86AudioRaiseVolume, exec, pamixer -i 5"
@@ -69,12 +55,6 @@
       # Lock screen (Fn+F10)
       ", XF86ScreenSaver, exec, hyprlock"
 
-      # Media controls
-      ", XF86AudioPlay, exec, playerctl play-pause"
-      ", XF86AudioPause, exec, playerctl play-pause"
-      ", XF86AudioNext, exec, playerctl next"
-      ", XF86AudioPrev, exec, playerctl previous"
-      ", XF86AudioStop, exec, playerctl stop"
     ];
 
     bindmd = [
@@ -84,9 +64,6 @@
       "$mod, mouse:273, Resize window, resizewindow"
     ];
 
-    # ----------------------------------------------------------
-    #  NOVAS KEYBINDINGS (com descrição via bindd)
-    # ----------------------------------------------------------
     bindd = [
       # Close windows
       "CTRL ALT, DELETE, Close all windows, exec, omarchy-hyprland-window-close-all"
@@ -95,9 +72,7 @@
       "$mod, J, Toggle window split, togglesplit"
       "$mod, P, Pseudo window, pseudo"
 
-      #"$mod, T, Toggle window floating/tiling, togglefloating"
       "$mod, F, Full screen, fullscreen, 0"
-      "$mod CTRL, F, Tiled full screen, fullscreenstate, 0 2"
       "$mod ALT, F, Full width, fullscreen, 1"
 
       # Move focus with SUPER + arrow keys
@@ -134,8 +109,6 @@
     
       # TAB between workspaces
       "$mod, TAB, Next workspace, workspace, e+1"
-      "$mod SHIFT, TAB, Previous workspace, workspace, e-1"
-      "$mod CTRL, TAB, Former workspace, workspace, previous"
 
       # Swap active window with neighbour
       "$mod SHIFT, LEFT, Swap window to the left, swapwindow, l"
@@ -145,9 +118,6 @@
 
       # Cycle through applications on active workspace
       "ALT, TAB, Cycle to next window, cyclenext"
-      "ALT SHIFT, TAB, Cycle to prev window, cyclenext, prev"
-      "ALT, TAB, Reveal active window on top, bringactivetotop"
-      "ALT SHIFT, TAB, Reveal active window on top, bringactivetotop"
 
       # Resize active window
       "$mod, code:20, Expand window left, resizeactive, -100 0"
@@ -158,29 +128,6 @@
       # Scroll through workspaces
       "$mod, mouse_down, Scroll active workspace forward, workspace, e+1"
       "$mod, mouse_up, Scroll active workspace backward, workspace, e-1"
-
-      # Toggle groups
-      "$mod, G, Toggle window grouping, togglegroup"
-      "$mod ALT, G, Move active window out of group, moveoutofgroup"
-
-      # Join groups
-      "$mod ALT, LEFT, Move window to group on left, moveintogroup, l"
-      "$mod ALT, RIGHT, Move window to group on right, moveintogroup, r"
-      "$mod ALT, UP, Move window to group on top, moveintogroup, u"
-      "$mod ALT, DOWN, Move window to group on bottom, moveintogroup, d"
-
-      # Navigate grouped windows
-      "$mod ALT, TAB, Next window in group, changegroupactive, f"
-      "$mod ALT SHIFT, TAB, Previous window in group, changegroupactive, b"
-      "$mod ALT, mouse_down, Next window in group, changegroupactive, f"
-      "$mod ALT, mouse_up, Previous window in group, changegroupactive, b"
-
-      # Activate group window by number
-      "$mod ALT, 1, Switch to group window 1, changegroupactive, 1"
-      "$mod ALT, 2, Switch to group window 2, changegroupactive, 2"
-      "$mod ALT, 3, Switch to group window 3, changegroupactive, 3"
-      "$mod ALT, 4, Switch to group window 4, changegroupactive, 4"
-      "$mod ALT, 5, Switch to group window 5, changegroupactive, 5"
 
       #Apps 
       "$mod, E, File manager, exec, -- nautilus --new-window"

@@ -1,20 +1,19 @@
 { config, pkgs, ... }:
 
 {
-  # Configuração da Waybar
   programs.waybar = {
     enable = true;
     systemd.enable = true;
-    style = ./style.css;  # Opcional: se quiser CSS separado
+    style = ./style.css;  
     settings = {
       mainBar = {
         layer = "top";
         position = "top";
-        height = 24;  # Aumentei um pouco para melhor visualização
+        height = 24;
         spacing = 4;
-        margin-top = 12;    # Espaço do topo
+        margin-top = 12;  
         margin-bottom = 0;
-        margin-left = 12;   # Espaço das laterais
+        margin-left = 12;  
         margin-right = 12;
 
         modules-left = [ "hyprland/workspaces" "mpris" ];

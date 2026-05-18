@@ -1,4 +1,3 @@
-# screenshot.nix
 { config, lib, pkgs, ... }:
 
 let
@@ -86,6 +85,6 @@ in
 {
   home.packages = [ screenshotScript ];
 
-  # Diretório de screenshots
+  # Screenshots directory
   home.file."Pictures/Screenshots/.keep".text = "";
 }

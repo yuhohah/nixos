@@ -44,7 +44,6 @@ let
     ];
   };
 
-  # Seleciona a config baseada no hostname
   listenerConfig = if hostname == "arrow" then arrow else nixos-btw;
   
 in
@@ -55,12 +54,12 @@ in
     settings = {
       general = {
         # Tempo antes de travar (em segundos)
-        lock_cmd = "pidof hyprlock || hyprlock";  # Evita múltiplas instâncias
-        before_sleep_cmd = "loginctl lock-session";  # Trava antes de suspender
-        after_sleep_cmd = "hyprctl dispatch dpms on";  # Liga tela após acordar
+        lock_cmd = "pidof hyprlock || hyprlock";  
+        before_sleep_cmd = "loginctl lock-session";  
+        after_sleep_cmd = "hyprctl dispatch dpms on"; 
       };
 
-      # Listeners - Ações baseadas em tempo de inatividade
+      # Listeners 
       listener = listenerConfig.listener;
     };
   };

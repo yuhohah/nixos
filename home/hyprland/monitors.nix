@@ -3,7 +3,6 @@
 let
   hostname = osConfig.networking.hostName;
 
-  # Configuração Padrão (Desktop/PC)
   nixos-btw = {
     monitor = [
       "HDMI-A-1,1920x1080@144,0x0,1"
@@ -17,10 +16,9 @@ let
     ];
   };
 
-  # Configuração do Notebook (Arrow)
   arrow = {
     monitor = [
-      #,preferred,auto,1" # Auto-detectar com scale 1
+      #,preferred,auto,1" 
       "eDP-1, 1920x1080, 0x0, 1"
       "HDMI-A-1,1920x1080@144,1920x0,1"
     ];
@@ -30,7 +28,6 @@ let
     ];
   };
 
-  # Seleciona a config baseada no hostname
   monitorConfig = if hostname == "arrow" then arrow else nixos-btw;
 
 in

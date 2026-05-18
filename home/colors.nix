@@ -1,7 +1,7 @@
 # cores do sistema – mude apenas este arquivo
 {
   myColors = {
-    # Fundos
+    # Backgrounds
     base00 = "1e1e2e";  # fundo geral (Catppuccin Mocha Base)
     base01 = "282846";  # superfície
     base02 = "45475a";  # hover
@@ -10,7 +10,7 @@
     text   = "cdd6f4";  # texto principal
     text-secondary = "a6adc8";  # texto secundário
 
-    # Cor de destaque principal
+    # Destaque principal
     accent = "cba6f7";  # mauve (cor principal do sistema)
     # accent = "a6e3a1";  # verde (alternativa)
 

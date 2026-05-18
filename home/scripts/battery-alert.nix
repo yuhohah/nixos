@@ -1,4 +1,3 @@
-# battery-alert.nix
 { config, lib, pkgs, ... }:
 
 let
@@ -20,12 +19,12 @@ let
         if [ "$STATUS" = "Discharging" ]; then
           if [ "$CAPACITY" -le 10 ]; then
             if ! grep -q "10" "$STATE_FILE"; then
-              ${pkgs.libnotify}/bin/notify-send -u critical "🪫 Bateria Crítica!" "Status: ''${CAPACITY}%"
+              ${pkgs.libnotify}/bin/notify-send -u critical "🪫 Battery Critical!" "Status: ''${CAPACITY}%"
               echo "10" > "$STATE_FILE"
             fi
           elif [ "$CAPACITY" -le 20 ]; then
             if ! grep -q "20" "$STATE_FILE"; then
-              ${pkgs.libnotify}/bin/notify-send -u normal "🔋 Bateria Baixa" "Status: ''${CAPACITY}%"
+              ${pkgs.libnotify}/bin/notify-send -u normal "🔋 Battery Low!" "Status: ''${CAPACITY}%"
               echo "20" > "$STATE_FILE"
             fi
           fi
@@ -41,10 +40,9 @@ in
 {
   home.packages = [ batteryAlert ];
 
-  # Inicia o monitor automaticamente com o login
   systemd.user.services.battery-alert = {
     Unit = {
-      Description = "Monitor de bateria";
+      Description = "Batery Monitor";
       After = [ "graphical-session.target" ];
     };
     Service = {

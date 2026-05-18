@@ -1,4 +1,3 @@
-# wallpaper.nix
 { config, lib, pkgs, ... }:
 
 let
@@ -30,7 +29,7 @@ in
   options.wallpaper = {
     dir = lib.mkOption {
       type = lib.types.path;
-      description = "Caminho para a pasta de wallpapers, relativo ao configuration.nix.";
+      description = "Wallpapers path, relative to configuration.nix.";
       example = lib.literalExpression "./wallpapers";
     };
   };
@@ -40,7 +39,7 @@ in
 
     systemd.user.services.wallpaper = {
       Unit = {
-        Description = "Wallpaper aleatório no login";
+        Description = "Random wallpaper on login";
         After = [ "graphical-session.target" ];
       };
       Service = {

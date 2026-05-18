@@ -70,6 +70,7 @@
       disable_hyprland_logo = true;
       animate_manual_resizes = true;
       animate_mouse_windowdragging = true;
+      vrr = 1;
     };
 
     input = {

@@ -1,4 +1,3 @@
-# screensaver.nix
 { config, lib, pkgs, ... }:
 
 let
@@ -30,5 +29,5 @@ in
   home.packages = [ terminalSaver runScreensaver ];
 
   # Alacritty Configuration for terminal-saver
-  home.file.".config/alacritty/screensaver.toml".source = ./alacritty/screensaver.toml;
+  home.file.".config/alacritty/screensaver.toml".source = ../alacritty/screensaver.toml;
 }
