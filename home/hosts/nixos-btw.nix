@@ -19,5 +19,8 @@
     ../satty/config.nix
     ../fastfetch/default.nix
     ../vicinae/default.nix
+
+    
+    
   ];
 }

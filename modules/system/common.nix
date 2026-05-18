@@ -9,6 +9,7 @@
     ./users.nix
     ./gvfs.nix
     ./gaming.nix
+    ./tracker.nix
 
     ../apps/core.nix
     ../apps/media.nix

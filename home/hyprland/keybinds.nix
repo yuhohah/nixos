@@ -22,7 +22,7 @@
       "$mod, T, togglefloating"
 
       # Screenshot
-      ", PRINT, exec, /home/luan/.local/bin/screenshot smart"           # Print = screenshot inteligente com editor
+      ", PRINT, exec, screenshot smart"           # Print = screenshot inteligente com editor
       "SHIFT, PRINT, exec, /home/luan/.local/bin/screenshot region"     # Shift+Print = selecionar região
       "CTRL, PRINT, exec, /home/luan/.local/bin/screenshot fullscreen"  # Ctrl+Print = tela cheia
       "ALT, PRINT, exec, /home/luan/.local/bin/screenshot windows"      # Alt+Print = selecionar janela

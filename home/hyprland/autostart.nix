@@ -10,7 +10,6 @@
       "mako"
       "hypridle"
       "hyprlock"
-      "battery-alert"
       "corectrl --minimize-systray"
     ];
   };

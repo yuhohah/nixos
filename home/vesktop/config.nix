@@ -1,10 +1,6 @@
 { config, pkgs, ... }:
 
-{
-  # ========================================
-  # CONFIGURAÇÃO DO VESKTOP
-  # ========================================
-  
+{ 
   # Configuração do Vesktop com flags corretas para Wayland
   home.file.".config/vesktop-flags.conf".text = ''
     --enable-features=WaylandWindowDecorations

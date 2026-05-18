@@ -8,11 +8,16 @@
   wayland.windowManager.hyprland = {
   enable = true;
   systemd.enable = true;  # opcional, mas recomendado
+  configType = "hyprlang";
   # xwayland.enable = true;  # se precisar de X11 apps
   };
 
   imports = [
     ./theme.nix
+
+    #scripts
+    ../scripts/screenshot.nix
+    ../scripts/screensaver.nix
   ];
 
 
@@ -79,49 +84,16 @@
     XCURSOR_THEME = "Bibata-Modern-Classic";  # Mude se escolher outro tema
   };
 
-  # ========================================
-  # CONFIGURAÇÃO DO SCRIPT DE SCREENSHOT
-  # ========================================
-  
-  # 1. Copiar o script para o home
-  home.file.".local/bin/screenshot" = {
-    source = ./scripts/screenshot.sh;
-    executable = true;
-  };
-
-  # Adicione junto com o script de screenshot
-  home.file.".local/bin/wallpaper" = {
-    source = ./scripts/wallpaper.sh;
-    executable = true;
-  };
-
   # Script de alerta de bateria
   home.file.".local/bin/battery-alert" = {
     source = ./scripts/battery-alert.sh;
     executable = true;
   };
 
-  # 2. Criar diretório de screenshots
-  home.file."Pictures/Screenshots/.keep".text = "";
-
   # 3. Adicionar o diretório de scripts ao PATH
   home.sessionPath = [ "$HOME/.local/bin" ];
 
-  # 1. O Script de Animação
-  home.file.".local/bin/term-saver" = {
-    source = ./scripts/term-saver.sh;
-    executable = true;
-  };
 
-  # 2. A Configuração Específica do Alacritty para Screensaver
-  # Baseado no seu arquivo screensaver.nix
-  home.file.".config/alacritty/screensaver.toml".source = ./alacritty/screensaver.toml;
-
-  # 3. Um script lançador para abrir o Alacritty com essa config
-  home.file.".local/bin/run-screensaver" = {
-    source = ./scripts/run-screensaver.sh;
-    executable = true;
-  };
 
 }
 

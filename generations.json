@@ -1,8 +1,31 @@
 {
   "meta": {
-    "created_at": "2026-01-01T00:00:00Z",
-    "description": "NixOS generation tracker - não delete este arquivo!"
+    "created_at": "2026-05-17T13:44:21Z",
+    "description": "NixOS generation tracker - commite este arquivo no git!"
   },
-  "hosts": {},
-  "total": 0
+  "hosts": {
+    "nixos-btw": {
+      "born_at": "2025-10-22T23:14:30Z",
+      "generations_count": 241,
+      "last_generation": 241,
+      "last_rebuild": "2026-05-18T00:42:22Z"
+    }
+  },
+  "graveyard": [
+    {
+      "name": "nixos-btw",
+      "born_at": "2025-10-22T23:14:30Z",
+      "died_at": "2026-05-17T13:44:30Z",
+      "generations_count": 239,
+      "last_generation": 239
+    },
+    {
+      "name": "nixos-btw",
+      "born_at": "2025-10-22T23:14:30Z",
+      "died_at": "2026-05-18T00:18:39Z",
+      "generations_count": 240,
+      "last_generation": 240
+    }
+  ],
+  "total": 720
 }

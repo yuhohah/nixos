@@ -34,7 +34,7 @@
 
     programs.corectrl = {
       enable = true;
-      gpuOverclock.enable = true;
+      #gpuOverclock.enable = true;
     };
 
     hardware.graphics = {
