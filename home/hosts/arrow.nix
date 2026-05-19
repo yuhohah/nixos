@@ -10,7 +10,7 @@
     ../hyprland/monitors.nix
     ../hyprland/hypridle.nix
     ../hyprland/hyprlock.nix
-    ../waybar/config.nix
+    ../waybar/notebook.nix
     ../mako/default.nix
     
     # Apps

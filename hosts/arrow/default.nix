@@ -6,6 +6,8 @@
     ./hardware-configuration.nix
     ../../modules/system/common.nix
   ];
+
+  generationTracker.configDir = "/home/luan/Configuration/nixos";
   
   my.system.core.enable = true;
   my.system.networking.enable = true;

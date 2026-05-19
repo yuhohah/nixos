@@ -24,7 +24,10 @@
 
   config = lib.mkIf config.my.system.core.enable {
     boot.loader = {
-      systemd-boot.enable = true;
+      systemd-boot = {
+        enable = true;
+        graceful = true; # Don't fail if EFI NVRAM is full (no space for new boot entry)
+      };
       efi.canTouchEfiVariables = true;
     };
 
@@ -35,6 +38,7 @@
       accept-flake-config = true;
       auto-optimise-store = true;
     };
+    
     nix.gc = {
       automatic = true;
       dates = "weekly";
