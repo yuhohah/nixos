@@ -40,7 +40,7 @@ let
     {
       "meta": {
         "created_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-        "description": "NixOS generation tracker - commite este arquivo no git!"
+        "description": "NixOS generation tracker - Graveyard of Hosts!"
       },
       "hosts": {},
       "graveyard": [],
@@ -110,8 +110,8 @@ let
     printf "│  On this host:  %-24s│\n" "''${HOST_COUNT} generations"
     echo "├─────────────────────────────────────────┤"
     printf "│  ★ TOTAL GEN:    %-23s│\n" "''${TOTAL} generations"
-    printf "│  Hosts alive:     %-24s│\n" "$(echo "$UPDATED" | "$JQ" '.hosts | length')"
-    printf "│  Hosts deceased:  %-24s│\n" "''${GRAVEYARD_COUNT}"
+    printf "│  Hosts alive:   %-24s│\n" "$(echo "$UPDATED" | "$JQ" '.hosts | length')"
+    printf "│  Hosts deceased:%-24s│\n" "''${GRAVEYARD_COUNT}"
     echo "└─────────────────────────────────────────┘"
     echo ""
 

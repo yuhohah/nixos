@@ -55,3 +55,12 @@ Instead of a traditional lock screen loop, the system utilizes a custom **Termin
 - **Clipboard Management:** Integrated `cliphist` with `wofi`, accessible directly through a custom Waybar module (📋).
 - **Automounting:** `udiskie` handles seamless USB/drive mounting with tray integration.
 - **Git:** User credentials and settings securely injected via Home Manager.
+
+## System Showcase
+
+The following screenshots illustrate the current state of the system, showcasing the "Frosted Glass" and "Pills" aesthetic, the custom Waybar configuration, and the dynamic tiling layout of Hyprland.
+
+![System View 3](images/system/Image3.png)
+![System View 4](images/system/image4.png)
+![System View 5](images/system/image5.png)
+![System View 6](images/system/image6.png)

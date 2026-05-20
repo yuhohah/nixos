@@ -130,9 +130,11 @@
       "$mod, mouse_up, Scroll active workspace backward, workspace, e-1"
 
       #Apps 
-      "$mod, E, File manager, exec, -- nautilus --new-window"
+      "$mod, E, File manager, exec, nautilus --new-window"
       "$mod, B, Browser, exec, chromium"
       "$mod SHIFT, B, Browser (private), exec, chromium --incognito"
+      "$mod, A, Antigravity, exec, antigravity"
+      "$mod, C, VSCODE, exec, code"
       "$mod, code:34, Activity, exec, alacritty -e btop"
       "$mod SHIFT, O, Obsidian, exec, obsidian -disable-gpu"
       "$mod SHIFT, M, Music, exec, spotify"

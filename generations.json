@@ -6,26 +6,9 @@
   "hosts": {
     "nixos-btw": {
       "born_at": "2025-10-22T23:14:30Z",
-      "generations_count": 246,
-      "last_generation": 246,
-      "last_rebuild": "2026-05-18T03:55:59Z"
+      "generations_count": 251,
+      "last_generation": 251,
+      "last_rebuild": "2026-05-19T23:14:08Z"
     }
-  },
-  "graveyard": [
-    {
-      "name": "nixos-btw",
-      "born_at": "2025-10-22T23:14:30Z",
-      "died_at": "2026-05-17T13:44:30Z",
-      "generations_count": 239,
-      "last_generation": 239
-    },
-    {
-      "name": "nixos-btw",
-      "born_at": "2025-10-22T23:14:30Z",
-      "died_at": "2026-05-18T00:18:39Z",
-      "generations_count": 240,
-      "last_generation": 240
-    }
-  ],
-  "total": 725
+  }
 }
