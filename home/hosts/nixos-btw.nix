@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 {
   imports = [
     ../common.nix
@@ -15,12 +15,16 @@
     
     # Apps
     ../alacritty/default.nix
-    ../vesktop/config.nix    
+    ../vesktop/config.nix
     ../satty/config.nix
     ../fastfetch/default.nix
     ../vicinae/default.nix
 
-    
-    
+    inputs.zen-browser.homeModules.twilight-official
   ];
+
+  programs.zen-browser = {
+    enable = true;
+    setAsDefaultBrowser = true;
+  };
 }

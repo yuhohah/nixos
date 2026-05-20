@@ -1,5 +1,3 @@
-Configuration for my personal system, utilizing hyprland, waybar, micromamba, vicinae, fastfetch.
-
 # System Overview
 
 This document provides a detailed explanation of the NixOS configuration, including system architecture, visual aesthetics, and unique custom features.

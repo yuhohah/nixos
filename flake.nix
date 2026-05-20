@@ -8,6 +8,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     vicinae.url = "github:vicinaehq/vicinae";
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hermes-agent, ... }@inputs:

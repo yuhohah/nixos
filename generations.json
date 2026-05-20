@@ -6,9 +6,11 @@
   "hosts": {
     "nixos-btw": {
       "born_at": "2025-10-22T23:14:30Z",
-      "generations_count": 251,
-      "last_generation": 251,
-      "last_rebuild": "2026-05-19T23:14:08Z"
+      "generations_count": 252,
+      "last_generation": 252,
+      "last_rebuild": "2026-05-20T03:54:28Z"
     }
-  }
+  },
+  "graveyard": [],
+  "total": 1
 }
