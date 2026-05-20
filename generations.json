@@ -3,14 +3,15 @@
     "created_at": "2026-05-17T13:44:21Z",
     "description": "NixOS generation tracker - Graveyard of Hosts!"
   },
-  "hosts": {
-    "nixos-btw": {
+  "hosts": {},
+  "graveyard": [
+    {
+      "name": "nixos-btw",
       "born_at": "2025-10-22T23:14:30Z",
+      "died_at": "2026-05-20T05:27:23Z",
       "generations_count": 252,
-      "last_generation": 252,
-      "last_rebuild": "2026-05-20T03:54:28Z"
+      "last_generation": 252
     }
-  },
-  "graveyard": [],
-  "total": 1
+  ],
+  "total": 252
 }
