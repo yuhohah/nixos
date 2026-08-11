@@ -16,6 +16,7 @@
   my.system.greetd.enable = true;
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
+  my.system.gaming.enable = true;
   
   my.apps.laptop.enable = true;
   my.apps.core.enable = true;

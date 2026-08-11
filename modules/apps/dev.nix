@@ -6,12 +6,15 @@
     environment.systemPackages = with pkgs; [
       vscode 
       obsidian 
-      antigravity 
-      godot 
-      lua 
-      love 
-      android-studio 
-      lmstudio
+      antigravity-ide 
+      docker-compose
+      #godot 
+      #lua 
+      #love 
+      #android-studio 
+      #lmstudio
     ];
+
+    virtualisation.docker.enable = true;
   };
 }

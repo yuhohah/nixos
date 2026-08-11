@@ -69,7 +69,7 @@
       "CTRL ALT, DELETE, Close all windows, exec, omarchy-hyprland-window-close-all"
 
       # Control tiling
-      "$mod, J, Toggle window split, togglesplit"
+      # "$mod, J, Toggle window split, togglesplit"
       "$mod, P, Pseudo window, pseudo"
 
       "$mod, F, Full screen, fullscreen, 0"
@@ -133,7 +133,7 @@
       "$mod, E, File manager, exec, nautilus --new-window"
       "$mod, B, Browser, exec, chromium"
       "$mod SHIFT, B, Browser (private), exec, chromium --incognito"
-      "$mod, A, Antigravity, exec, antigravity"
+      "$mod, A, Antigravity, exec, antigravity-ide"
       "$mod, C, VSCODE, exec, code"
       "$mod, code:34, Activity, exec, alacritty -e btop"
       "$mod SHIFT, O, Obsidian, exec, obsidian -disable-gpu"

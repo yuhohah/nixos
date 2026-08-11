@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 {
   imports = [
     ../common.nix
@@ -21,5 +21,8 @@
 
     #scripts
     ../scripts/battery-alert.nix
+
+    inputs.zen-browser.homeModules.twilight-official
+
   ];
 }

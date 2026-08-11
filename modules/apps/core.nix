@@ -43,6 +43,7 @@
       
       libratbag
       piper 
+      aisleriot
       
       #Lixo legal
       fastfetch
