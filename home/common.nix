@@ -8,7 +8,7 @@
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;  # opcional, mas recomendado
-    configType = "hyprlang";
+    configType = "lua";
     # xwayland.enable = true;  # se precisar de X11 apps
   };
 

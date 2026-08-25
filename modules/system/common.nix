@@ -17,7 +17,6 @@
     ../apps/browsers.nix
     ../apps/laptop.nix
     ../apps/waydroid.nix
-    ../apps/hermes.nix
   ];
   
   options.my.system.core.enable = lib.mkEnableOption "Core System Config";

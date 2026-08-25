@@ -8,7 +8,8 @@
       obsidian 
       antigravity-ide 
       docker-compose
-      #godot 
+      kitty      
+      godot 
       #lua 
       #love 
       #android-studio 
@@ -16,5 +17,6 @@
     ];
 
     virtualisation.docker.enable = true;
+    programs.nix-ld.enable = true;
   };
 }

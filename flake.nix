@@ -7,11 +7,10 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     vicinae.url = "github:vicinaehq/vicinae";
-    hermes-agent.url = "github:NousResearch/hermes-agent";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, hermes-agent, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       unstable = import nixpkgs-unstable {
@@ -26,7 +25,6 @@
           specialArgs = { inherit inputs unstable; hostName = "nixos-btw";};
           modules = [
             ./hosts/nixos-btw/default.nix
-            hermes-agent.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -43,7 +41,6 @@
           specialArgs = { inherit inputs unstable; hostName = "arrow";};
           modules = [
             ./hosts/arrow/default.nix
-            hermes-agent.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

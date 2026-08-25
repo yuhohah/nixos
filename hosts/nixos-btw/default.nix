@@ -23,7 +23,6 @@
   my.apps.dev.enable = true;
   my.apps.browsers.enable = true;
   my.apps.waydroid.enable = true;
-  my.apps.hermes.enable = true;
 
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;

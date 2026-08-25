@@ -18,12 +18,13 @@
 
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "battery" "network" "tray" ];
+        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "battery" "memory" "disk" "network" "tray" ];
 
         # Workspaces
         "hyprland/workspaces" = {
           disable-scroll = true;
           all-outputs = true;
+          on-click = "activate";
           format = "{icon}";
           format-icons = {
             "1" = "1";
@@ -111,6 +112,22 @@
           tooltip-format-disconnected = "Disconnected";
           max-length = 50;
           on-click = "alacritty -e nmtui";
+        };
+
+        "memory" = {
+          "format"= "mem: {used:0.1f}G";
+          "tooltip"= true;
+          "tooltip-format" = "RAM: Used {used:0.1f}G / Free {total:0.1f}G";
+          "interval"= 4;
+        };
+
+        "disk" = {
+          "interval"= 30;
+          "unit"= "GB";
+          "format"= "disk: {specific_used:0.2f}G";
+          "path"= "/";
+          "tooltip"= true;
+          "tooltip-format"= "Root: Used {specific_used:0.2f}G / free {specific_free:0.2f}G";
         };
 
         # Tray
