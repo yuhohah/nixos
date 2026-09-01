@@ -18,7 +18,7 @@
 @define-color lavender #b4befe;
 @define-color blue #89b4fa;
 @define-color teal #94e2d5;
-@define-color green #cba6f7;
+@define-color green #a6e3a1;
 @define-color yellow #f9e2af;
 @define-color peach #fab387;
 @define-color red #f38ba8;
@@ -37,12 +37,15 @@ window#waybar {
 tooltip {
     background-color: @mantle;
     border: 1px solid @surface0;
-    border-radius: 8px;
-    padding: 6px 10px;
+    border-radius: 12px;
+    padding: 12px 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 tooltip label {
     color: @text;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 15px;
 }
 
 menu {
@@ -65,33 +68,64 @@ menu menuitem:hover {
 
 /* ---------- shared module pill ---------- */
 
-#workspaces,
 #clock,
 #pulseaudio,
+#backlight,
 #battery,
 #network,
 #cpu,
 #memory,
+#disk,
+#custom-clipboard,
 #tray {
+    background-color: @mantle;
+    border: 1px solid @surface0;
     color: @text;
     padding: 4px 12px;
     margin: 4px 3px;
     border-radius: 10px;
+    transition: all 0.2s ease-in-out;
 }
 
-/* ---------- workspaces ---------- */
+#clock:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover,
+#network:hover,
+#cpu:hover,
+#memory:hover,
+#disk:hover,
+#custom-clipboard:hover,
+#tray:hover {
+    background-color: @surface0;
+    border-color: @surface1;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
 
-#workspaces {
-    padding: 2px 6px;
+/* ---------- workspaces & group-workspaces ---------- */
+
+#workspaces,
+#group-workspaces {
+    background-color: @mantle;
+    border: 1px solid @surface0;
+    padding: 2px 4px;
+    margin: 4px 3px;
+    border-radius: 10px;
 }
 
 #workspaces button {
     padding: 2px 8px;
     margin: 2px;
-    border-radius: 8px;
+    border-radius: 6px;
     color: @subtext1;
-    font-size: 20px;
+    font-size: 14px;
+    font-weight: bold;
     transition: all 0.2s ease-in-out;
+}
+
+#workspaces button:hover {
+    background-color: @surface0;
+    color: @text;
 }
 
 #workspaces button.empty {
@@ -99,12 +133,65 @@ menu menuitem:hover {
 }
 
 #workspaces button.active {
-    color: @mauve;
+    background-color: @mauve;
+    color: @crust;
     font-weight: bold;
+    border-radius: 6px;
+    box-shadow: 0 0 6px rgba(203, 166, 247, 0.4);
 }
 
 #workspaces button.urgent {
     background-color: @red;
+    color: @crust;
+    border-radius: 6px;
+}
+
+/* Custom workspace buttons (Lua mode) */
+#custom-ws1,
+#custom-ws2,
+#custom-ws3,
+#custom-ws4,
+#custom-ws5,
+#custom-ws6,
+#custom-ws7,
+#custom-ws8,
+#custom-ws9,
+#custom-ws10 {
+    padding: 2px 8px;
+    margin: 2px 1px;
+    border-radius: 6px;
+    color: @subtext1;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s ease-in-out;
+}
+
+#custom-ws1:hover,
+#custom-ws2:hover,
+#custom-ws3:hover,
+#custom-ws4:hover,
+#custom-ws5:hover,
+#custom-ws6:hover,
+#custom-ws7:hover,
+#custom-ws8:hover,
+#custom-ws9:hover,
+#custom-ws10:hover {
+    background-color: @mauve;
+    color: @crust;
+    box-shadow: 0 0 6px rgba(203, 166, 247, 0.4);
+}
+
+#custom-ws1:active,
+#custom-ws2:active,
+#custom-ws3:active,
+#custom-ws4:active,
+#custom-ws5:active,
+#custom-ws6:active,
+#custom-ws7:active,
+#custom-ws8:active,
+#custom-ws9:active,
+#custom-ws10:active {
+    background-color: @lavender;
     color: @crust;
 }
 
@@ -113,6 +200,12 @@ menu menuitem:hover {
 #clock {
     color: @blue;
     font-weight: bold;
+}
+
+#clock:hover {
+    background-color: @surface0;
+    border-color: @blue;
+    box-shadow: 0 0 8px rgba(137, 180, 250, 0.3);
 }
 
 /* ---------- pulseaudio ---------- */
@@ -125,22 +218,38 @@ menu menuitem:hover {
     color: @overlay0;
 }
 
+/* ---------- backlight ---------- */
+
+#backlight {
+    color: @yellow;
+}
+
 /* ---------- battery ---------- */
 
 #battery {
-    color: @green;
+    color: @teal;
 }
 
-#battery.charging {
-    color: @teal;
+#battery.charging,
+#battery.plugged {
+    color: @green;
 }
 
 #battery.warning:not(.charging) {
     color: @yellow;
+    border-color: @yellow;
 }
 
 #battery.critical:not(.charging) {
     color: @red;
+    border-color: @red;
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0.5;
+    }
 }
 
 /* ---------- network ---------- */
@@ -151,9 +260,10 @@ menu menuitem:hover {
 
 #network.disconnected {
     color: @red;
+    border-color: @red;
 }
 
-/* ---------- cpu / memory ---------- */
+/* ---------- cpu / memory / disk ---------- */
 
 #cpu {
     color: @mauve;
@@ -161,6 +271,16 @@ menu menuitem:hover {
 
 #memory {
     color: @lavender;
+}
+
+#disk {
+    color: @teal;
+}
+
+/* ---------- custom clipboard ---------- */
+
+#custom-clipboard {
+    color: @mauve;
 }
 
 /* ---------- tray ---------- */
@@ -183,7 +303,5 @@ menu menuitem:hover {
     background-repeat: no-repeat;
     background-position: left center;
     background-size: 18px 18px;
-    /* Adjust size to fit your bar height */
     padding-left: 24px;
-    /* Adjust based on icon size + desired gap */
 }

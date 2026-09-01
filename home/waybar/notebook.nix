@@ -18,7 +18,7 @@
 
         modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
-        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "battery" "memory" "disk" "network" "tray" ];
+        modules-right = [ "custom/clipboard" "pulseaudio" "backlight" "battery" "cpu" "memory" "network" "tray" ];
 
         # Workspaces
         "hyprland/workspaces" = {
@@ -45,7 +45,7 @@
           interval = 1;
           format = "{:%H:%M:%S}";
           format-alt = "{:%A, %d de %B de %Y}";
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
+          tooltip-format = "<tt><span size='13pt' font='JetBrainsMono Nerd Font'>{calendar}</span></tt>";
           calendar = {
             mode = "month";
             mode-mon-col = 3;
@@ -53,12 +53,17 @@
             on-scroll = 1;
             on-click-right = "mode";
             format = {
-              months = "<span color='#f5e0dc'><b>{}</b></span>";
-              days = "<span color='#cdd6f4'><b>{}</b></span>";
+              months = "<span color='#cba6f7'><b>{}</b></span>";
+              days = "<span color='#cdd6f4'>{}</span>";
               weeks = "<span color='#94e2d5'><b>W{}</b></span>";
               weekdays = "<span color='#f9e2af'><b>{}</b></span>";
-              today = "<span color='#cba6f7'><b><u>{}</u></b></span>";
+              today = "<span color='#11111b' background='#cba6f7'><b>{}</b></span>";
             };
+          };
+          actions = {
+            on-click-right = "mode";
+            on-scroll-up = "shift_up";
+            on-scroll-down = "shift_down";
           };
         };
 
@@ -121,13 +126,12 @@
           "interval"= 4;
         };
 
-        "disk" = {
-          "interval"= 30;
-          "unit"= "GB";
-          "format"= "disk: {specific_used:0.2f}G";
-          "path"= "/";
-          "tooltip"= true;
-          "tooltip-format"= "Root: Used {specific_used:0.2f}G / free {specific_free:0.2f}G";
+        "cpu" = {
+          interval = 2;
+          format = "cpu: {usage}%";
+          tooltip = true;
+          tooltip-format = "CPU Usage: {usage}%\nCores: {cores}";
+          on-click = "alacritty -e btop";
         };
 
         # Tray

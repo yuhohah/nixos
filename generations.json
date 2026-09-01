@@ -9,16 +9,14 @@
       "generations_count": 162,
       "last_generation": 162,
       "last_rebuild": "2026-08-25T18:33:20Z"
+    },
+    "nixos-btw": {
+      "born_at": "2025-10-22T23:14:30Z",
+      "generations_count": 268,
+      "last_generation": 268,
+      "last_rebuild": "2026-09-01T20:25:10Z"
     }
   },
-  "graveyard": [
-    {
-      "name": "nixos-btw",
-      "born_at": "2025-10-22T23:14:30Z",
-      "died_at": "2026-05-20T05:27:23Z",
-      "generations_count": 252,
-      "last_generation": 252
-    }
-  ],
-  "total": 414
+  "graveyard": [],
+  "total": 430
 }
