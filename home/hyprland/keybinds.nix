@@ -79,6 +79,8 @@ in
       hl.bind("${mod} + code:34", hl.dsp.exec_cmd("${terminal} -e btop"))
       hl.bind("${mod} + SHIFT + O", hl.dsp.exec_cmd("obsidian -disable-gpu"))
       hl.bind("${mod} + SHIFT + M", hl.dsp.exec_cmd("spotify"))
+      hl.bind("${mod} + V", hl.dsp.exec_cmd("vesktop"))
+      hl.bind("${mod} + S", hl.dsp.exec_cmd("steam"))
 
       -- Evento de tampa (Lid Switch)
       hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd("loginctl lock-session"), { locked = true })

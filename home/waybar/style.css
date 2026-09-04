@@ -30,8 +30,8 @@
 }
 
 window#waybar {
-    background-color: @base;
-    border-bottom: 1px solid @teal;
+    background-color: transparent;
+    border-bottom: none;
 }
 
 tooltip {
