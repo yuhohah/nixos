@@ -11,6 +11,7 @@
     ../hyprland/hypridle.nix
     ../hyprland/hyprlock.nix
     ../waybar/config.nix
+    ../quickshell/default.nix
     ../mako/default.nix
     
     # Apps

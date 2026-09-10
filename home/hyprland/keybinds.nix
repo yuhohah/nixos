@@ -23,6 +23,7 @@ in
       hl.bind("${mod} + HOME", hl.dsp.exec_cmd("wallpaper"))
       hl.bind("${mod} + R", hl.dsp.exec_cmd("hyprctl reload"))
       hl.bind("${mod} + L", hl.dsp.exec_cmd("hyprlock"))
+      hl.bind("${mod} + ALT + Q", hl.dsp.exec_cmd("quickshell"))
       
       -- Controles de Notebook
       hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"), { locked = true, repeating = true })

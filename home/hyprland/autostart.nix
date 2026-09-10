@@ -16,6 +16,7 @@
         hl.exec_cmd("hypridle")
         hl.exec_cmd("hyprlock")
         hl.exec_cmd("corectrl --minimize-systray")
+        hl.exec_cmd("quickshell")
       end)
     '';
   };
