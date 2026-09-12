@@ -1,6 +1,19 @@
-{ config, pkgs, ... }:
+{ config, pkgs, osConfig ? {}, lib, ... }:
 
 let
+  hostname = osConfig.networking.hostName or "nixos-btw";
+
+  hostShellJson =
+    if hostname == "arrow"
+    then ./hosts/arrow/shell.json
+    else ./hosts/nixos-btw/shell.json;
+
+  quickshellConfig = pkgs.runCommand "quickshell-config" {} ''
+    mkdir -p $out
+    cp -r ${./src}/* $out/
+    chmod -R u+w $out
+    cp -f ${hostShellJson} $out/shell.json
+  '';
   quickshellToggle = pkgs.writeShellScriptBin "quickshell-toggle" ''
     if pgrep -f "quickshell" > /dev/null 2>&1; then
       pkill -f "quickshell"
@@ -635,5 +648,5 @@ in
     displayTextSize
   ];
 
-  xdg.configFile."quickshell".source = ./src;
+  xdg.configFile."quickshell".source = quickshellConfig;
 }

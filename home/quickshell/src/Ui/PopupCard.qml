@@ -14,7 +14,7 @@ PopupWindow {
   property int contentWidth: Style.space(280)
   property int contentHeight: Style.space(200)
   property color borderColor: Color.popups.border
-  property var borderSpec: Border.localOrSurfaceSpec("popups", "border", borderColor, Color.popups.border, Math.max(1, Style.space(2)))
+  property var borderSpec: Border.localOrSurfaceSpec("popups", "border", borderColor, Color.popups.border, 1)
   property bool open: false
   property bool centerOnBar: false
   // "click" — uses HyprlandFocusGrab so clicking outside dismisses the popup.
@@ -153,7 +153,7 @@ PopupWindow {
     color: Color.popups.background
     borderSpec: root.borderSpec
     padding: root.padding
-    radius: Style.cornerRadius
+    radius: Math.max(14, Style.cornerRadius)
     opacity: root.open ? 1.0 : 0
 
     Behavior on opacity {

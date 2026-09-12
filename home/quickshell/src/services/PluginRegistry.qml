@@ -146,8 +146,9 @@ QtObject {
   //     silently make `omarchy launch bar-settings` a no-op. Turning one off
   //     is therefore recorded the other way round, in `disabledPlugins[]`.
   function isEnabled(id) {
-    var key = String(id)
-    var manifest = installedPlugins[key]
+    var raw = String(id || "")
+    var key = Util.canonicalWidgetId(raw)
+    var manifest = installedPlugins[raw] || installedPlugins["omarchy." + key] || installedPlugins[key]
     var config = shellConfigProvider ? shellConfigProvider() : null
     if (manifest) {
       if (Array.isArray(manifest.kinds) && manifest.kinds.indexOf("bar") !== -1) {
@@ -155,21 +156,24 @@ QtObject {
         if (Util.isPlainObject(config) && Util.isPlainObject(config.bar))
           selectedBar = Util.canonicalWidgetId(String(config.bar.id || ""))
         if (!selectedBar) selectedBar = "omarchy.bar"
-        return selectedBar === key
+        return selectedBar === manifest.id || selectedBar === key
       }
-      if (isDisabled(config, key)) return false
+      if (isDisabled(config, key) || isDisabled(config, manifest.id)) return false
       if (manifest.__isFirstParty) return true
     }
-    return findEntryLocation(config, key).found
+    return findEntryLocation(config, key).found || findEntryLocation(config, raw).found
   }
 
   function isDisabled(config, id) {
+    var raw = String(id || "")
+    var key = Util.canonicalWidgetId(raw)
     return Util.isPlainObject(config) && Array.isArray(config.disabledPlugins)
-      && config.disabledPlugins.indexOf(Util.canonicalWidgetId(String(id))) !== -1
+      && (config.disabledPlugins.indexOf(key) !== -1 || config.disabledPlugins.indexOf(raw) !== -1 || config.disabledPlugins.indexOf("omarchy." + key) !== -1)
   }
 
   function resolveEnabledId(id) {
-    var key = Util.canonicalWidgetId(String(id || ""))
+    var raw = String(id || "")
+    var key = Util.canonicalWidgetId(raw)
     // Callers keep using the built-in id after cloning; the enabled local
     // manifest is the implementation that should receive the call.
     for (var candidate in installedPlugins) {
@@ -178,7 +182,10 @@ QtObject {
       if (metadata && String(metadata.clonedFrom || "") === key && isEnabled(candidate))
         return candidate
     }
-    return key
+    if (installedPlugins[raw]) return raw
+    if (installedPlugins["omarchy." + key]) return "omarchy." + key
+    if (installedPlugins[key]) return key
+    return raw
   }
 
   // A bar widget is on when it sits in the bar, whoever shipped it. That is a
@@ -478,9 +485,10 @@ QtObject {
       console.warn("PluginRegistry.setEnabled called before shellConfigMutator wired")
       return false
     }
-    var manifest = installedPlugins[key]
+    var raw = String(id || "")
+    var manifest = installedPlugins[raw] || installedPlugins["omarchy." + key] || installedPlugins[key]
     if (value && !manifest) {
-      console.warn("PluginRegistry.setEnabled: unknown plugin " + key)
+      console.warn("PluginRegistry.setEnabled: unknown plugin " + id)
       return false
     }
     var isBarOption = manifest && Array.isArray(manifest.kinds) && manifest.kinds.indexOf("bar") !== -1

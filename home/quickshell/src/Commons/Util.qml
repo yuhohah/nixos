@@ -72,7 +72,9 @@ QtObject {
   }
 
   function canonicalWidgetId(id) {
-    return String(id || "")
+    var s = String(id || "")
+    if (s.indexOf("omarchy.") === 0) return s.substring(8)
+    return s
   }
 
   // Best-effort base64 decode. Returns "" on parse failure rather than

@@ -28,7 +28,7 @@
         },
 
         decoration = {
-          rounding = 0,
+          rounding = 12,
           active_opacity = 0.8,
           inactive_opacity = 0.65,
           fullscreen_opacity = 1.0,

@@ -1,49 +1,155 @@
 { config, pkgs, ... }:
 
 {
-  xdg.configFile."vicinae/settings.json".force = true;
-  xdg.configFile."vicinae/settings.json".text = builtins.toJSON {
-    theme = {
-      dark = {
-        name = "nixos-custom";
-        icon_theme = "auto";
+  # NOTE: this module must come from vicinae's flake, e.g. in your flake.nix:
+  #
+  #   inputs.vicinae.url = "github:vicinaehq/vicinae";
+  #
+  #   home-manager.users.<you>.imports = [
+  #     inputs.vicinae.homeManagerModules.default
+  #     ./default.nix   # this file
+  #   ];
+  #
+  # Also add the Cachix cache so you don't have to build from source
+  # (put this in your flake.nix or /etc/nix/nix.conf):
+  #
+  #   extra-substituters = [ "https://vicinae.cachix.org" ];
+  #   extra-trusted-public-keys = [ "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc=" ];
+
+  programs.vicinae = {
+    enable = true;
+    # package = pkgs.vicinae; # uncomment to use the nixpkgs build instead of the flake's
+
+    systemd = {
+      enable = true;   # run vicinae as a systemd user service
+      autoStart = true;
+    };
+
+    settings = {
+      theme = {
+        dark = {
+          name = "nixos-custom";
+          icon_theme = "auto";
+        };
+        light = {
+          name = "nixos-custom";
+          icon_theme = "auto";
+        };
       };
-      light = {
-        name = "nixos-custom";
-        icon_theme = "auto";
+
+      launcher_window = {
+        rounding = 12;
+        material = "auto";
+        compact_mode.enabled = true;
+        client_side_decorations = {
+          enabled = true;
+          border_width = 1;
+          shadow_size = 12;
+        };
+        layer_shell = {
+          enabled = true;
+          keyboard_interactivity = "exclusive";
+          layer = "top";
+        };
+      };
+
+      favorites = [ ];
+      fallbacks = [ ];
+
+      providers = {
+        "calculator".enabled = true;
+        "manage-shortcuts".enabled = false;
+        "files".enabled = false;
+        "raycast-compat".enabled = false;
+        "@knoopx/store.vicinae.nix".enabled = false;
       };
     };
-    launcher_window = {
-      client_side_decorations = {
-        enabled = true;
-        rounding = 12;
-        border_width = 2;
+
+    # Vicinae's own HM module writes this to
+    # ~/.config/vicinae/themes/nixos-custom.toml for you.
+    themes = {
+      nixos-custom = {
+        meta = {
+          name = "nixos-custom";
+          description = "Custom theme for NixOS matching Quickshell Catppuccin Mocha style";
+          variant = "dark";
+          inherits = "vicinae-dark";
+        };
+
+        colors = {
+          core = {
+            accent = "#cba6f7";
+            accent_foreground = "#11111b";
+            background = "#1e1e2e";
+            foreground = "#cdd6f4";
+            secondary_background = "#181825";
+            border = "#313244";
+          };
+
+          main_window = {
+            border = "#313244";
+            footer.background = "#181825";
+          };
+
+          settings_window.border = "#313244";
+
+          accents = {
+            blue = "#89b4fa";
+            green = "#a6e3a1";
+            magenta = "#f5c2e7";
+            orange = "#fab387";
+            purple = "#cba6f7";
+            red = "#f38ba8";
+            yellow = "#f9e2af";
+            cyan = "#94e2d5";
+          };
+
+          text = {
+            default = "#cdd6f4";
+            muted = "#6c7086";
+            danger = "#f38ba8";
+            success = "#a6e3a1";
+            placeholder = "#6c7086";
+            selection = {
+              background = "#cba6f7";
+              foreground = "#11111b";
+            };
+          };
+
+          input = {
+            border = "#313244";
+            border_focus = "#cba6f7";
+            border_error = "#f38ba8";
+          };
+
+          button.primary = {
+            background = "#313244";
+            foreground = "#cdd6f4";
+            hover.background = "#45475a";
+            focus.outline = "#cba6f7";
+          };
+
+          list.item = {
+            hover = {
+              foreground = "#cdd6f4";
+              secondary_foreground = "#a6adc8";
+            };
+            selection = {
+              background = "#313244";
+              foreground = "#cdd6f4";
+              secondary_background = "#313244";
+              secondary_foreground = "#cdd6f4";
+            };
+          };
+
+          scrollbars.background = "#313244";
+
+          loading = {
+            bar = "#cba6f7";
+            spinner = "#cba6f7";
+          };
+        };
       };
     };
   };
-
-  xdg.configFile."vicinae/themes/nixos-custom.toml".text = ''
-    [meta]
-    version = 1
-    name = "nixos-custom"
-    description = "Custom theme for NixOS based on Catppuccin Macchiato/Mocha"
-    variant = "dark"
-
-    [colors.core]
-    background = "#1e1e2e"
-    foreground = "#cdd6f4"
-    secondary_background = "#313244"
-    border = "#cba6f7"
-    accent = "#cba6f7"
-
-    [colors.accents]
-    blue = "#89b4fa"
-    green = "#a6e3a1"
-    magenta = "#f5c2e7"
-    orange = "#fab387"
-    purple = "#cba6f7"
-    red = "#f38ba8"
-    yellow = "#f9e2af"
-    cyan = "#94e2d5"
-  '';
 }

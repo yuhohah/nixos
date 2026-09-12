@@ -9,21 +9,43 @@ BarWidget {
   moduleName: "omarchy.workspaces"
 
   function workspaceById(id) {
-    var values = Hyprland.workspaces.values
+    var values = Hyprland.workspaces ? Hyprland.workspaces.values : []
     for (var i = 0; i < values.length; i++) {
       if (values[i].id === id) return values[i]
     }
     return null
   }
 
+  function hasWindows(id) {
+    var ws = workspaceById(id)
+    return ws !== null && (ws.windows === undefined || ws.windows > 0)
+  }
+
   function workspaceIds() {
-    var ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    var maxId = 4
+    if (Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id > maxId) {
+      maxId = Hyprland.focusedWorkspace.id
+    }
+    var values = Hyprland.workspaces ? Hyprland.workspaces.values : []
+    for (var i = 0; i < values.length; i++) {
+      var ws = values[i]
+      if (ws && ws.id > maxId && (ws.windows === undefined || ws.windows > 0)) {
+        maxId = ws.id
+      }
+    }
+    var ids = []
+    for (var j = 1; j <= maxId; j++) {
+      ids.push(j)
+    }
     return ids
   }
 
   function focusWorkspace(id) {
-    if (!root.bar) return
-    root.bar.run("hyprctl dispatch " + Util.shellQuote("hl.dsp.focus({ workspace = \"" + id + "\" })"))
+    if (typeof Hyprland !== "undefined" && Hyprland.dispatch) {
+      Hyprland.dispatch("workspace", String(id))
+    } else if (root.bar) {
+      root.bar.run("hyprctl dispatch workspace " + id)
+    }
   }
 
   implicitWidth: wsRow.implicitWidth + 16
@@ -42,13 +64,15 @@ BarWidget {
         required property int modelData
         property int wsId: modelData
         property bool isActive: Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id === wsId
+        property bool hasContent: root.hasWindows(wsId)
 
-        implicitWidth: isActive ? 26 : 20
-        implicitHeight: 20
-        radius: 6
-        color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? "#45475a" : "transparent")
-        border.color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? "#45475a" : "transparent")
+        implicitWidth: isActive ? 28 : 22
+        implicitHeight: 24
+        radius: 7
+        color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? (hasContent ? "#45475a" : "#313244") : "transparent")
+        border.color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? (hasContent ? "#45475a" : "#313244") : "transparent")
         border.width: 1
+        opacity: isActive || hasContent ? 1.0 : (wsMouse.containsMouse ? 0.85 : 0.45)
 
         Behavior on implicitWidth {
           NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
@@ -56,14 +80,17 @@ BarWidget {
         Behavior on color {
           ColorAnimation { duration: 150 }
         }
+        Behavior on opacity {
+          NumberAnimation { duration: 150 }
+        }
 
         Text {
           anchors.centerIn: parent
           text: String(wsBtn.wsId)
-          color: wsBtn.isActive ? "#11111b" : "#cdd6f4"
+          color: wsBtn.isActive ? "#11111b" : (wsBtn.hasContent ? "#cdd6f4" : "#6c7086")
           font.family: root.fontFamily || "JetBrainsMono Nerd Font"
-          font.pixelSize: 11
-          font.bold: wsBtn.isActive
+          font.pixelSize: 12
+          font.bold: wsBtn.isActive || wsBtn.hasContent
         }
 
         MouseArea {

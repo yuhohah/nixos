@@ -276,12 +276,12 @@ QtObject {
 
   // The only sanity floor is 1px. Themes and users can make this as large
   // as they like; if the shell gets ridiculous, that's their call.
-  property int fontBaseSize: 12
+  property int fontBaseSize: 14
 
   property var fontOverrides: ({})
   property var barOverrides: ({})
   property bool barScaleWithFont: true
-  readonly property real fontScale: Math.max(1 / 12, fontBaseSize / 12)
+  readonly property real fontScale: Math.max(1 / 14, fontBaseSize / 14)
 
   function fontPx(mult) {
     return Math.max(1, Math.round(fontBaseSize * mult))
@@ -324,27 +324,27 @@ QtObject {
     readonly property string menuFamily: root.menuFontFamily
     readonly property int baseSize: root.fontBaseSize
 
-    readonly property int caption:      root.fontToken("caption",       root.fontPx(0.833))   // 10
-    readonly property int bodySmall:    root.fontToken("body-small",    root.fontPx(0.917))   // 11
-    readonly property int body:         root.fontToken("body",          root.fontPx(1.0))     // 12
-    readonly property int subtitle:     root.fontToken("subtitle",      root.fontPx(1.083))   // 13
-    readonly property int title:        root.fontToken("title",         root.fontPx(1.167))   // 14
-    readonly property int heading:      root.fontToken("heading",       root.fontPx(1.333))   // 16
-    readonly property int display:      root.fontToken("display",       root.fontPx(2.0))     // 24
-    readonly property int displayLarge: root.fontToken("display-large", root.fontPx(2.333))   // 28
+    readonly property int caption:      root.fontToken("caption",       root.fontPx(0.857))   // 12
+    readonly property int bodySmall:    root.fontToken("body-small",    root.fontPx(0.929))   // 13
+    readonly property int body:         root.fontToken("body",          root.fontPx(1.0))     // 14
+    readonly property int subtitle:     root.fontToken("subtitle",      root.fontPx(1.071))   // 15
+    readonly property int title:        root.fontToken("title",         root.fontPx(1.143))   // 16
+    readonly property int heading:      root.fontToken("heading",       root.fontPx(1.286))   // 18
+    readonly property int display:      root.fontToken("display",       root.fontPx(1.857))   // 26
+    readonly property int displayLarge: root.fontToken("display-large", root.fontPx(2.143))   // 30
 
     readonly property int iconSmall:    root.fontToken("icon-small",    bodySmall)
-    readonly property int icon:         root.fontToken("icon",          title)
-    readonly property int iconLarge:    root.fontToken("icon-large",    root.fontPx(1.5))     // 18
+    readonly property int icon:         root.fontToken("icon",          heading)              // 18
+    readonly property int iconLarge:    root.fontToken("icon-large",    root.fontPx(1.571))   // 22
   }
 
   readonly property QtObject bar: QtObject {
-    readonly property int sizeHorizontal: root.barToken("size-horizontal", 26)
-    readonly property int sizeVertical:   root.barToken("size-vertical",   28)
-    readonly property int iconSlot:       root.barToken("icon-slot",       27)
-    readonly property int iconCanvas:     root.barToken("icon-canvas",     16)
-    readonly property int iconFont:       root.barToken("icon-font",       13)
-    readonly property int statusSlot:     root.barToken("status-slot",     21)
+    readonly property int sizeHorizontal: root.barToken("size-horizontal", 38)
+    readonly property int sizeVertical:   root.barToken("size-vertical",   38)
+    readonly property int iconSlot:       root.barToken("icon-slot",       36)
+    readonly property int iconCanvas:     root.barToken("icon-canvas",     24)
+    readonly property int iconFont:       root.barToken("icon-font",       18)
+    readonly property int statusSlot:     root.barToken("status-slot",     28)
   }
 
   function refresh() {
@@ -360,7 +360,8 @@ QtObject {
     try {
       var json = JSON.parse(raw || "{}")
       var n = Number(json.int)
-      if (isFinite(n) && n >= 0) cornerRadius = n
+      if (isFinite(n) && n > 0) cornerRadius = n
+      else cornerRadius = 14
     } catch (e) {
       // hyprctl missing / Hyprland not running — leave the previous value.
     }

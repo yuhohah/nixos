@@ -9,9 +9,9 @@ Item {
   property string fontFamily: bar ? bar.fontFamily : Style.font.family
   property real fontSize: Style.font.body
   property color foreground: bar ? bar.barForeground : Color.foreground
-  property color activeColor: bar ? bar.urgent : Color.urgent
+  property color activeColor: (bar && bar.active !== undefined) ? bar.active : Color.accent
   property bool active: false
-  property real horizontalMargin: 8.5
+  property real horizontalMargin: 9
   property real verticalPadding: 6
   property real fixedWidth: -1
   property real fixedHeight: -1

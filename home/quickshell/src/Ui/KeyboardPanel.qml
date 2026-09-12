@@ -44,7 +44,7 @@ PanelWindow {
   property int padding: Style.spacing.popupPadding
   property int contentWidth: Style.space(280)
   property int contentHeight: Style.space(200)
-  property var borderSpec: Border.surfaceSpec("popups", "border", Color.popups.border, Math.max(1, Style.space(2)))
+  property var borderSpec: Border.surfaceSpec("popups", "border", Color.popups.border, 1)
   property bool centerOnBar: false
   property bool open: false
   property int gap: Style.gapsOut  // distance between bar edge and panel
@@ -385,7 +385,7 @@ PanelWindow {
     color: Color.popups.background
     borderSpec: root.borderSpec
     padding: root.padding
-    radius: Style.cornerRadius
+    radius: Math.max(14, Style.cornerRadius)
     opacity: root.open || root.popoutSwitching ? 1.0 : 0
 
     Behavior on opacity {

@@ -71,34 +71,34 @@ QtObject {
   }
 
   readonly property QtObject bar: QtObject {
-    property color background: root.composed("bar.background", "bar.background-alpha", "#a81e1e2e", 1.0)
+    property color background: root.composed("bar.background", "bar.background-alpha", "#00000000", 1.0)
     property color text: root.pick("bar.text", root.foreground)
     property color active: root.pick("bar.active", root.accent)
   }
   readonly property QtObject popups: QtObject {
-    property color background: root.composed("popups.background", "popups.background-alpha", "#e61e1e2e", 1.0)
+    property color background: root.composed("popups.background", "popups.background-alpha", "#1e222b", 0.94)
     property color text: root.pick("popups.text", root.foreground)
-    property color border: root.composed("popups.border", "popups.border-alpha", "#33cba6f7", 1.0)
+    property color border: root.composed("popups.border", "popups.border-alpha", "#cba6f7", 0.25)
   }
   readonly property QtObject tooltip: QtObject {
-    property color background: root.composed("tooltip.background", "tooltip.background-alpha", "#e61e1e2e", 1.0)
+    property color background: root.composed("tooltip.background", "tooltip.background-alpha", "#1e222b", 0.95)
     property color text: root.pick("tooltip.text", root.foreground)
-    property color border: root.composed("tooltip.border", "tooltip.border-alpha", "#33cba6f7", 1.0)
+    property color border: root.composed("tooltip.border", "tooltip.border-alpha", "#cba6f7", 0.25)
   }
   readonly property QtObject notifications: QtObject {
-    property color background: root.composed("notifications.background", "notifications.background-alpha", "#e61e1e2e", 1.0)
+    property color background: root.composed("notifications.background", "notifications.background-alpha", "#1e222b", 0.94)
     property color text: root.pick("notifications.text", root.foreground)
-    property color border: root.composed("notifications.border", "notifications.border-alpha", "#33cba6f7", 1.0)
+    property color border: root.composed("notifications.border", "notifications.border-alpha", "#cba6f7", 0.25)
     property color countdown: root.pick("notifications.countdown", root.accent)
   }
   readonly property QtObject menu: QtObject {
-    property color background: root.composed("menu.background", "menu.background-alpha", "#e61e1e2e", 1.0)
+    property color background: root.composed("menu.background", "menu.background-alpha", "#1e222b", 0.94)
     property color text: root.pick("menu.text", root.foreground)
-    property color border: root.composed("menu.border", "menu.border-alpha", "#33cba6f7", 1.0)
+    property color border: root.composed("menu.border", "menu.border-alpha", "#cba6f7", 0.25)
     property color scrim: root.composed("menu.scrim", "menu.scrim-alpha", root.background, 0.5)
     property color selectedBackground: root.composed("menu.selected-background", "menu.selected-background-alpha", "#313244", 1.0)
     property color selectedText: root.pick("menu.selected-text", root.accent)
-    property color selectedBorder: root.composed("menu.selected-border", "menu.selected-border-alpha", "#33cba6f7", 0.0)
+    property color selectedBorder: root.composed("menu.selected-border", "menu.selected-border-alpha", "#cba6f7", 0.0)
   }
   // polkit + lock share a single border-alpha across border / border-active /
   // border-error: the three states are mutually exclusive in time, so one

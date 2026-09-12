@@ -78,6 +78,7 @@ Item {
   property color barForeground: useTransparentForeground ? transparentForeground : themeForeground
   property bool foregroundAnimationEnabled: true
   property color background: Color.bar.background
+  property color active: Color.bar.active
   property color urgent: Color.bar.active
 
   Behavior on barForeground { enabled: root.foregroundAnimationEnabled; ColorAnimation { duration: 420; easing.type: Easing.InOutCubic } }
@@ -126,6 +127,7 @@ Item {
     api.foreground = Qt.binding(function() { return root.foreground })
     api.barForeground = Qt.binding(function() { return root.barForeground })
     api.background = Qt.binding(function() { return root.background })
+    api.active = Qt.binding(function() { return root.active })
     api.urgent = Qt.binding(function() { return root.urgent })
     api.fontFamily = Qt.binding(function() { return root.fontFamily })
     api.position = Qt.binding(function() { return root.position })
@@ -1248,10 +1250,10 @@ Item {
     }
 
     margins {
-      top: root.barHidden && root.position === "top" ? -root.barSize : 12
-      bottom: root.barHidden && root.position === "bottom" ? -root.barSize : 12
-      left: root.barHidden && root.position === "left" ? -root.barSize : 12
-      right: root.barHidden && root.position === "right" ? -root.barSize : 12
+      top: root.barHidden && root.position === "top" ? -root.barSize : 4
+      bottom: root.barHidden && root.position === "bottom" ? -root.barSize : 0
+      left: root.barHidden && root.position === "left" ? -root.barSize : 8
+      right: root.barHidden && root.position === "right" ? -root.barSize : 8
     }
 
     anchors {
@@ -1262,7 +1264,7 @@ Item {
     }
 
     implicitWidth: root.vertical ? root.barSize : 0
-    implicitHeight: root.vertical ? 0 : 32
+    implicitHeight: root.vertical ? 0 : root.barSize
     color: "transparent"
     surfaceFormat.opaque: false
     WlrLayershell.namespace: "omarchy-bar"
@@ -1533,8 +1535,6 @@ Item {
     id: centerRoot
 
     property var entries: root.layoutEntries("center")
-    readonly property bool hasAnchor: root.entryIndex(entries, root.centerAnchor) !== -1
-    readonly property var anchorEntry: root.findCenterAnchorEntry()
 
     Loader {
       anchors.fill: parent
@@ -1554,34 +1554,9 @@ Item {
         }
 
         ModuleList {
-          visible: !centerRoot.hasAnchor
           entries: centerRoot.entries
           region: "center"
           anchors.centerIn: parent
-        }
-
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.right: centerAnchorModule.left
-          anchors.verticalCenter: centerAnchorModule.verticalCenter
-        }
-
-        ModuleSlot {
-          id: centerAnchorModule
-          visible: centerRoot.hasAnchor
-          entry: centerRoot.anchorEntry
-          region: "center"
-          anchors.centerIn: parent
-        }
-
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.left: centerAnchorModule.right
-          anchors.verticalCenter: centerAnchorModule.verticalCenter
         }
       }
     }
@@ -1599,34 +1574,9 @@ Item {
         }
 
         ModuleList {
-          visible: !centerRoot.hasAnchor
           entries: centerRoot.entries
           region: "center"
           anchors.centerIn: parent
-        }
-
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesBefore(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.bottom: centerAnchorModule.top
-          anchors.horizontalCenter: centerAnchorModule.horizontalCenter
-        }
-
-        ModuleSlot {
-          id: centerAnchorModule
-          visible: centerRoot.hasAnchor
-          entry: centerRoot.anchorEntry
-          region: "center"
-          anchors.centerIn: parent
-        }
-
-        ModuleList {
-          visible: centerRoot.hasAnchor
-          entries: root.entriesAfter(centerRoot.entries, root.centerAnchor)
-          region: "center"
-          anchors.top: centerAnchorModule.bottom
-          anchors.horizontalCenter: centerAnchorModule.horizontalCenter
         }
       }
     }
@@ -1721,11 +1671,6 @@ Item {
     property string region: ""
 
     visible: entries.length > 0
-    // A hidden list must not build its modules. The center section declares
-    // both an anchored and an unanchored arrangement and shows whichever
-    // fits, so leaving the other one loaded mounts every center module
-    // twice — two IPC handlers registered for the same target, two clocks
-    // ticking, two of every timer and fetch behind them.
     active: visible && entries.length > 0
     sourceComponent: root.vertical ? verticalModuleList : horizontalModuleList
     width: item ? item.implicitWidth : 0
@@ -1734,16 +1679,34 @@ Item {
     Component {
       id: horizontalModuleList
 
-      Row {
-        spacing: 6
+      Item {
+        id: listContainer
+        implicitWidth: moduleRow.implicitWidth + 8
+        implicitHeight: root.barSize
 
-        Repeater {
-          model: moduleListRoot.entries
+        Rectangle {
+          id: sectionPill
+          anchors.fill: parent
+          radius: 12
+          color: "#cc21242b"
+          border.color: "#25ffffff"
+          border.width: 1
+          visible: moduleRow.implicitWidth > 0
+        }
 
-          ModuleSlot {
-            required property var modelData
-            entry: modelData
-            region: moduleListRoot.region
+        Row {
+          id: moduleRow
+          anchors.centerIn: parent
+          spacing: 2
+
+          Repeater {
+            model: moduleListRoot.entries
+
+            ModuleSlot {
+              required property var modelData
+              entry: modelData
+              region: moduleListRoot.region
+            }
           }
         }
       }
@@ -1752,16 +1715,34 @@ Item {
     Component {
       id: verticalModuleList
 
-      Column {
-        spacing: 0
+      Item {
+        id: vertListContainer
+        implicitWidth: root.barSize
+        implicitHeight: vertModuleColumn.implicitHeight + 8
 
-        Repeater {
-          model: moduleListRoot.entries
+        Rectangle {
+          id: vertSectionPill
+          anchors.fill: parent
+          radius: 12
+          color: "#cc21242b"
+          border.color: "#25ffffff"
+          border.width: 1
+          visible: vertModuleColumn.implicitHeight > 0
+        }
 
-          ModuleSlot {
-            required property var modelData
-            entry: modelData
-            region: moduleListRoot.region
+        Column {
+          id: vertModuleColumn
+          anchors.centerIn: parent
+          spacing: 2
+
+          Repeater {
+            model: moduleListRoot.entries
+
+            ModuleSlot {
+              required property var modelData
+              entry: modelData
+              region: moduleListRoot.region
+            }
           }
         }
       }
@@ -1822,16 +1803,6 @@ Item {
     }
 
     HoverHandler { id: moduleHover }
-
-    Rectangle {
-      id: slotPill
-      anchors.fill: parent
-      radius: 12
-      color: "#a81e1e2e"
-      border.color: "#33cba6f7"
-      border.width: 1
-      visible: !slot.dragSource && slot.activeItem && slot.activeItem.visible && slot.moduleName !== "omarchy.spacer"
-    }
 
     BorderSurface {
       visible: slot.dragSource
