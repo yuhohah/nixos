@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if command -v powerprofilesctl >/dev/null 2>&1; then
+  active=$(powerprofilesctl get 2>/dev/null || echo "balanced")
+  for p in power-saver balanced performance; do
+    if [ "$p" = "$active" ]; then
+      printf "%s\t1\n" "$p"
+    else
+      printf "%s\t0\n" "$p"
+    fi
+  done
+else
+  printf "power-saver\t0\n"
+  printf "balanced\t1\n"
+  printf "performance\t0\n"
+fi

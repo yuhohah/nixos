@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "omarchy.cpu",
+  "name": "CPU",
+  "version": "1.0.0",
+  "author": "Omarchy",
+  "description": "Live CPU usage, load average, and monitor launcher",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Cpu.qml"
+  },
+  "barWidget": {
+    "displayName": "CPU",
+    "description": "Live CPU usage, load average, and monitor launcher",
+    "category": "System",
+    "allowMultiple": false
+  }
+}

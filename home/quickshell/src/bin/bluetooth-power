@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+state="$1"
+case "$state" in
+  on)
+    rfkill unblock bluetooth 2>/dev/null || true
+    bluetoothctl power on
+    ;;
+  off)
+    bluetoothctl power off
+    rfkill block bluetooth 2>/dev/null || true
+    ;;
+  *)
+    echo "Usage: bluetooth-power <on|off>" >&2
+    exit 1
+    ;;
+esac

@@ -35,6 +35,17 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+        FastConnectable = true;
+        JustWorksRepairing = "always";
+        Privacy = "device";
+      };
+      Policy = {
+        AutoEnable = true;
+      };
+    };
   };
 
   services.blueman.enable = true; # interface gráfica (opcional, mas recomendado)

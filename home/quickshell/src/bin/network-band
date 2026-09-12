@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+target="$1"
+wifi_line=$(nmcli -t -f active,ssid,freq dev wifi 2>/dev/null | grep -E '^(\*|yes|sim|true):' | head -n1)
+current_freq=$(echo "$wifi_line" | cut -d: -f3 | awk '{print $1}')
+
+current_band=""
+if [ -n "$current_freq" ]; then
+  if [ "$current_freq" -gt 5000 ]; then
+    current_band="5"
+  else
+    current_band="2.4"
+  fi
+fi
+
+if [ -z "$target" ]; then
+  printf "band\t%s\n" "$current_band"
+  printf "selected\tauto\n"
+  printf "available\t2.4 5\n"
+  exit 0
+fi

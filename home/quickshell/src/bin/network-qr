@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+meta_flag=false
+iface=""
+
+for arg in "$@"; do
+  if [ "$arg" = "--meta" ]; then
+    meta_flag=true
+  elif [ -z "$iface" ]; then
+    iface="$arg"
+  fi
+done
+
+if [ -z "$iface" ]; then
+  default_route=$(ip route show default 2>/dev/null | head -n1)
+  iface=$(echo "$default_route" | awk '{for(i=1;i<=NF;i++) if($i=="dev") print $(i+1)}')
+  if [ -z "$iface" ] || [ ! -d "/sys/class/net/$iface/wireless" ]; then
+    iface=$(nmcli -t -f DEVICE,TYPE dev 2>/dev/null | grep ':wifi' | head -n1 | cut -d: -f1)
+  fi
+fi
+
+con=$(nmcli -t -f NAME,DEVICE,TYPE connection show --active 2>/dev/null | grep -E ':(802-11-wireless|wifi)' | head -n1 | cut -d: -f1)
+if [ -z "$con" ] && [ -n "$iface" ]; then
+  con=$(nmcli -t -f NAME,DEVICE connection show --active 2>/dev/null | grep ":$iface$" | head -n1 | cut -d: -f1)
+fi
+
+wifi_line=$(nmcli -t -f active,ssid,security dev wifi 2>/dev/null | grep -E '^(\*|yes|sim|true):' | head -n1)
+ssid=$(echo "$wifi_line" | cut -d: -f2)
+sec_raw=$(echo "$wifi_line" | cut -d: -f3)
+
+if [ -z "$ssid" ] && [ -n "$con" ]; then
+  ssid=$(nmcli -g 802-11-wireless.ssid connection show "$con" 2>/dev/null)
+  [ -z "$ssid" ] && ssid="$con"
+fi
+
+if [ -z "$ssid" ]; then
+  echo "No active Wi-Fi connection to share" >&2
+  exit 1
+fi
+
+password=""
+sec_type="WPA"
+
+if [ -z "$sec_raw" ] || [ "$sec_raw" = "--" ]; then
+  sec_type="nopass"
+elif echo "$sec_raw" | grep -qi "wep"; then
+  sec_type="WEP"
+  if [ -n "$con" ]; then
+    password=$(nmcli -s -g 802-11-wireless-security.wep-key0 connection show "$con" 2>/dev/null)
+  fi
+else
+  sec_type="WPA"
+  if [ -n "$con" ]; then
+    password=$(nmcli -s -g 802-11-wireless-security.psk connection show "$con" 2>/dev/null)
+  fi
+fi
+
+escape_qr() {
+  echo -n "$1" | sed 's/\\/\\\\/g; s/;/\\;/g; s/,/\\,/g; s/:/\\:/g; s/"/\\"/g'
+}
+
+esc_ssid=$(escape_qr "$ssid")
+if [ "$sec_type" = "nopass" ] || [ -z "$password" ]; then
+  qr_data="WIFI:T:nopass;S:$esc_ssid;;"
+else
+  esc_pass=$(escape_qr "$password")
+  qr_data="WIFI:T:$sec_type;S:$esc_ssid;P:$esc_pass;;"
+fi
+
+if [ "$meta_flag" = true ]; then
+  printf "meta\t%s\t%s\t%s\n" "$iface" "$sec_type" "$ssid"
+fi
+
+QRENCODE=$(command -v qrencode 2>/dev/null || ls -d /nix/store/*qrencode*-bin/bin/qrencode 2>/dev/null | tail -n1 || echo "qrencode")
+"$QRENCODE" -m 0 -t ASCII "$qr_data" | sed 's/#/1/g; s/ /0/g; s/11/1/g; s/00/0/g'

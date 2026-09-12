@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "omarchy.memory",
+  "name": "Memory",
+  "version": "1.0.0",
+  "author": "Omarchy",
+  "description": "Live RAM and swap usage with toggleable display",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Memory.qml"
+  },
+  "barWidget": {
+    "displayName": "Memory",
+    "description": "Live RAM and swap usage with toggleable display",
+    "category": "System",
+    "allowMultiple": false
+  }
+}

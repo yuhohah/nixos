@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+brightness="unavailable"
+if command -v brightnessctl >/dev/null 2>&1; then
+  b=$(brightnessctl -m 2>/dev/null | head -n1 | cut -d, -f4 | tr -d '%')
+  [ -n "$b" ] && brightness="$b"
+elif [ -d "/sys/class/backlight" ]; then
+  b_dir=$(ls -d /sys/class/backlight/* 2>/dev/null | head -n1)
+  if [ -n "$b_dir" ]; then
+    cur=$(cat "$b_dir/brightness" 2>/dev/null || echo 100)
+    max=$(cat "$b_dir/max_brightness" 2>/dev/null || echo 100)
+    [ "$max" -gt 0 ] && brightness=$(( (cur * 100) / max ))
+  fi
+fi
+
+monitors_json=$(hyprctl -j monitors all 2>/dev/null || echo "[]")
+
+internal_mon=$(echo "$monitors_json" | jq -r '([.[] | select(.name | test("^(eDP|LVDS)"))] | .[0].name) // (.[0].name // "")' 2>/dev/null)
+external_mon=$(echo "$monitors_json" | jq -r '([.[] | select(.name | test("^(eDP|LVDS)") | not)] | .[0].name) // ""' 2>/dev/null)
+internal_enabled=$(echo "$monitors_json" | jq -r "([.[] | select(.name == \"$internal_mon\" and .disabled == false)] | .[0].name) // \"\"" 2>/dev/null)
+mirror_enabled=$(echo "$monitors_json" | jq -r '([.[] | select(.mirrorOf != "none" and .mirrorOf != "")] | .[0].name) // ""' 2>/dev/null)
+focused_mon=$(echo "$monitors_json" | jq -r '([.[] | select(.focused == true)] | .[0].name) // (.[0].name // "")' 2>/dev/null)
+focused_scale=$(echo "$monitors_json" | jq -r '([.[] | select(.focused == true)] | .[0].scale) // (.[0].scale // 1)' 2>/dev/null)
+displays_json=$(echo "$monitors_json" | jq -c '[.[] | {name: .name, description: .description, focused: .focused, enabled: (.disabled | not), width: .width, height: .height, scale: .scale}]' 2>/dev/null)
+
+[ -z "$displays_json" ] && displays_json="[]"
+
+echo "$brightness"
+echo "$internal_mon"
+echo "$external_mon"
+echo "$internal_enabled"
+echo "$mirror_enabled"
+echo "$focused_mon"
+echo "$focused_scale"
+echo "$displays_json"

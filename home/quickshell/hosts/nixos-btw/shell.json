@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "idle": {
+    "screensaver": 300,
+    "lock": 600
+  },
+  "bar": {
+    "position": "top",
+    "transparent": false,
+    "centerAnchor": "clock",
+    "layout": {
+      "left": [
+        {
+          "id": "workspaces"
+        }
+      ],
+      "center": [
+        {
+          "id": "clock",
+          "format": "dddd HH:mm",
+          "formatAlt": "d MMMM 'W'ww yyyy",
+          "verticalFormat": "HH\n—\nmm"
+        },
+        {
+          "id": "keyboard-layout"
+        }
+      ],
+      "right": [
+        {
+          "id": "tray"
+        },
+        {
+          "id": "cpu"
+        },
+        {
+          "id": "memory"
+        },
+        {
+          "id": "bluetooth"
+        },
+        {
+          "id": "network"
+        },
+        {
+          "id": "audio"
+        },
+        {
+          "id": "monitor"
+        },
+        {
+          "id": "power"
+        }
+      ]
+    }
+  },
+  "disabledPlugins": [
+    "notifications",
+    "system-update",
+    "reminders",
+    "agents",
+    "polkit",
+    "clipboard"
+  ],
+  "plugins": []
+}

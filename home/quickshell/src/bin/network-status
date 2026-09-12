@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+default_route=$(ip route show default 2>/dev/null | head -n1)
+iface=$(echo "$default_route" | awk '{for(i=1;i<=NF;i++) if($i=="dev") print $(i+1)}')
+gateway=$(echo "$default_route" | awk '{for(i=1;i<=NF;i++) if($i=="via") print $(i+1)}')
+
+if [ -z "$iface" ]; then
+  if [ "$1" = "--verbose" ]; then
+    echo -e "type\tdisconnected"
+  else
+    echo -e "disconnected\t\t\t"
+  fi
+  exit 0
+fi
+
+if [ -d "/sys/class/net/$iface/wireless" ] || [ -f "/proc/net/wireless" ] && grep -q "$iface:" /proc/net/wireless 2>/dev/null; then
+  type="wifi"
+else
+  type="ethernet"
+fi
+
+ip_info=$(ip -4 -o addr show dev "$iface" 2>/dev/null | head -n1 | awk '{print $4}')
+ip_addr="${ip_info%/*}"
+prefix="${ip_info#*/}"
+
+rx_bytes=$(cat "/sys/class/net/$iface/statistics/rx_bytes" 2>/dev/null || echo "0")
+tx_bytes=$(cat "/sys/class/net/$iface/statistics/tx_bytes" 2>/dev/null || echo "0")
+duplex=$(cat "/sys/class/net/$iface/duplex" 2>/dev/null || echo "full")
+speed=$(cat "/sys/class/net/$iface/speed" 2>/dev/null || echo "0")
+
+ssid=""
+signal="0"
+freq=""
+bitrate=""
+
+if [ "$type" = "wifi" ]; then
+  wifi_line=$(nmcli -t -f active,ssid,signal,freq,rate dev wifi 2>/dev/null | grep -E '^(\*|yes|sim|true):' | head -n1)
+  if [ -n "$wifi_line" ]; then
+    ssid=$(echo "$wifi_line" | cut -d: -f2)
+    signal=$(echo "$wifi_line" | cut -d: -f3)
+    freq=$(echo "$wifi_line" | cut -d: -f4 | awk '{print $1}')
+    bitrate=$(echo "$wifi_line" | cut -d: -f5)
+  else
+    ssid=$(nmcli -t -f active,ssid dev wifi 2>/dev/null | grep -E '^(\*|yes|sim|true):' | head -n1 | cut -d: -f2)
+  fi
+  [ -z "$speed" ] || [ "$speed" = "0" ] && speed="${bitrate%% *}"
+else
+  ssid="Ethernet"
+fi
+
+if [ "$1" = "--verbose" ]; then
+  router_ping=""
+  if [ -n "$gateway" ]; then
+    router_ping=$(ping -c 1 -W 1 "$gateway" 2>/dev/null | grep 'time=' | sed -E 's/.*time=([0-9.]+).*/\1/' || true)
+  fi
+  internet_ping=$(ping -c 1 -W 1 1.1.1.1 2>/dev/null | grep 'time=' | sed -E 's/.*time=([0-9.]+).*/\1/' || true)
+
+  printf "iface\t%s\n" "$iface"
+  printf "type\t%s\n" "$type"
+  printf "ip\t%s\n" "$ip_addr"
+  printf "prefix\t%s\n" "$prefix"
+  printf "gateway\t%s\n" "$gateway"
+  printf "speed\t%s\n" "$speed"
+  printf "duplex\t%s\n" "$duplex"
+  printf "ssid\t%s\n" "$ssid"
+  printf "signal\t%s\n" "$signal"
+  printf "freq\t%s\n" "$freq"
+  printf "bitrate\t%s\n" "$bitrate"
+  printf "rx_bytes\t%s\n" "$rx_bytes"
+  printf "tx_bytes\t%s\n" "$tx_bytes"
+  [ -n "$router_ping" ] && printf "router_ping_ms\t%s\n" "$router_ping"
+  [ -n "$internet_ping" ] && printf "internet_ping_ms\t%s\n" "$internet_ping"
+else
+  printf "%s\t%s\t%s\t%s\n" "$type" "$ssid" "$signal" "$freq"
+fi

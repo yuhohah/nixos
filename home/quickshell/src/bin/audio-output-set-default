@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+id="$1"
+if [ -n "$id" ]; then
+  wpctl set-default "$id" 2>/dev/null || true
+fi

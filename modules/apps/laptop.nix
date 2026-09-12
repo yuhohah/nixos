@@ -14,11 +14,6 @@
       # Rede
       networkmanagerapplet  # Applet de rede
       
-      # Bluetooth
-      blueman            # Gerenciador Bluetooth GUI
-      bluez              # Stack Bluetooth
-      bluez-tools        # Ferramentas Bluetooth CLI
-      
       # Display
       wdisplays          # Configurar monitores externos
       wlr-randr          # Gerenciar displays via CLI
@@ -35,6 +30,7 @@
     ];
 
     services.power-profiles-daemon.enable = false;
+    services.upower.enable = true;
 
     services.tlp = {
       enable = true;

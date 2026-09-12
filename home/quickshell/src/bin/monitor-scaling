@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+scale="$1"
+if [ -z "$scale" ]; then
+  echo "Usage: monitor-scaling <scale>" >&2
+  exit 1
+fi
+
+monitors_json=$(hyprctl -j monitors 2>/dev/null || echo "[]")
+focused_mon=$(echo "$monitors_json" | jq -r '([.[] | select(.focused == true)] | .[0].name) // (.[0].name // "")' 2>/dev/null)
+[ -z "$focused_mon" ] && focused_mon="eDP-1"
+
+hyprctl keyword monitor "$focused_mon,preferred,auto,$scale"

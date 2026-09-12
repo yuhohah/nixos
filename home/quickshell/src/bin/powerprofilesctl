@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+case "$1" in
+  get)
+    echo "balanced"
+    ;;
+  set)
+    exit 0
+    ;;
+  list)
+    echo "  balanced:"
+    echo "  power-saver:"
+    echo "  performance:"
+    ;;
+  *)
+    echo "balanced"
+    ;;
+esac

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+cpu_temp=""
+if [ -d "/sys/class/thermal" ]; then
+  temp_raw=$(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | sort -nr | head -n1)
+  if [ -n "$temp_raw" ] && [ "$temp_raw" -gt 0 ] 2>/dev/null; then
+    cpu_temp=$(awk "BEGIN { printf \"%.0f°C\", $temp_raw / 1000 }")
+  fi
+fi
+
+uptime_str=""
+if [ -f "/proc/uptime" ]; then
+  up_secs=$(cut -d. -f1 /proc/uptime)
+  days=$(( up_secs / 86400 ))
+  hours=$(( (up_secs % 86400) / 3600 ))
+  mins=$(( (up_secs % 3600) / 60 ))
+  if [ "$days" -gt 0 ]; then
+    uptime_str="${days}d ${hours}h"
+  elif [ "$hours" -gt 0 ]; then
+    uptime_str="${hours}h ${mins}m"
+  else
+    uptime_str="${mins}m"
+  fi
+fi
+
+[ -n "$cpu_temp" ] && printf "temperature\t%s\n" "$cpu_temp"
+[ -n "$uptime_str" ] && printf "uptime\t%s\n" "$uptime_str"

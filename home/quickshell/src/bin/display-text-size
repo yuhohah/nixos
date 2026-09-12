@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+size="${1:-12}"
+config_file="$HOME/.config/omarchy/shell.toml"
+mkdir -p "$(dirname "$config_file")"
+
+if [ ! -f "$config_file" ]; then
+  cat <<EOF > "$config_file"
+[font]
+base-size = $size
+EOF
+else
+  if grep -q "^\[font\]" "$config_file"; then
+    if grep -q "^base-size" "$config_file"; then
+      sed -i "s/^base-size *= *.*/base-size = $size/" "$config_file"
+    else
+      sed -i "/^\[font\]/a base-size = $size" "$config_file"
+    fi
+  else
+    cat <<EOF >> "$config_file"
+
+[font]
+base-size = $size
+EOF
+  fi
+fi
+
+if command -v gsettings >/dev/null 2>&1; then
+  scale=$(awk -v s="$size" 'BEGIN { printf "%.2f", s / 12 }')
+  gsettings set org.gnome.desktop.interface text-scaling-factor "$scale" 2>/dev/null || true
+fi

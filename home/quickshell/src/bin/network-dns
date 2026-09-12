@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+provider="$1"
+custom_dns="$2"
+
+con=$(nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep -E ':(802-11-wireless|802-3-ethernet|wifi|ethernet)' | head -n1 | cut -d: -f1)
+
+if [ -z "$provider" ]; then
+  if [ -z "$con" ]; then
+    echo "DHCP"
+    exit 0
+  fi
+  dns_setting=$(nmcli -g ipv4.dns connection show "$con" 2>/dev/null)
+  ignore_auto=$(nmcli -g ipv4.ignore-auto-dns connection show "$con" 2>/dev/null)
+
+  if [ "$ignore_auto" != "yes" ] || [ -z "$dns_setting" ]; then
+    echo "DHCP"
+  elif echo "$dns_setting" | grep -q "1.1.1.1"; then
+    echo "Cloudflare"
+  elif echo "$dns_setting" | grep -q "8.8.8.8"; then
+    echo "Google"
+  else
+    echo "Custom"
+  fi
+  exit 0
+fi
+
+if [ -z "$con" ]; then
+  echo "No active connection to set DNS" >&2
+  exit 1
+fi
+
+case "$provider" in
+  DHCP)
+    nmcli connection modify "$con" ipv4.ignore-auto-dns no ipv4.dns "" 2>/dev/null || true
+    nmcli connection modify "$con" ipv6.ignore-auto-dns no ipv6.dns "" 2>/dev/null || true
+    nmcli connection up "$con" >/dev/null 2>&1
+    ;;
+  Cloudflare)
+    nmcli connection modify "$con" ipv4.ignore-auto-dns yes ipv4.dns "1.1.1.1 1.0.0.1" 2>/dev/null || true
+    nmcli connection modify "$con" ipv6.ignore-auto-dns yes ipv6.dns "2606:4700:4700::1111 2606:4700:4700::1001" 2>/dev/null || true
+    nmcli connection up "$con" >/dev/null 2>&1
+    ;;
+  Google)
+    nmcli connection modify "$con" ipv4.ignore-auto-dns yes ipv4.dns "8.8.8.8 8.8.4.4" 2>/dev/null || true
+    nmcli connection modify "$con" ipv6.ignore-auto-dns yes ipv6.dns "2001:4860:4860::8888 2001:4860:4860::8844" 2>/dev/null || true
+    nmcli connection up "$con" >/dev/null 2>&1
+    ;;
+  Custom)
+    if [ -n "$custom_dns" ]; then
+      nmcli connection modify "$con" ipv4.ignore-auto-dns yes ipv4.dns "$custom_dns" 2>/dev/null || true
+      nmcli connection up "$con" >/dev/null 2>&1
+    fi
+    ;;
+  *)
+    echo "Unknown provider: $provider" >&2
+    exit 1
+    ;;
+esac

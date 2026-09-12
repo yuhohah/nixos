@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+bat_dir=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1)
+
+if [ -z "$bat_dir" ] || [ ! -d "$bat_dir" ]; then
+  exit 0
+fi
+
+capacity=$(cat "$bat_dir/capacity" 2>/dev/null || echo "")
+status=$(cat "$bat_dir/status" 2>/dev/null || echo "")
+cycle_count=$(cat "$bat_dir/cycle_count" 2>/dev/null || echo "")
+charge_now=$(cat "$bat_dir/charge_now" 2>/dev/null || cat "$bat_dir/energy_now" 2>/dev/null || echo "")
+charge_full=$(cat "$bat_dir/charge_full" 2>/dev/null || cat "$bat_dir/energy_full" 2>/dev/null || echo "")
+voltage_now=$(cat "$bat_dir/voltage_now" 2>/dev/null || echo "")
+current_now=$(cat "$bat_dir/current_now" 2>/dev/null || cat "$bat_dir/power_now" 2>/dev/null || echo "")
+threshold=$(cat "$bat_dir/charge_control_end_threshold" 2>/dev/null || echo "")
+
+size_wh=""
+if [ -n "$charge_full" ] && [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
+  size_wh=$(awk "BEGIN { printf \"%.1f Wh\", ($charge_full * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
+fi
+
+rate_w=""
+if [ -n "$current_now" ] && [ "$current_now" -gt 0 ] 2>/dev/null; then
+  if [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
+    rate_w=$(awk "BEGIN { printf \"%.1f W\", ($current_now * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
+  fi
+fi
+
+time_str="—"
+if [ -n "$current_now" ] && [ "$current_now" -gt 0 ] 2>/dev/null && [ -n "$charge_now" ]; then
+  if [ "$status" = "Discharging" ]; then
+    mins=$(( (charge_now * 60) / current_now ))
+    time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+  elif [ "$status" = "Charging" ] && [ -n "$charge_full" ]; then
+    remaining=$(( charge_full - charge_now ))
+    if [ "$remaining" -gt 0 ]; then
+      mins=$(( (remaining * 60) / current_now ))
+      time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+    fi
+  fi
+fi
+
+if [ "$1" = "--shell" ] || [ "$1" = "--verbose" ]; then
+  [ -n "$capacity" ] && printf "percentage\t%s%%\n" "$capacity"
+  [ -n "$size_wh" ] && printf "size\t%s\n" "$size_wh"
+  [ -n "$cycle_count" ] && printf "cycles\t%s\n" "$cycle_count"
+  [ -n "$time_str" ] && printf "time\t%s\n" "$time_str"
+  [ -n "$rate_w" ] && printf "rate\t%s\n" "$rate_w"
+  [ -n "$threshold" ] && printf "threshold\t%s%%\n" "$threshold"
+else
+  printf "%s\t%s\n" "$capacity" "$status"
+fi
