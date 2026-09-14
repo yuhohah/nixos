@@ -54,12 +54,8 @@
     }
   },
   "disabledPlugins": [
-    "notifications",
     "system-update",
-    "reminders",
-    "agents",
-    "polkit",
-    "clipboard"
+    "agents"
   ],
   "plugins": []
 }
