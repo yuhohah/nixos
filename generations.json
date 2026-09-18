@@ -6,9 +6,9 @@
   "hosts": {
     "arrow": {
       "born_at": "2025-12-08T00:17:45Z",
-      "generations_count": 178,
-      "last_generation": 178,
-      "last_rebuild": "2026-03-17T19:55:57Z"
+      "generations_count": 180,
+      "last_generation": 180,
+      "last_rebuild": "2026-09-18T03:12:49Z"
     },
     "nixos-btw": {
       "born_at": "2025-10-22T23:14:30Z",
