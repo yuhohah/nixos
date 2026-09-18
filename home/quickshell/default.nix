@@ -425,6 +425,47 @@ let
     ${pkgs.qrencode}/bin/qrencode -m 0 -t ASCII "$qr_data" | sed 's/#/1/g; s/ /0/g; s/11/1/g; s/00/0/g'
   '';
 
+  networkVpn = pkgs.writeShellScriptBin "network-vpn" ''
+    action="''${1:-status}"
+
+    con=$(${pkgs.networkmanager}/bin/nmcli -t -f NAME,TYPE connection show 2>/dev/null | grep -E ':(wireguard|vpn)' | head -n1 | cut -d: -f1)
+    [ -z "$con" ] && con="proton"
+
+    case "$action" in
+      status)
+        if ${pkgs.networkmanager}/bin/nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep -E "^$con:(wireguard|vpn)" >/dev/null 2>&1; then
+          echo "connected"
+        else
+          echo "disconnected"
+        fi
+        ;;
+      toggle)
+        if ${pkgs.networkmanager}/bin/nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep -E "^$con:(wireguard|vpn)" >/dev/null 2>&1; then
+          ${pkgs.networkmanager}/bin/nmcli connection down "$con" >/dev/null 2>&1
+          echo "disconnected"
+        else
+          ${pkgs.networkmanager}/bin/nmcli connection up "$con" >/dev/null 2>&1
+          echo "connected"
+        fi
+        ;;
+      connect)
+        ${pkgs.networkmanager}/bin/nmcli connection up "$con" >/dev/null 2>&1
+        echo "connected"
+        ;;
+      disconnect)
+        ${pkgs.networkmanager}/bin/nmcli connection down "$con" >/dev/null 2>&1
+        echo "disconnected"
+        ;;
+      name)
+        echo "$con"
+        ;;
+      *)
+        echo "Usage: network-vpn <status|toggle|connect|disconnect|name>" >&2
+        exit 1
+        ;;
+    esac
+  '';
+
   batteryStatus = pkgs.writeShellScriptBin "battery-status" ''
     bat_dir=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1)
 
@@ -639,6 +680,7 @@ in
     networkSpeedtest
     networkQr
     networkPassword
+    networkVpn
     batteryStatus
     powerprofilesList
     powerprofilesSet

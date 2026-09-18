@@ -9,97 +9,63 @@ BarWidget {
   moduleName: "omarchy.workspaces"
 
   function workspaceById(id) {
-    var values = Hyprland.workspaces ? Hyprland.workspaces.values : []
+    var values = Hyprland.workspaces.values
     for (var i = 0; i < values.length; i++) {
       if (values[i].id === id) return values[i]
     }
+
     return null
   }
 
-  function hasWindows(id) {
-    var ws = workspaceById(id)
-    return ws !== null && (ws.windows === undefined || ws.windows > 0)
-  }
-
   function workspaceIds() {
-    var maxId = 4
-    if (Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id > maxId) {
-      maxId = Hyprland.focusedWorkspace.id
-    }
-    var values = Hyprland.workspaces ? Hyprland.workspaces.values : []
+    var ids = [1, 2, 3, 4, 5]
+    var values = Hyprland.workspaces.values
+
     for (var i = 0; i < values.length; i++) {
-      var ws = values[i]
-      if (ws && ws.id > maxId && (ws.windows === undefined || ws.windows > 0)) {
-        maxId = ws.id
-      }
+      var id = values[i].id
+      if (id > 0 && id <= 10 && ids.indexOf(id) === -1) ids.push(id)
     }
-    var ids = []
-    for (var j = 1; j <= maxId; j++) {
-      ids.push(j)
-    }
+
+    ids.sort(function(left, right) { return left - right })
     return ids
   }
 
   function focusWorkspace(id) {
-    if (typeof Hyprland !== "undefined" && Hyprland.dispatch) {
-      Hyprland.dispatch("workspace", String(id))
-    } else if (root.bar) {
-      root.bar.run("hyprctl dispatch workspace " + id)
-    }
+    if (!root.bar) return
+    root.bar.run("hyprctl dispatch " + Util.shellQuote("hl.dsp.focus({ workspace = \"" + id + "\" })"))
   }
 
-  implicitWidth: wsRow.implicitWidth + 16
-  implicitHeight: root.barSize
+  readonly property real trailingGap: root.vertical ? 0 : Style.spaceReal(1.5)
 
-  Row {
-    id: wsRow
-    anchors.centerIn: parent
-    spacing: 4
+  implicitWidth: grid.implicitWidth + trailingGap
+  implicitHeight: grid.implicitHeight
+
+  GridLayout {
+    id: grid
+    anchors.fill: parent
+    anchors.rightMargin: root.trailingGap
+    columns: root.vertical ? 1 : root.workspaceIds().length
+    columnSpacing: root.vertical ? 0 : Style.space(1)
+    rowSpacing: root.vertical ? Style.space(2) : 0
 
     Repeater {
       model: root.workspaceIds()
 
-      Rectangle {
-        id: wsBtn
+      WidgetButton {
         required property int modelData
-        property int wsId: modelData
-        property bool isActive: Hyprland.focusedWorkspace && Hyprland.focusedWorkspace.id === wsId
-        property bool hasContent: root.hasWindows(wsId)
 
-        implicitWidth: isActive ? 28 : 22
-        implicitHeight: 24
-        radius: 7
-        color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? (hasContent ? "#45475a" : "#313244") : "transparent")
-        border.color: isActive ? "#cba6f7" : (wsMouse.containsMouse ? (hasContent ? "#45475a" : "#313244") : "transparent")
-        border.width: 1
-        opacity: isActive || hasContent ? 1.0 : (wsMouse.containsMouse ? 0.85 : 0.45)
+        readonly property var workspace: root.workspaceById(modelData)
+        readonly property bool occupied: workspace !== null && workspace.toplevels.values.length > 0
+        readonly property bool focused: Hyprland.focusedWorkspace !== null && Hyprland.focusedWorkspace.id === modelData
 
-        Behavior on implicitWidth {
-          NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
-        }
-        Behavior on color {
-          ColorAnimation { duration: 150 }
-        }
-        Behavior on opacity {
-          NumberAnimation { duration: 150 }
-        }
-
-        Text {
-          anchors.centerIn: parent
-          text: String(wsBtn.wsId)
-          color: wsBtn.isActive ? "#11111b" : (wsBtn.hasContent ? "#cdd6f4" : "#6c7086")
-          font.family: root.fontFamily || "JetBrainsMono Nerd Font"
-          font.pixelSize: 12
-          font.bold: wsBtn.isActive || wsBtn.hasContent
-        }
-
-        MouseArea {
-          id: wsMouse
-          anchors.fill: parent
-          hoverEnabled: true
-          cursorShape: Qt.PointingHandCursor
-          onClicked: root.focusWorkspace(wsBtn.wsId)
-        }
+        bar: root.bar
+        text: focused ? "\uDB85\uDCFB" : (modelData === 10 ? "0" : String(modelData))
+        opacity: occupied || focused ? 1 : 0.5
+        horizontalMargin: 6
+        verticalPadding: 6
+        fixedWidth: root.vertical ? root.barSize : Style.space(20)
+        fixedHeight: root.barSize
+        onPressed: function() { root.focusWorkspace(modelData) }
       }
     }
   }

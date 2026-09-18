@@ -84,6 +84,8 @@ Panel {
   property string bandSelected: "auto"
   property var bandAvailable: []
   property string pendingBand: ""
+  property bool vpnConnected: false
+  property bool vpnBusy: false
 
   // Per-row in-flight state. `actionSsid` flips on for the row whose action
   // is currently running so it can render "Connecting…" / "Disconnecting…" /
@@ -536,6 +538,10 @@ Panel {
       bandProc.command = [root.omarchyPath ? (root.omarchyPath + "/bin/network-band") : "network-band"]
       bandProc.running = true
     }
+    if (!vpnProc.running && !root.vpnBusy) {
+      vpnProc.command = [root.omarchyPath ? (root.omarchyPath + "/bin/network-vpn") : "network-vpn", "status"]
+      vpnProc.running = true
+    }
     // A closed panel has no nearby-network list to fill, and bare refresh()
     // reaches here from action completion, timeouts and construction.
     if (opened && wifiDevice) {
@@ -923,6 +929,42 @@ Panel {
     }
   }
 
+  Process {
+    id: vpnProc
+    command: [root.omarchyPath ? (root.omarchyPath + "/bin/network-vpn") : "network-vpn", "status"]
+    stdout: StdioCollector {
+      waitForEnd: true
+      onStreamFinished: {
+        root.vpnConnected = (text.trim() === "connected")
+      }
+    }
+  }
+
+  Process {
+    id: vpnToggleProc
+    stdout: StdioCollector {
+      waitForEnd: true
+      onStreamFinished: {
+        root.vpnConnected = (text.trim() === "connected")
+        root.vpnBusy = false
+      }
+    }
+    onExited: function(exitCode) {
+      root.vpnBusy = false
+      if (!vpnProc.running) {
+        vpnProc.command = [root.omarchyPath ? (root.omarchyPath + "/bin/network-vpn") : "network-vpn", "status"]
+        vpnProc.running = true
+      }
+    }
+  }
+
+  function toggleVpn() {
+    if (root.vpnBusy) return
+    root.vpnBusy = true
+    vpnToggleProc.command = [root.omarchyPath ? (root.omarchyPath + "/bin/network-vpn") : "network-vpn", "toggle"]
+    vpnToggleProc.running = true
+  }
+
   // Action runner for DNS provider changes. Wi-Fi actions use the
   // Quickshell.Networking NetworkManager backend directly.
   Process {
@@ -953,7 +995,13 @@ Panel {
     interval: 1500
     repeat: true
     running: root.opened
-    onTriggered: if (!detailsProc.running) detailsProc.running = true
+    onTriggered: {
+      if (!detailsProc.running) detailsProc.running = true
+      if (!vpnProc.running && !root.vpnBusy) {
+        vpnProc.command = [root.omarchyPath ? (root.omarchyPath + "/bin/network-vpn") : "network-vpn", "status"]
+        vpnProc.running = true
+      }
+    }
   }
 
   Timer {
@@ -1182,6 +1230,20 @@ Panel {
           spacing: Style.space(8)
           anchors.right: parent.right
           anchors.verticalCenter: parent.verticalCenter
+
+          Button {
+            id: vpnAction
+            iconText: "󰒄"
+            tooltipText: root.vpnBusy ? "Alterando ProtonVPN..." : (root.vpnConnected ? "ProtonVPN (Conectado) — Clique para desconectar" : "ProtonVPN (Desconectado) — Clique para conectar")
+            foreground: root.vpnConnected ? root.bar.foreground : Qt.darker(root.bar.foreground, 1.4)
+            fontFamily: root.bar.fontFamily
+            iconSize: Style.font.subtitle * 1.5
+            horizontalPadding: Style.space(5)
+            verticalPadding: Style.space(2)
+            active: root.vpnConnected
+            Layout.alignment: Qt.AlignVCenter
+            onClicked: root.toggleVpn()
+          }
 
           Button {
             id: qrAction

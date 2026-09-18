@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+# VPN toggle script for ProtonVPN / NetworkManager Wireguard
+ACTION="${1:-status}"
+
+get_vpn_name() {
+  con=$(nmcli -t -f NAME,TYPE connection show 2>/dev/null | grep -E ':(wireguard|vpn)' | head -n1 | cut -d: -f1)
+  if [ -n "$con" ]; then
+    echo "$con"
+  else
+    echo "proton"
+  fi
+}
+
+VPN_NAME=$(get_vpn_name)
+
+case "$ACTION" in
+  status)
+    if nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep -E "^$VPN_NAME:(wireguard|vpn)" >/dev/null 2>&1; then
+      echo "connected"
+    else
+      echo "disconnected"
+    fi
+    ;;
+  toggle)
+    if nmcli -t -f NAME,TYPE connection show --active 2>/dev/null | grep -E "^$VPN_NAME:(wireguard|vpn)" >/dev/null 2>&1; then
+      nmcli connection down "$VPN_NAME" >/dev/null 2>&1
+      echo "disconnected"
+    else
+      nmcli connection up "$VPN_NAME" >/dev/null 2>&1
+      echo "connected"
+    fi
+    ;;
+  connect)
+    nmcli connection up "$VPN_NAME" >/dev/null 2>&1
+    echo "connected"
+    ;;
+  disconnect)
+    nmcli connection down "$VPN_NAME" >/dev/null 2>&1
+    echo "disconnected"
+    ;;
+  name)
+    echo "$VPN_NAME"
+    ;;
+  *)
+    echo "Usage: network-vpn <status|toggle|connect|disconnect|name>" >&2
+    exit 1
+    ;;
+esac
