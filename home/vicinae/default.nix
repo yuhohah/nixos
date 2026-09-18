@@ -1,27 +1,11 @@
 { config, pkgs, ... }:
 
 {
-  # NOTE: this module must come from vicinae's flake, e.g. in your flake.nix:
-  #
-  #   inputs.vicinae.url = "github:vicinaehq/vicinae";
-  #
-  #   home-manager.users.<you>.imports = [
-  #     inputs.vicinae.homeManagerModules.default
-  #     ./default.nix   # this file
-  #   ];
-  #
-  # Also add the Cachix cache so you don't have to build from source
-  # (put this in your flake.nix or /etc/nix/nix.conf):
-  #
-  #   extra-substituters = [ "https://vicinae.cachix.org" ];
-  #   extra-trusted-public-keys = [ "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc=" ];
-
   programs.vicinae = {
     enable = true;
-    # package = pkgs.vicinae; # uncomment to use the nixpkgs build instead of the flake's
-
+    
     systemd = {
-      enable = true;   # run vicinae as a systemd user service
+      enable = true;   
       autoStart = true;
     };
 
@@ -39,6 +23,7 @@
 
       launcher_window = {
         rounding = 12;
+        opacity = 0.8;
         material = "auto";
         compact_mode.enabled = true;
         client_side_decorations = {
@@ -71,6 +56,7 @@
       nixos-custom = {
         meta = {
           name = "nixos-custom";
+          version = 1;
           description = "Custom theme for NixOS matching Quickshell Catppuccin Mocha style";
           variant = "dark";
           inherits = "vicinae-dark";

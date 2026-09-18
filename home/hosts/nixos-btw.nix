@@ -21,11 +21,6 @@
     ../fastfetch/default.nix
     ../vicinae/default.nix
 
-    inputs.zen-browser.homeModules.twilight-official
   ];
 
-  programs.zen-browser = {
-    enable = true;
-    setAsDefaultBrowser = true;
-  };
 }

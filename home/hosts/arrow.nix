@@ -23,7 +23,6 @@
     #scripts
     ../scripts/battery-alert.nix
 
-    inputs.zen-browser.homeModules.twilight-official
 
   ];
 }
