@@ -7,11 +7,6 @@
       vscode 
       obsidian 
       antigravity-ide 
-      docker-compose
-      kitty      
-      godot 
-      #lua 
-      #love 
       #android-studio 
       #lmstudio
     ];

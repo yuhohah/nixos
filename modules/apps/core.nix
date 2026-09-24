@@ -9,7 +9,6 @@
       tree
       neovim
       alacritty
-      waybar
       awww 
       nautilus
       pavucontrol

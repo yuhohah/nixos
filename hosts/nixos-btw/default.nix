@@ -22,7 +22,7 @@
   my.apps.media.enable = true;
   my.apps.dev.enable = true;
   my.apps.browsers.enable = true;
-  my.apps.waydroid.enable = true;
+  my.apps.waydroid.enable = false;
 
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;
