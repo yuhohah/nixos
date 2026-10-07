@@ -728,11 +728,12 @@ Item {
   function findPanelWidget(pluginId) {
     var id = String(pluginId || "")
     if (!id) return null
+    var canonicalId = canonicalWidgetId(id)
     var candidates = []
     for (var i = 0; i < moduleSlots.length; i++) {
       var slot = moduleSlots[i]
       if (!slot || !slot.activeItem) continue
-      if (slot.moduleName !== id) continue
+      if (slot.moduleName !== id && canonicalWidgetId(slot.moduleName) !== canonicalId) continue
       var item = slot.activeItem
       if (typeof item.open !== "function" || typeof item.close !== "function" || item.opened === undefined) continue
       candidates.push({ slot: slot, screenName: slotScreenName(slot), opened: item.opened === true })

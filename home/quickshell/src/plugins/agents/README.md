@@ -45,52 +45,28 @@ on its refresh timer and whenever you ask for a refresh, and picks up any
 record that lands in the directory regardless of who wrote it.
 
 Adding an agent therefore never touches this plugin: ship a collector that
-prints the record contract (see the `claude` and `codex` collectors in
-`bin/`), and the panel gains a tab. An `assets/<id>.svg` mark is optional —
+prints the record contract, and the panel gains a tab. An `assets/<id>.svg` mark is optional —
 with an `assets/<id>-light.svg` twin if the mark needs a dark variant for
 light surfaces — and the bar glyph stands in when there is none.
 
 | Collector | Limits | Local stats |
 |---|---|---|
-| `claude` | Anthropic's OAuth usage endpoint (5-hour session + 7-day weekly) | `~/.claude/projects` transcripts, opencode sessions on an Anthropic provider, plus `stats-cache.json` and `history.jsonl` as fallback |
-| `codex` | The Codex app-server RPC | native Codex CLI session files (plus pi and opencode sessions) |
-| `fireworks` | Estimated prepaid balance: configured funding minus rated account costs | Fireworks billing API, grouped by day and model for the last 30 days |
+| `gemini` | Rolling 5-hour session and 7-day weekly limits | Antigravity IDE transcripts in `~/.gemini/antigravity-ide/brain` and `gemini` CLI sessions |
 
-Claude limits need a signed-in CLI; without credentials the panel says so and
-falls back to local stats only. A non-default Claude directory is honored via
-`CLAUDE_CONFIG_DIR`, Codex via `CODEX_HOME`. Fireworks reads
-`FIREWORKS_API_KEY` and `FIREWORKS_ACCOUNT_ID` first, then
-`~/.fireworks/auth.ini` (which `firectl set-api-key` creates), then the key
-opencode stores in `~/.local/share/opencode/auth.json` when Fireworks is
-signed in there.
+### Gemini Configuration
 
-### Fireworks balance
-
-The collector first asks the account's `:getBalance` endpoint for the real
-prepaid ledger. That endpoint exists but is permission-gated, and as of
-August 2026 no console-issued API key passes it — Fireworks appears to
-reserve it for the dashboard session. The probe stays because it is cheap
-and the live figure lights up automatically if Fireworks ever opens it to
-keys. Until then the collector falls back to estimating the balance from
-configuration in `~/.config/omarchy/agents/fireworks.json`:
+The collector automatically reads Antigravity IDE and `gemini` CLI transcripts.
+Optional configuration can be placed in `~/.config/omarchy/agents/gemini.json`:
 
 ```json
 {
-  "accountId": "",
-  "fundedAmount": 20,
-  "fundedAt": "2026-07-01"
+  "name": "Google Gemini",
+  "tier": "Advanced",
+  "apiKey": "YOUR_GEMINI_API_KEY",
+  "sessionLimit": 50,
+  "weeklyLimit": 500
 }
 ```
-
-Set `fundedAmount` to the credits purchased and optionally `fundedAt` to the
-purchase date; with no date, the collector uses the account creation time. It
-subtracts rated account costs and the panel labels the result as estimated.
-For a later top-up, increase `fundedAmount` by the new credit while keeping
-the original `fundedAt`, so both the funding and spend still cover the same
-period. `accountId` only matters when one API key can access several
-accounts. Without a configured `fundedAmount` the tab still shows token
-usage, just no balance. With a live ledger, `fundedAmount` is optional and
-only adds the meter and the spent-of-funded line under the real figure.
 
 ## Interactions
 
@@ -126,9 +102,7 @@ edit `shell.json` directly):
 
 ```bash
 omarchy bar set omarchy.agents providers '{
-  "claude": { "enabled": true },
-  "codex": { "enabled": false },
-  "fireworks": { "enabled": true }
+  "gemini": { "enabled": true }
 }' --json
 ```
 
@@ -139,12 +113,4 @@ the records regenerate.
 With `syncMode` on, every `*.json` snapshot in `syncDir` is merged, so today,
 the last 7 days, and the all-time totals cover every machine you code on —
 active days are unioned by date rather than summed. Rate limits stay
-per-account and are never merged. A record may declare `"scope": "account"`
-when its stats are account-global rather than machine-local (Fireworks'
-billing API); those merge by taking the widest value instead of summing, so
-the same account synced from two machines is not counted twice.
-
-One caveat on "all-time": the Codex collector only reads native session files
-touched in the last 30 days, and Fireworks requests the last 30 days from its
-billing API, so their totals and day counts cover that window. Claude's cover
-every transcript still on disk.
+per-account and are never merged.

@@ -11,6 +11,9 @@
     "layout": {
       "left": [
         {
+          "id": "agents"
+        },
+        {
           "id": "workspaces"
         }
       ],
@@ -28,6 +31,9 @@
       "right": [
         {
           "id": "tray"
+        },
+        {
+          "id": "disk-speedtest"
         },
         {
           "id": "cpu"
@@ -54,8 +60,7 @@
     }
   },
   "disabledPlugins": [
-    "system-update",
-    "agents"
+    "system-update"
   ],
   "plugins": []
 }

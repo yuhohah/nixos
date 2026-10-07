@@ -658,6 +658,372 @@ EOF
       gsettings set org.gnome.desktop.interface text-scaling-factor "$scale" 2>/dev/null || true
     fi
   '';
+
+  omarchyAgentUsageGemini = pkgs.writeScriptBin "omarchy-agent-usage-gemini" ''#!${pkgs.python3}/bin/python3
+import os, sys, glob, json, datetime
+
+brain_dir = os.path.expanduser("~/.gemini/antigravity-ide/brain")
+state_dir = os.path.expanduser("~/.local/state/omarchy/agents")
+usage_dir = os.path.join(state_dir, "usage")
+config_file = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+history_file = os.path.join(state_dir, "gemini-history.jsonl")
+
+os.makedirs(usage_dir, exist_ok=True)
+
+config = {}
+if os.path.isfile(config_file):
+    try:
+        with open(config_file, "r") as f:
+            config = json.load(f)
+    except Exception:
+        pass
+
+now = datetime.datetime.now(datetime.timezone.utc)
+local_now = datetime.datetime.now()
+today_str = local_now.strftime("%Y-%m-%d")
+
+dates = [(local_now - datetime.timedelta(days=i)).strftime("%Y-%m-%d") for i in range(6, -1, -1)]
+recent_tokens = {d: 0 for d in dates}
+recent_prompts = {d: 0 for d in dates}
+
+total_prompts = 0
+today_prompts = 0
+today_sessions_set = set()
+all_sessions = set()
+active_dates = set()
+
+today_tokens_by_model = {"gemini-2.5-pro": 0, "gemini-2.5-flash": 0}
+model_usage = {
+    "gemini-2.5-pro": {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0},
+    "gemini-2.5-flash": {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0}
+}
+
+transcripts = glob.glob(os.path.join(brain_dir, "*", ".system_generated", "logs", "transcript.jsonl"))
+
+for t_path in transcripts:
+    conv_id = os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(t_path))))
+    all_sessions.add(conv_id)
+    session_has_today = False
+    
+    try:
+        with open(t_path, "r", encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                if not line.strip(): continue
+                obj = json.loads(line)
+                step_type = obj.get("type", "")
+                created = obj.get("created_at", "")
+                
+                content = obj.get("content", "")
+                thinking = obj.get("thinking", "")
+                char_count = len(content) + len(thinking)
+                step_tokens = max(1, char_count // 4)
+                
+                date_str = ""
+                if created:
+                    try:
+                        dt = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone()
+                        date_str = dt.strftime("%Y-%m-%d")
+                    except Exception:
+                        date_str = created[:10]
+                        
+                if date_str:
+                    active_dates.add(date_str)
+                    if date_str in recent_tokens:
+                        recent_tokens[date_str] += step_tokens
+                    if date_str == today_str:
+                        session_has_today = True
+
+                if step_type == "USER_INPUT":
+                    total_prompts += 1
+                    if date_str == today_str:
+                        today_prompts += 1
+                    if date_str in recent_prompts:
+                        recent_prompts[date_str] += 1
+                    model_usage["gemini-2.5-pro"]["inputTokens"] += step_tokens
+                    if date_str == today_str:
+                        today_tokens_by_model["gemini-2.5-pro"] += step_tokens
+                elif step_type in ("MODEL_RESPONSE", "PLANNER_RESPONSE"):
+                    model_usage["gemini-2.5-pro"]["outputTokens"] += step_tokens
+                    if date_str == today_str:
+                        today_tokens_by_model["gemini-2.5-pro"] += step_tokens
+                else:
+                    model_usage["gemini-2.5-flash"]["inputTokens"] += step_tokens
+                    if date_str == today_str:
+                        today_tokens_by_model["gemini-2.5-flash"] += step_tokens
+
+        if session_has_today:
+            today_sessions_set.add(conv_id)
+    except Exception:
+        pass
+
+if os.path.isfile(history_file):
+    try:
+        with open(history_file, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.strip(): continue
+                item = json.loads(line)
+                d = item.get("date", today_str)
+                in_tok = item.get("inputTokens", 0)
+                out_tok = item.get("outputTokens", 0)
+                m = item.get("model", "gemini-2.5-pro")
+                if m not in model_usage:
+                    model_usage[m] = {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0}
+                if m not in today_tokens_by_model:
+                    today_tokens_by_model[m] = 0
+                
+                model_usage[m]["inputTokens"] += in_tok
+                model_usage[m]["outputTokens"] += out_tok
+                tot = in_tok + out_tok
+                if d in recent_tokens:
+                    recent_tokens[d] += tot
+                if d == today_str:
+                    today_prompts += 1
+                    today_tokens_by_model[m] += tot
+                total_prompts += 1
+                active_dates.add(d)
+    except Exception:
+        pass
+
+today_total_tokens = sum(today_tokens_by_model.values())
+recent_days = [{"date": d, "messageCount": recent_tokens[d]} for d in dates]
+
+next_session_reset = (now + datetime.timedelta(hours=3)).strftime("%Y-%m-%dT%H:00:00Z")
+days_until_sunday = (6 - now.weekday()) % 7 or 7
+next_weekly_reset = (now + datetime.timedelta(days=days_until_sunday)).strftime("%Y-%m-%dT00:00:00Z")
+
+session_pct = min(0.95, round(today_prompts / max(1, config.get("sessionLimit", 50)), 2))
+weekly_prompts = sum(recent_prompts.values())
+weekly_pct = min(0.95, round(weekly_prompts / max(1, config.get("weeklyLimit", 500)), 2))
+
+record = {
+    "id": "gemini",
+    "name": config.get("name", "Google Gemini"),
+    "ready": True,
+    "tierLabel": config.get("tier", "Advanced"),
+    "usageStatusText": "",
+    "authHelpText": "",
+    "limits": [
+        {
+            "label": "Session (5-hour)",
+            "percent": session_pct,
+            "resetsAt": next_session_reset
+        },
+        {
+            "label": "Weekly (7-day)",
+            "percent": weekly_pct,
+            "resetsAt": next_weekly_reset
+        }
+    ],
+    "todayPrompts": today_prompts,
+    "todaySessions": len(today_sessions_set) or 1,
+    "todayTotalTokens": today_total_tokens,
+    "todayTokensByModel": today_tokens_by_model,
+    "recentDays": recent_days,
+    "totalPrompts": total_prompts,
+    "totalSessions": len(all_sessions),
+    "activeDays": len(active_dates),
+    "modelUsage": model_usage
+}
+
+out_path = os.path.join(usage_dir, "gemini.json")
+tmp_path = out_path + ".tmp"
+with open(tmp_path, "w", encoding="utf-8") as f:
+    json.dump(record, f, indent=2)
+os.replace(tmp_path, out_path)
+'';
+
+  omarchyAgentUsageUpdate = pkgs.writeShellScriptBin "omarchy-agent-usage-update" ''
+    USAGE_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
+    mkdir -p "$USAGE_DIR"
+
+    if command -v omarchy-agent-usage-gemini >/dev/null 2>&1; then
+      omarchy-agent-usage-gemini "$@" || true
+    fi
+  '';
+
+  omarchyAgent = pkgs.writeShellScriptBin "omarchy-agent" ''
+    action="$1"
+    if [ "$action" = "--pick" ] || [ -z "$action" ]; then
+      if command -v antigravity-ide >/dev/null 2>&1; then
+        antigravity-ide "$HOME/Configuration/nixos" &
+      elif command -v alacritty >/dev/null 2>&1; then
+        alacritty -e gemini &
+      fi
+    elif [ "$action" = "gemini" ]; then
+      if command -v antigravity-ide >/dev/null 2>&1; then
+        antigravity-ide &
+      else
+        gemini
+      fi
+    fi
+  '';
+
+  omarchyDiskSpeedtest = pkgs.writeShellScriptBin "omarchy-disk-speedtest" ''
+    TMPFILE="''${XDG_CACHE_HOME:-$HOME/.cache}/omarchy-speedtest.dat"
+    cleanup() {
+      rm -f "$TMPFILE" 2>/dev/null || true
+      exit 0
+    }
+    trap cleanup INT TERM EXIT HUP
+
+    # Identify root block device and model
+    root_dev=$(${pkgs.coreutils}/bin/df / 2>/dev/null | ${pkgs.gawk}/bin/awk 'END {print $1}')
+    disk_dev=$(${pkgs.util-linux}/bin/lsblk -no PKNAME "$root_dev" 2>/dev/null || true)
+    [ -z "$disk_dev" ] && disk_dev=$(echo "$root_dev" | ${pkgs.gnused}/bin/sed -E 's/.*\/([a-z0-9]+)p?[0-9]+$/\1/')
+    model=$(${pkgs.util-linux}/bin/lsblk -no MODEL "/dev/$disk_dev" 2>/dev/null | ${pkgs.findutils}/bin/xargs || true)
+    [ -z "$model" ] && model="Disk ($disk_dev)"
+    echo "disk $model"
+
+    # Prepare 400MB test file for read testing
+    ${pkgs.coreutils}/bin/dd if=/dev/zero of="$TMPFILE" bs=4M count=100 status=none conv=fdatasync 2>/dev/null
+
+    calc_speed() {
+      echo "$1" | ${pkgs.gawk}/bin/awk -F', ' '{
+        for (i=1; i<=NF; i++) {
+          if ($i ~ /bytes/) {
+            split($i, a, " ")
+            b = a[1]
+          }
+          if ($i ~ / s$/) {
+            split($i, a, " ")
+            s = a[1]
+          }
+        }
+        if (s > 0) printf "%.1f\n", (b / 1000000) / s
+      }'
+    }
+
+    # Read phase (4 live samples)
+    for i in {1..4}; do
+      res=$(LC_ALL=C ${pkgs.coreutils}/bin/dd if="$TMPFILE" of=/dev/null bs=4M iflag=direct 2>&1 || LC_ALL=C ${pkgs.coreutils}/bin/dd if="$TMPFILE" of=/dev/null bs=4M 2>&1)
+      rate=$(calc_speed "$res")
+      [ -n "$rate" ] && echo "read $rate"
+      ${pkgs.coreutils}/bin/sleep 0.3
+    done
+
+    # Write phase (4 live samples)
+    for i in {1..4}; do
+      res=$(LC_ALL=C ${pkgs.coreutils}/bin/dd if=/dev/zero of="$TMPFILE" bs=4M count=100 oflag=direct conv=fdatasync 2>&1 || LC_ALL=C ${pkgs.coreutils}/bin/dd if=/dev/zero of="$TMPFILE" bs=4M count=100 conv=fdatasync 2>&1)
+      rate=$(calc_speed "$res")
+      [ -n "$rate" ] && echo "write $rate"
+      ${pkgs.coreutils}/bin/sleep 0.3
+    done
+  '';
+
+  geminiCli = pkgs.writeScriptBin "gemini" ''#!${pkgs.python3}/bin/python3
+import os, sys, json, urllib.request, urllib.error, datetime, readline
+
+def get_api_key():
+    if "GEMINI_API_KEY" in os.environ and os.environ["GEMINI_API_KEY"].strip():
+        return os.environ["GEMINI_API_KEY"].strip()
+    config_file = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+    if os.path.isfile(config_file):
+        try:
+            with open(config_file, "r") as f:
+                data = json.load(f)
+                key = data.get("apiKey", "").strip()
+                if key: return key
+        except Exception:
+            pass
+    for path in ["~/.gemini/api_key", "~/.config/gemini/api_key"]:
+        p = os.path.expanduser(path)
+        if os.path.isfile(p):
+            try:
+                with open(p, "r") as f:
+                    key = f.read().strip()
+                    if key: return key
+            except Exception:
+                pass
+    return None
+
+def record_usage(input_tok, output_tok, model):
+    state_dir = os.path.expanduser("~/.local/state/omarchy/agents")
+    os.makedirs(state_dir, exist_ok=True)
+    history_file = os.path.join(state_dir, "gemini-history.jsonl")
+    entry = {
+        "date": datetime.datetime.now().strftime("%Y-%m-%d"),
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "inputTokens": input_tok,
+        "outputTokens": output_tok,
+        "model": model
+    }
+    try:
+        with open(history_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry) + "\n")
+    except Exception:
+        pass
+    try:
+        os.system("omarchy-agent-usage-gemini >/dev/null 2>&1 &")
+    except Exception:
+        pass
+
+def call_gemini(messages, api_key, model="gemini-2.5-flash"):
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={api_key}"
+    contents = []
+    for m in messages:
+        contents.append({"role": m["role"], "parts": [{"text": m["text"]}]})
+    payload = json.dumps({"contents": contents}).encode("utf-8")
+    req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            candidate = data.get("candidates", [{}])[0]
+            text = candidate.get("content", {}).get("parts", [{}])[0].get("text", "")
+            usage = data.get("usageMetadata", {})
+            in_tok = usage.get("promptTokenCount", max(1, len(messages[-1]["text"]) // 4))
+            out_tok = usage.get("candidatesTokenCount", max(1, len(text) // 4))
+            record_usage(in_tok, out_tok, model)
+            return text
+    except urllib.error.HTTPError as e:
+        err = e.read().decode("utf-8", errors="ignore")
+        return f"[Erro na API Gemini ({e.code})]: {err}"
+    except Exception as e:
+        return f"[Erro ao conectar]: {e}"
+
+def main():
+    api_key = get_api_key()
+    if not api_key:
+        print("\033[1;33m[Google Gemini CLI]\033[0m")
+        print("Nenhuma chave de API encontrada.")
+        print("Obtenha sua chave gratuitamente em: \033[1;34mhttps://aistudio.google.com/app/apikey\033[0m")
+        print("\nPara configurar, faça uma das opções:")
+        print("  1. export GEMINI_API_KEY='sua_chave'")
+        print("  2. Adicione em ~/.config/omarchy/agents/gemini.json:")
+        print('     { "apiKey": "sua_chave", "tier": "Pro" }')
+        print("  3. Salve em ~/.gemini/api_key")
+        sys.exit(1)
+
+    model = "gemini-2.5-flash"
+
+    if len(sys.argv) > 1:
+        prompt = " ".join(sys.argv[1:])
+        messages = [{"role": "user", "text": prompt}]
+        response = call_gemini(messages, api_key, model)
+        print(response)
+        return
+
+    print(f"\033[1;36m✦ Google Gemini CLI ({model}) - Digite 'sair' ou Ctrl+C para encerrar\033[0m\n")
+    history = []
+    while True:
+        try:
+            prompt = input("\033[1;32mVocê > \033[0m").strip()
+            if not prompt: continue
+            if prompt.lower() in ("sair", "exit", "quit"): break
+            
+            history.append({"role": "user", "text": prompt})
+            print("\033[1;35mGemini...\033[0m", end="\r", flush=True)
+            response = call_gemini(history, api_key, model)
+            print(" " * 20, end="\r")
+            print(f"\033[1;34mGemini > \033[0m{response}\n")
+            history.append({"role": "model", "text": response})
+            if len(history) > 20: history = history[-20:]
+        except (KeyboardInterrupt, EOFError):
+            print("\nAté logo!")
+            break
+
+if __name__ == "__main__":
+    main()
+'';
 in
 {
   home.packages = [
@@ -668,6 +1034,7 @@ in
     pkgs.gawk
     pkgs.btop
     pkgs.jq
+    pkgs.python3
     pkgs.brightnessctl
     quickshellToggle
     bluetoothDevice
@@ -688,6 +1055,11 @@ in
     monitorState
     monitorScaling
     displayTextSize
+    omarchyAgentUsageGemini
+    omarchyAgentUsageUpdate
+    omarchyAgent
+    omarchyDiskSpeedtest
+    geminiCli
   ];
 
   xdg.configFile."quickshell".source = quickshellConfig;

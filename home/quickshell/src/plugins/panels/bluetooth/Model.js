@@ -1,6 +1,8 @@
 function deviceLabel(device) {
   if (!device) return ""
-  return String(device.deviceName || device.name || "").trim()
+  var name = String(device.deviceName || device.name || "").trim()
+  if (name !== "") return name
+  return String(device.address || "").trim()
 }
 
 function toArray(values) {
@@ -34,8 +36,8 @@ function normalizedAddress(value) {
 }
 
 function hasHumanName(device) {
-  var label = deviceLabel(device)
-  return label !== "" && !isUuidLike(label) && !isAddressLike(label)
+  var name = String(device && (device.deviceName || device.name) || "").trim()
+  return name !== "" && !isUuidLike(name) && !isAddressLike(name)
 }
 
 function nodeProps(node) {
@@ -107,7 +109,11 @@ function deviceLists(devices) {
 
   for (var i = 0; i < values.length; i++) {
     var d = values[i]
-    if (!d || !hasHumanName(d)) continue
+    if (!d) continue
+    var label = deviceLabel(d)
+    if (isUuidLike(label)) continue
+    if (label === "" && (!d.address || d.address.trim() === "")) continue
+
     if (d.connected) connected.push(d)
     else if (d.paired || d.bonded || d.trusted) known.push(d)
     else discovered.push(d)
@@ -142,7 +148,7 @@ function visibleSections(lists, discovering) {
   var sections = []
   if (lists && lists.connected && lists.connected.length > 0) sections.push("connected")
   if (lists && lists.known && lists.known.length > 0) sections.push("known")
-  if (discovering && lists && lists.discovered && lists.discovered.length > 0) sections.push("discovered")
+  if (lists && lists.discovered && lists.discovered.length > 0) sections.push("discovered")
   return sections
 }
 

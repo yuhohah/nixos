@@ -60,7 +60,7 @@ Panel {
   }
 
   function launchAgent() {
-    if (root.bar) root.bar.run("omarchy-agent --pick")
+    if (root.bar) root.bar.run("export PATH=\"$HOME/.local/bin:$PATH\"; omarchy-agent --pick")
     root.close()
   }
 
@@ -294,10 +294,9 @@ Panel {
     return candidates
   }
 
-  // Nothing to report, nothing in the bar: Bar.qml collapses a slot whose item
-  // is invisible, so the icon appears the moment the first scan finds usage and
-  // stays away entirely on a machine that has never run either CLI.
-  visible: providers.length > 0
+  // By default, keep the bar icon visible once added to layout, with optional
+  // auto-hide if alwaysShow is explicitly set to false in inline settings.
+  visible: setting("alwaysShow", true) || providers.length > 0
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
 

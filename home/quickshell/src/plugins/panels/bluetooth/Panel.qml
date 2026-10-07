@@ -120,7 +120,7 @@ Panel {
   function sectionVisible(section) {
     if (section === "connected") return connectedDevices.length > 0
     if (section === "known") return knownDevices.length > 0
-    if (section === "discovered") return adapter && adapter.discovering && discoveredDevices.length > 0
+    if (section === "discovered") return discoveredDevices.length > 0
     return false
   }
 
@@ -412,9 +412,10 @@ Panel {
 
   onOpenedChanged: {
     if (opened) {
-      // Adopt a discovery session that is already running — a popout handoff
-      // from another monitor, or one leaked by an instance that could not
-      // finish its own stop — so this close settles it either way.
+      if (adapter !== null && adapter.enabled && !adapter.discovering) {
+        owesDiscoveryStop = true
+        adapter.discovering = true
+      }
       if (adapter !== null && adapter.discovering) owesDiscoveryStop = true
       if (connectedDevices.length > 0) { focusSection = "connected"; selectedIndex = 0 }
       else if (knownDevices.length > 0) { focusSection = "known"; selectedIndex = 0 }
@@ -513,7 +514,6 @@ Panel {
     id: discoveryRetry
     interval: 1000
     repeat: true
-    triggeredOnStart: true
     running: root.opened && root.adapter !== null && root.adapter.enabled && !root.adapter.discovering
     onTriggered: {
       root.owesDiscoveryStop = true
@@ -885,6 +885,17 @@ Panel {
           wrapMode: Text.WordWrap
           width: parent.width
         }
+
+        Text {
+          textFormat: Text.PlainText
+          visible: root.adapter && root.adapter.enabled && root.adapter.discovering && root.discoveredDevices.length === 0 && root.scrollRows.length > 0
+          text: "Scanning for nearby devices…"
+          color: Qt.darker(root.bar.foreground, 1.5)
+          font.family: root.bar.fontFamily
+          font.pixelSize: Style.font.caption
+          wrapMode: Text.WordWrap
+          width: parent.width
+        }
       }
     }
   }
@@ -927,7 +938,10 @@ Panel {
         return sectionName === "connected" ? "" : "Connected"
       }
       if (action === "connecting" || devState === 3 || dev.pairing === true) return "Connecting…"
-      if (isDiscovered) return ""
+      if (isDiscovered) {
+        if (dev.name && dev.address && dev.name !== dev.address) return dev.address
+        return "Discovered"
+      }
       return ""
     }
 

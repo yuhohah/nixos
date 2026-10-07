@@ -6,9 +6,18 @@
   "author": "Omarchy",
   "description": "Live disk write and read speed dials. Summon with: omarchy-shell shell summon omarchy.disk-speedtest",
   "kinds": [
-    "panel"
+    "panel",
+    "bar-widget"
   ],
   "entryPoints": {
-    "panel": "Panel.qml"
+    "panel": "Panel.qml",
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Disk speed test",
+    "description": "Live disk I/O and speed test launcher",
+    "category": "System",
+    "aliases": ["disk-speedtest", "disk"],
+    "allowMultiple": false
   }
 }
