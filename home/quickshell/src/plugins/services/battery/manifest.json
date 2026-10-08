@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.battery",
+  "id": "battery",
   "name": "Battery",
   "version": "1.0.0",
   "author": "Omarchy",

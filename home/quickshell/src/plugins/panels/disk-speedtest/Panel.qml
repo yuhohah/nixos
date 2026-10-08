@@ -47,7 +47,7 @@ Item {
 
   function dismiss() {
     if (shell && typeof shell.hide === "function")
-      shell.hide((manifest && manifest.id) || "omarchy.disk-speedtest")
+      shell.hide((manifest && manifest.id) || "disk-speedtest")
     else close()
   }
 
@@ -96,7 +96,7 @@ Item {
 
   Process {
     id: proc
-    command: ["omarchy-disk-speedtest"]
+    command: ["disk-speedtest"]
     stdout: SplitParser { onRead: function(line) { root.updateLine(line) } }
     // Exit and stream-finished have no guaranteed order: when a failed exit
     // beat the collector and published the generic message, replace it with
@@ -131,7 +131,7 @@ Item {
 
   SpeedTestOverlay {
     fontFamily: Style.font.family
-    layerNamespace: "omarchy-disk-speedtest"
+    layerNamespace: "quickshell-disk-speedtest"
     title: root.diskName
     leftLabel: "READ"
     rightLabel: "WRITE"

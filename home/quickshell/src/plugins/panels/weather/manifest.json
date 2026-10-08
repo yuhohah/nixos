@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "omarchy.weather",
+  "id": "weather",
   "name": "Weather",
   "version": "1.0.0",
   "author": "Omarchy",

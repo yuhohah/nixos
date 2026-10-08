@@ -6,7 +6,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "omarchy.memory"
+  moduleName: "memory"
 
   property int memUsage: 0
   property real totalGb: 0

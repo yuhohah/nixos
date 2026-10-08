@@ -6,7 +6,6 @@
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    vicinae.url = "github:vicinaehq/vicinae";
   };
 
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs:
@@ -28,6 +27,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs unstable; };
               home-manager.users.luan = import ./home/hosts/nixos-btw.nix;
             }
@@ -44,6 +44,7 @@
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
+              home-manager.backupFileExtension = "backup";
               home-manager.extraSpecialArgs = { inherit inputs unstable; };
               home-manager.users.luan = import ./home/hosts/arrow.nix;
             }

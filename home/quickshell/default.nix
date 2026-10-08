@@ -629,7 +629,7 @@ let
 
   displayTextSize = pkgs.writeShellScriptBin "display-text-size" ''
     size="''${1:-12}"
-    config_file="$HOME/.config/omarchy/shell.toml"
+    config_file="$HOME/.config/quickshell/shell.toml"
     mkdir -p "$(dirname "$config_file")"
 
     if [ ! -f "$config_file" ]; then
@@ -659,14 +659,22 @@ EOF
     fi
   '';
 
-  omarchyAgentUsageGemini = pkgs.writeScriptBin "omarchy-agent-usage-gemini" ''#!${pkgs.python3}/bin/python3
+  quickshellAgentUsageGemini = pkgs.writeScriptBin "quickshell-agent-usage-gemini" ''#!${pkgs.python3}/bin/python3
 import os, sys, glob, json, datetime
 
 brain_dir = os.path.expanduser("~/.gemini/antigravity-ide/brain")
-state_dir = os.path.expanduser("~/.local/state/omarchy/agents")
+state_dir = os.path.expanduser("~/.local/state/quickshell/agents")
 usage_dir = os.path.join(state_dir, "usage")
-config_file = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+config_file = os.path.expanduser("~/.config/quickshell/agents/gemini.json")
+if not os.path.isfile(config_file):
+    legacy_config = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+    if os.path.isfile(legacy_config):
+        config_file = legacy_config
 history_file = os.path.join(state_dir, "gemini-history.jsonl")
+if not os.path.isfile(history_file):
+    legacy_hist = os.path.expanduser("~/.local/state/omarchy/agents/gemini-history.jsonl")
+    if os.path.isfile(legacy_hist):
+        history_file = legacy_hist
 
 os.makedirs(usage_dir, exist_ok=True)
 
@@ -832,16 +840,24 @@ with open(tmp_path, "w", encoding="utf-8") as f:
 os.replace(tmp_path, out_path)
 '';
 
-  omarchyAgentUsageUpdate = pkgs.writeShellScriptBin "omarchy-agent-usage-update" ''
-    USAGE_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/omarchy/agents/usage"
+  omarchyAgentUsageGemini = pkgs.writeShellScriptBin "omarchy-agent-usage-gemini" ''
+    exec quickshell-agent-usage-gemini "$@"
+  '';
+
+  quickshellAgentUsageUpdate = pkgs.writeShellScriptBin "quickshell-agent-usage-update" ''
+    USAGE_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/agents/usage"
     mkdir -p "$USAGE_DIR"
 
-    if command -v omarchy-agent-usage-gemini >/dev/null 2>&1; then
-      omarchy-agent-usage-gemini "$@" || true
+    if command -v quickshell-agent-usage-gemini >/dev/null 2>&1; then
+      quickshell-agent-usage-gemini "$@" || true
     fi
   '';
 
-  omarchyAgent = pkgs.writeShellScriptBin "omarchy-agent" ''
+  omarchyAgentUsageUpdate = pkgs.writeShellScriptBin "omarchy-agent-usage-update" ''
+    exec quickshell-agent-usage-update "$@"
+  '';
+
+  quickshellAgent = pkgs.writeShellScriptBin "quickshell-agent" ''
     action="$1"
     if [ "$action" = "--pick" ] || [ -z "$action" ]; then
       if command -v antigravity-ide >/dev/null 2>&1; then
@@ -858,8 +874,12 @@ os.replace(tmp_path, out_path)
     fi
   '';
 
-  omarchyDiskSpeedtest = pkgs.writeShellScriptBin "omarchy-disk-speedtest" ''
-    TMPFILE="''${XDG_CACHE_HOME:-$HOME/.cache}/omarchy-speedtest.dat"
+  omarchyAgent = pkgs.writeShellScriptBin "omarchy-agent" ''
+    exec quickshell-agent "$@"
+  '';
+
+  diskSpeedtest = pkgs.writeShellScriptBin "disk-speedtest" ''
+    TMPFILE="''${XDG_CACHE_HOME:-$HOME/.cache}/disk-speedtest.dat"
     cleanup() {
       rm -f "$TMPFILE" 2>/dev/null || true
       exit 0
@@ -910,13 +930,21 @@ os.replace(tmp_path, out_path)
     done
   '';
 
+  omarchyDiskSpeedtest = pkgs.writeShellScriptBin "omarchy-disk-speedtest" ''
+    exec disk-speedtest "$@"
+  '';
+
   geminiCli = pkgs.writeScriptBin "gemini" ''#!${pkgs.python3}/bin/python3
 import os, sys, json, urllib.request, urllib.error, datetime, readline
 
 def get_api_key():
     if "GEMINI_API_KEY" in os.environ and os.environ["GEMINI_API_KEY"].strip():
         return os.environ["GEMINI_API_KEY"].strip()
-    config_file = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+    config_file = os.path.expanduser("~/.config/quickshell/agents/gemini.json")
+    if not os.path.isfile(config_file):
+        legacy = os.path.expanduser("~/.config/omarchy/agents/gemini.json")
+        if os.path.isfile(legacy):
+            config_file = legacy
     if os.path.isfile(config_file):
         try:
             with open(config_file, "r") as f:
@@ -937,7 +965,7 @@ def get_api_key():
     return None
 
 def record_usage(input_tok, output_tok, model):
-    state_dir = os.path.expanduser("~/.local/state/omarchy/agents")
+    state_dir = os.path.expanduser("~/.local/state/quickshell/agents")
     os.makedirs(state_dir, exist_ok=True)
     history_file = os.path.join(state_dir, "gemini-history.jsonl")
     entry = {
@@ -953,7 +981,7 @@ def record_usage(input_tok, output_tok, model):
     except Exception:
         pass
     try:
-        os.system("omarchy-agent-usage-gemini >/dev/null 2>&1 &")
+        os.system("quickshell-agent-usage-gemini >/dev/null 2>&1 &")
     except Exception:
         pass
 
@@ -988,7 +1016,7 @@ def main():
         print("Obtenha sua chave gratuitamente em: \033[1;34mhttps://aistudio.google.com/app/apikey\033[0m")
         print("\nPara configurar, faça uma das opções:")
         print("  1. export GEMINI_API_KEY='sua_chave'")
-        print("  2. Adicione em ~/.config/omarchy/agents/gemini.json:")
+        print("  2. Adicione em ~/.config/quickshell/agents/gemini.json:")
         print('     { "apiKey": "sua_chave", "tier": "Pro" }')
         print("  3. Salve em ~/.gemini/api_key")
         sys.exit(1)
@@ -1055,12 +1083,19 @@ in
     monitorState
     monitorScaling
     displayTextSize
+    quickshellAgentUsageGemini
     omarchyAgentUsageGemini
+    quickshellAgentUsageUpdate
     omarchyAgentUsageUpdate
+    quickshellAgent
     omarchyAgent
+    diskSpeedtest
     omarchyDiskSpeedtest
     geminiCli
   ];
 
-  xdg.configFile."quickshell".source = quickshellConfig;
+  xdg.configFile."quickshell" = {
+    source = quickshellConfig;
+    force = true;
+  };
 }

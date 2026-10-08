@@ -8,8 +8,8 @@ import qs.Ui
 
 Panel {
   id: root
-  moduleName: "omarchy.tailscale"
-  ipcTarget: "omarchy.tailscale"
+  moduleName: "tailscale"
+  ipcTarget: "tailscale"
   manageIpc: false
 
   property string focusSection: "header"

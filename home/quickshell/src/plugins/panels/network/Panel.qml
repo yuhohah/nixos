@@ -10,8 +10,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.network"
-  ipcTarget: "omarchy.network"
+  moduleName: "network"
+  ipcTarget: "network"
   // manageIpc: false so this panel can own the single IpcHandler the target
   // permits — needed for the toggleNetwork method below.
   manageIpc: false
@@ -212,7 +212,7 @@ Panel {
   }
 
   IpcHandler {
-    target: "omarchy.network"
+    target: "network"
 
     function open() { root.open() }
     function close() { root.close() }
@@ -496,7 +496,7 @@ Panel {
     if (!hasCaptivePortal) return
     // Explicit user action only. argv (not a shell string), and a fixed HTTP
     // URL: let the browser handle the redirect without trusting portal input.
-    Quickshell.execDetached(["omarchy-launch-browser", Model.captivePortalUrl])
+    Quickshell.execDetached(["xdg-open", Model.captivePortalUrl])
     close()
   }
 
@@ -523,7 +523,9 @@ Panel {
       payload.iface = info.iface
       if (info.ssid) payload.ssid = info.ssid
     }
-    bar.shell.summon("omarchy.wifiqr", JSON.stringify(payload))
+    if (!bar.shell.summon("wifiqr", JSON.stringify(payload))) {
+      bar.shell.summon("omarchy.wifiqr", JSON.stringify(payload))
+    }
   }
 
   function refresh(scanWifi) {
@@ -718,7 +720,10 @@ Panel {
     var connection = ""
     if (info.type === "wifi") connection = info.ssid || "Wi-Fi"
     else if (info.type === "ethernet") connection = "Ethernet"
-    bar.shell.summon("omarchy.speedtest", connection ? JSON.stringify({ connection: connection }) : "{}")
+    var payload = connection ? JSON.stringify({ connection: connection }) : "{}"
+    if (!bar.shell.summon("speedtest", payload)) {
+      bar.shell.summon("omarchy.speedtest", payload)
+    }
   }
 
   function dnsCommand(provider) {
@@ -731,7 +736,7 @@ Panel {
     if (!root.bar || !provider || actionProc.running) return
 
     if (provider === "Custom") {
-      var launcher = "omarchy-launch-floating-terminal-with-presentation"
+      var launcher = "alacritty -e"
       root.bar.run(launcher + " " + Util.shellQuote(root.dnsCommand(provider)))
       root.close()
       return

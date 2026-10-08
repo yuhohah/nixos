@@ -89,7 +89,7 @@ Item {
 
   function dismiss() {
     if (root.shell && typeof root.shell.hide === "function")
-      root.shell.hide((root.manifest && root.manifest.id) || "omarchy.wifiqr")
+      root.shell.hide((root.manifest && root.manifest.id) || "wifiqr")
     else close()
   }
 
@@ -215,7 +215,7 @@ Item {
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.namespace: "omarchy-network-qr"
+    WlrLayershell.namespace: "quickshell-network-qr"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
 

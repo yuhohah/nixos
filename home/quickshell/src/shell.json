@@ -59,8 +59,6 @@
       ]
     }
   },
-  "disabledPlugins": [
-    "system-update"
-  ],
+  "disabledPlugins": [],
   "plugins": []
 }

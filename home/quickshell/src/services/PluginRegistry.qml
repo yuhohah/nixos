@@ -8,7 +8,7 @@ QtObject {
   id: registry
 
   property string home: Quickshell.env("HOME")
-  property string pluginsDir: home + "/.config/omarchy/plugins"
+  property string pluginsDir: home + "/.config/quickshell/plugins"
 
   // Set by shell.qml at startup so we can also scan bundled first-party plugins.
   property string firstPartyDir: ""
@@ -148,14 +148,14 @@ QtObject {
   function isEnabled(id) {
     var raw = String(id || "")
     var key = Util.canonicalWidgetId(raw)
-    var manifest = installedPlugins[raw] || installedPlugins["omarchy." + key] || installedPlugins[key]
+    var manifest = installedPlugins[key] || installedPlugins[raw] || installedPlugins["omarchy." + key]
     var config = shellConfigProvider ? shellConfigProvider() : null
     if (manifest) {
       if (Array.isArray(manifest.kinds) && manifest.kinds.indexOf("bar") !== -1) {
         var selectedBar = ""
         if (Util.isPlainObject(config) && Util.isPlainObject(config.bar))
           selectedBar = Util.canonicalWidgetId(String(config.bar.id || ""))
-        if (!selectedBar) selectedBar = "omarchy.bar"
+        if (!selectedBar) selectedBar = "bar"
         return selectedBar === manifest.id || selectedBar === key
       }
       if (isDisabled(config, key) || isDisabled(config, manifest.id)) return false
@@ -182,9 +182,9 @@ QtObject {
       if (metadata && String(metadata.clonedFrom || "") === key && isEnabled(candidate))
         return candidate
     }
+    if (installedPlugins[key]) return key
     if (installedPlugins[raw]) return raw
     if (installedPlugins["omarchy." + key]) return "omarchy." + key
-    if (installedPlugins[key]) return key
     return raw
   }
 
@@ -274,7 +274,7 @@ QtObject {
       return { section: section, index: Math.min(requested, config.bar.layout[section].length) }
     }
 
-    var anchors = { left: "omarchy.workspaces", center: "omarchy.weather", right: "omarchy.tray" }
+    var anchors = { left: "workspaces", center: "weather", right: "tray" }
     var anchor = findRelativeBarLocation(config, anchors[section], section)
     return {
       section: section,

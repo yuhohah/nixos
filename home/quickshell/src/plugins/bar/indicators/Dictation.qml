@@ -24,7 +24,7 @@ BarIndicator {
   }
 
   Process {
-    command: ["bash", "-c", "omarchy-voxtype-status"]
+    command: ["bash", "-c", "command -v voxtype-status >/dev/null 2>&1 && voxtype-status || true"]
     running: true
     stdout: SplitParser {
       onRead: function(data) { root.update(data) }
@@ -33,6 +33,6 @@ BarIndicator {
 
   onPressed: function() {
     if (!root.bar) return
-    root.bar.run("omarchy-voxtype-config")
+    root.bar.run("command -v voxtype-config >/dev/null 2>&1 && voxtype-config || true")
   }
 }

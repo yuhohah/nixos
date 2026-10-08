@@ -1,5 +1,5 @@
 # ./hyprland/keybinds.nix
-{ ... }:
+{ pkgs, ... }:
 let
   mod = "SUPER";
   terminal = "alacritty";
@@ -7,8 +7,16 @@ let
   browser = "chromium";
   editor = "code";
   menu = "vicinae open";
+
+  hyprlandCloseAll = pkgs.writeShellScriptBin "hyprland-window-close-all" ''
+    ${pkgs.hyprland}/bin/hyprctl -j clients 2>/dev/null | ${pkgs.jq}/bin/jq -r '.[].address' 2>/dev/null | while read -r addr; do
+      [ -n "$addr" ] && ${pkgs.hyprland}/bin/hyprctl dispatch closewindow address:"$addr" 2>/dev/null || true
+    done
+  '';
 in
 {
+  home.packages = [ hyprlandCloseAll ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     configType = "lua";
@@ -41,7 +49,7 @@ in
       hl.bind("${mod} + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
       -- Binds de Janela e Foco
-      hl.bind("CTRL + ALT + DELETE", hl.dsp.exec_cmd("omarchy-hyprland-window-close-all"))
+      hl.bind("CTRL + ALT + DELETE", hl.dsp.exec_cmd("hyprland-window-close-all"))
       hl.bind("${mod} + P", hl.dsp.window.pseudo())
       hl.bind("${mod} + F", hl.dsp.window.fullscreen({ state = "fullscreen" }))
       hl.bind("${mod} + ALT + F", hl.dsp.window.fullscreen({ state = "maximized" }))

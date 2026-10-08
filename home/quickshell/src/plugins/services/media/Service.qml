@@ -245,10 +245,13 @@ Item {
 
   function showOsd(actionLabel, iconName, player) {
     if (!shell) return
-    shell.summon("omarchy.osd", JSON.stringify({
+    var payload = JSON.stringify({
       icon: iconName || "media",
       message: osdMessage(player || activePlayer, actionLabel)
-    }))
+    })
+    if (!shell.summon("osd", payload)) {
+      shell.summon("omarchy.osd", payload)
+    }
   }
 
   function scheduleOsd(actionLabel, iconName, player, waitForTrackChange, beforeTrackSignature) {

@@ -41,11 +41,12 @@ Item {
   property bool barHidden: false
   property string home: Quickshell.env("HOME")
   property string stateHome: home + "/.local/state"
-  property string omarchyConfigDir: home + "/.config/omarchy"
+  property string quickshellConfigDir: home + "/.config/quickshell"
+  property string omarchyConfigDir: quickshellConfigDir
   property var fallbackBarConfig: ({
     position: "top",
     transparent: false,
-    centerAnchor: "omarchy.clock",
+    centerAnchor: "clock",
     layout: { left: [], center: [], right: [] }
   })
   property var layoutConfig: fallbackBarConfig.layout
@@ -804,7 +805,7 @@ Item {
   }
 
   function customModuleSource(entry) {
-    var source = BarModel.customModulePath(entry, home, omarchyConfigDir)
+    var source = BarModel.customModulePath(entry, home, quickshellConfigDir)
     return source ? Util.fileUrl(source) : ""
   }
 
@@ -1104,6 +1105,13 @@ Item {
   }
 
   FileView {
+    path: root.stateHome + "/quickshell/current"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: root.scheduleTransparentForegroundRefresh()
+  }
+
+  FileView {
     path: root.stateHome + "/omarchy/current"
     watchChanges: true
     printErrors: false
@@ -1166,13 +1174,18 @@ Item {
   }
 
   // Presence of the `bar-off` flag = bar hidden. Watching the parent toggles
-  // directory because FileView can't observe a file that doesn't exist yet,
-  // and the flag is created/removed by `omarchy-toggle-bar`.
+  // directory because FileView can't observe a file that doesn't exist yet.
   Process {
     id: barHiddenProbe
     running: true
-    command: ["bash", "-c", "[[ -f $HOME/.local/state/omarchy/toggles/bar-off ]] && echo yes || echo no"]
+    command: ["bash", "-c", "[[ -f $HOME/.local/state/quickshell/toggles/bar-off || -f $HOME/.local/state/omarchy/toggles/bar-off ]] && echo yes || echo no"]
     stdout: SplitParser { onRead: function(line) { root.barHidden = String(line).trim() === "yes" } }
+  }
+  FileView {
+    path: root.home + "/.local/state/quickshell/toggles"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: barHiddenProbe.running = true
   }
   FileView {
     path: root.home + "/.local/state/omarchy/toggles"
@@ -1186,7 +1199,7 @@ Item {
   // shell restarts. `omarchy-toggle-bar` nudges this after flipping the flag
   // so the probe re-reads it even when the watch has gone quiet.
   IpcHandler {
-    target: "omarchy.bar"
+    target: "bar"
 
     // Start rather than restart: a probe already in flight was launched by the
     // directory watch after the flag flipped, so its answer is current, and
@@ -1268,7 +1281,7 @@ Item {
     implicitHeight: root.vertical ? 0 : root.barSize
     color: "transparent"
     surfaceFormat.opaque: false
-    WlrLayershell.namespace: "omarchy-bar"
+    WlrLayershell.namespace: "quickshell-bar"
     WlrLayershell.layer: WlrLayer.Top
 
     Loader {
@@ -1410,7 +1423,7 @@ Item {
     visible: active && sourceItem !== null
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.namespace: "omarchy-bar-drag-ghost"
+    WlrLayershell.namespace: "quickshell-bar-drag-ghost"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 
@@ -1472,7 +1485,7 @@ Item {
     visible: root.barMoveActive && screenMatches
     color: "transparent"
     exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.namespace: "omarchy-bar-move-ghost"
+    WlrLayershell.namespace: "quickshell-bar-move-ghost"
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
 

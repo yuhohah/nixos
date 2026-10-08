@@ -54,7 +54,6 @@
     }
   },
   "disabledPlugins": [
-    "system-update",
     "battery"
   ],
   "plugins": []

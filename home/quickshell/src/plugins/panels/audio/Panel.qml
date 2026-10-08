@@ -10,14 +10,14 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.audio"
-  ipcTarget: "omarchy.audio"
+  moduleName: "audio"
+  ipcTarget: "audio"
 
   readonly property var sink: Pipewire.defaultAudioSink
   readonly property var source: Pipewire.defaultAudioSource
   readonly property var nodes: Pipewire.nodes ? Pipewire.nodes.values : []
   readonly property var mprisPlayers: Mpris.players ? Mpris.players.values : []
-  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("omarchy.media")
+  readonly property var mediaService: bar?.shell?.firstPartyServiceFor("media")
   readonly property var activeMediaPlayer: mediaService ? mediaService.activePlayer : null
 
   readonly property var candidateSinks: {
@@ -432,10 +432,13 @@ Panel {
 
   function showVolumeOsd(volume) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    var payload = JSON.stringify({
       icon: outputIcon(volume),
       value: Math.round(volume * 100)
-    }))
+    })
+    if (!bar.shell.summon("osd", payload)) {
+      bar.shell.summon("omarchy.osd", payload)
+    }
   }
 
   function setInputVolume(v) {

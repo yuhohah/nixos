@@ -5,7 +5,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "omarchy.microphone"
+  moduleName: "microphone"
 
 
   readonly property var source: Pipewire.defaultAudioSource

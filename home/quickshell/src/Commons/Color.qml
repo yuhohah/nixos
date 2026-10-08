@@ -14,7 +14,7 @@ QtObject {
 
   readonly property string home: Quickshell.env("HOME")
   readonly property string stateHome: home + "/.local/state"
-  readonly property string currentThemePath: stateHome + "/omarchy/current/theme"
+  readonly property string currentThemePath: stateHome + "/quickshell/current/theme"
 
   property color foreground: "#cdd6f4"
   property color background: "#1e1e2e"
@@ -241,13 +241,20 @@ QtObject {
   // CLI takes effect live without restarting the shell; absent by default.
   property FileView userShellFile: FileView {
     id: userShellFile
+    path: root.home + "/.config/quickshell/shell.toml"
+    watchChanges: true
+    printErrors: false
+    onLoaded: root.loadUserShell(text())
+    onFileChanged: reload()
+    onLoadFailed: legacyUserShellFile.reload()
+  }
+
+  property FileView legacyUserShellFile: FileView {
+    id: legacyUserShellFile
     path: root.home + "/.config/omarchy/shell.toml"
     watchChanges: true
     printErrors: false
     onLoaded: root.loadUserShell(text())
-    // Re-read on change (including first creation) before loading — `text()`
-    // is stale in the change signal itself, so route both paths through reload
-    // → onLoaded to always parse fresh content.
     onFileChanged: reload()
     onLoadFailed: root.loadUserShell("")
   }

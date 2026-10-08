@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 size="${1:-12}"
-config_file="$HOME/.config/omarchy/shell.toml"
+config_file="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/shell.toml"
 mkdir -p "$(dirname "$config_file")"
 
 if [ ! -f "$config_file" ]; then

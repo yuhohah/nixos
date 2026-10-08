@@ -6,7 +6,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "omarchy.disk-speedtest"
+  moduleName: "disk-speedtest"
 
   property real prevReadSectors: 0
   property real prevWriteSectors: 0
@@ -56,14 +56,14 @@ BarWidget {
   }
 
   readonly property bool isPanelOpen: root.bar && root.bar.shell && typeof root.bar.shell.isPluginOpen === "function"
-    ? root.bar.shell.isPluginOpen("omarchy.disk-speedtest")
+    ? (root.bar.shell.isPluginOpen("disk-speedtest") || root.bar.shell.isPluginOpen("omarchy.disk-speedtest"))
     : false
 
   function toggleSpeedtest() {
     if (root.bar && root.bar.shell && typeof root.bar.shell.toggle === "function") {
-      root.bar.shell.toggle("omarchy.disk-speedtest", "")
+      root.bar.shell.toggle("disk-speedtest", "")
     } else if (root.bar && typeof root.bar.run === "function") {
-      root.bar.run("qs ipc call shell toggle omarchy.disk-speedtest \"\"")
+      root.bar.run("qs ipc call shell toggle disk-speedtest \"\"")
     }
   }
 

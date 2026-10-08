@@ -314,7 +314,7 @@ QtObject {
   // summoned popups than on the bar. Resolved once at startup; an empty env
   // value falls back to the shared fontconfig alias.
   readonly property string menuFontFamily: {
-    var override = Quickshell.env("OMARCHY_MENU_FONT")
+    var override = Quickshell.env("QUICKSHELL_MENU_FONT") || Quickshell.env("OMARCHY_MENU_FONT")
     return (override && override.length > 0) ? override : fontFamily
   }
 
@@ -501,6 +501,15 @@ QtObject {
   // reloads its config when sourced files change, then hyprctl reflects
   // the new effective value.
   property FileView windowNoGapsToggle: FileView {
+    path: Quickshell.env("HOME") + "/.local/state/quickshell/toggles/hypr/window-no-gaps.lua"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: refreshTimer.restart()
+    onLoaded: refreshTimer.restart()
+    onLoadFailed: refreshTimer.restart()
+  }
+
+  property FileView legacyWindowNoGapsToggle: FileView {
     path: Quickshell.env("HOME") + "/.local/state/omarchy/toggles/hypr/window-no-gaps.lua"
     watchChanges: true
     printErrors: false

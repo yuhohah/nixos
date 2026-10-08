@@ -8,8 +8,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.monitor"
-  ipcTarget: "omarchy.monitor"
+  moduleName: "monitor"
+  ipcTarget: "monitor"
   manageIpc: false
 
   property string omarchyPath: Quickshell.env("OMARCHY_PATH") || (Quickshell.env("HOME") + "/.config/quickshell")
@@ -220,7 +220,7 @@ Panel {
   }
 
   IpcHandler {
-    target: "omarchy.monitor"
+    target: "monitor"
 
     function brightness(percent: string): string { return root.brightnessIpc(percent) }
     function state(): string { return root.stateIpc() }
@@ -249,10 +249,13 @@ Panel {
 
   function showBrightnessOsd(percent) {
     if (!bar || !bar.shell) return
-    bar.shell.summon("omarchy.osd", JSON.stringify({
+    var payload = JSON.stringify({
       icon: "brightness",
       value: percent
-    }))
+    })
+    if (!bar.shell.summon("osd", payload)) {
+      bar.shell.summon("omarchy.osd", payload)
+    }
   }
 
   function normalizeScale(scale) {

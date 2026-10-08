@@ -37,7 +37,7 @@ BarIndicator {
 
   onPressed: function() {
     if (root.bar) {
-      root.bar.run(root.recording ? "omarchy-capture-screenrecording --stop-recording" : "omarchy-menu toggle trigger.capture.screenrecord")
+      root.bar.run(root.recording ? "pkill -SIGINT -f gpu-screen-recorder 2>/dev/null || true" : "screenshot smart")
     }
   }
 }

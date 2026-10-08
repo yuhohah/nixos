@@ -13,7 +13,7 @@ Item {
   property var settings: ({})
 
   readonly property string home: Quickshell.env("HOME") || ""
-  readonly property string usageDir: (Quickshell.env("XDG_STATE_HOME") || home + "/.local/state") + "/omarchy/agents/usage"
+  readonly property string usageDir: (Quickshell.env("XDG_STATE_HOME") || home + "/.local/state") + "/quickshell/agents/usage"
 
   // ------------------------------------------------------------- discovery
 
@@ -144,7 +144,7 @@ Item {
   }
 
   function updateCommand(kind, agentIds) {
-    var command = ["bash", "-c", "export PATH=\"$HOME/.local/bin:$PATH\"; exec omarchy-agent-usage-update \"$@\"", "--"]
+    var command = ["bash", "-c", "export PATH=\"$HOME/.local/bin:$PATH\"; if command -v quickshell-agent-usage-update >/dev/null 2>&1; then exec quickshell-agent-usage-update \"$@\"; else exec omarchy-agent-usage-update \"$@\"; fi", "--"]
     if (kind === "force") command.push("--force")
     if (kind === "limits") command.push("--limits-only")
     var providers = settings && settings.providers ? settings.providers : {}

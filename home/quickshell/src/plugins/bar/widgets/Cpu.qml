@@ -6,7 +6,7 @@ import qs.Ui
 
 BarWidget {
   id: root
-  moduleName: "omarchy.cpu"
+  moduleName: "cpu"
 
   property int cpuUsage: 0
   property real prevTotal: 0

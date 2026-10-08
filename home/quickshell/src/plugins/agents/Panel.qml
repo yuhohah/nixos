@@ -7,8 +7,8 @@ import qs.Ui
 
 Panel {
   id: root
-  moduleName: "omarchy.agents"
-  ipcTarget: "omarchy.agents"
+  moduleName: "agents"
+  ipcTarget: "agents"
   manageIpc: false
 
   readonly property color foreground: bar ? bar.foreground : Color.foreground
@@ -60,7 +60,7 @@ Panel {
   }
 
   function launchAgent() {
-    if (root.bar) root.bar.run("export PATH=\"$HOME/.local/bin:$PATH\"; omarchy-agent --pick")
+    if (root.bar) root.bar.run("export PATH=\"$HOME/.local/bin:$PATH\"; if command -v quickshell-agent >/dev/null 2>&1; then quickshell-agent --pick; else omarchy-agent --pick; fi")
     root.close()
   }
 

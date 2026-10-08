@@ -20,7 +20,7 @@ BarIndicator {
   }
 
   function openReminderFlow() {
-    Quickshell.execDetached(["omarchy-reminder", "-i"])
+    Quickshell.execDetached(["bash", "-c", "command -v reminder >/dev/null && reminder -i || true"])
   }
 
   function update(raw) {
@@ -39,10 +39,9 @@ BarIndicator {
 
   Process {
     id: jsonProc
-    command: ["omarchy-reminder", "show", "--json"]
-    stdout: StdioCollector {
-      waitForEnd: true
-      onStreamFinished: root.update(text)
+    command: ["bash", "-c", "command -v reminder >/dev/null && reminder show --json || echo '{}'"]
+    stdout: SplitParser {
+      onRead: function(text) { root.update(text) }
     }
     onExited: function(exitCode) {
       if (exitCode !== 0) {
@@ -53,7 +52,7 @@ BarIndicator {
   }
 
   onPressed: function() {
-    if (root.reminderCount > 0) Quickshell.execDetached(["omarchy-reminder", "show"])
+    if (root.reminderCount > 0) Quickshell.execDetached(["bash", "-c", "command -v reminder >/dev/null && reminder show || true"])
     else root.openReminderFlow()
   }
 }

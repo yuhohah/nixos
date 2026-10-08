@@ -11,10 +11,8 @@
       "minsize 1 1, title:^()$,class:^(steam)$"
     ];
     layerrule = [
-      "blur, quickshell"
-      "ignorezero, quickshell"
-      "blur, omarchy-.*"
-      "ignorezero, omarchy-.*"
+      "blur, quickshell.*"
+      "ignorezero, quickshell.*"
     ];
   };
 }

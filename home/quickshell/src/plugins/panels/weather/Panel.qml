@@ -7,8 +7,8 @@ import "Model.js" as Model
 
 Panel {
   id: root
-  moduleName: "omarchy.weather"
-  ipcTarget: "omarchy.weather"
+  moduleName: "weather"
+  ipcTarget: "weather"
   manageIpc: false
 
   property var anchorItem: null
@@ -95,6 +95,15 @@ Panel {
   }
 
   property FileView locationFile: FileView {
+    path: Quickshell.env("HOME") + "/.local/state/quickshell/settings/weather.json"
+    watchChanges: true
+    printErrors: false
+    onFileChanged: reload()
+    onLoaded: root.configuredLocationState = Model.parseLocationFile(text())
+    onLoadFailed: legacyLocationFile.reload()
+  }
+
+  property FileView legacyLocationFile: FileView {
     path: Quickshell.env("HOME") + "/.local/state/omarchy/settings/weather.json"
     watchChanges: true
     printErrors: false

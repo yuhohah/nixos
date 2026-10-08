@@ -29,7 +29,7 @@ ShellRoot {
   property string omarchyPath: Quickshell.env("OMARCHY_PATH") || shellPath
   readonly property string firstPartyPluginsDir: shellPath + "/plugins"
   readonly property string defaultsPath: shellPath + "/shell.json"
-  readonly property string userConfigPath: home + "/.config/omarchy/shell.json"
+  readonly property string userConfigPath: home + "/.config/quickshell/shell.json"
 
   // Bundled fallback so the shell can start even when the default shell.json is
   // missing or unreadable. The bar config here mirrors the on-disk defaults
@@ -43,11 +43,11 @@ ShellRoot {
     bar: {
       position: "top",
       transparent: false,
-      centerAnchor: "omarchy.clock",
+      centerAnchor: "clock",
       layout: {
-        left: [{ id: "omarchy.menu" }, { id: "omarchy.workspaces" }],
-        center: [{ id: "omarchy.clock", format: "dddd HH:mm" }],
-        right: [{ id: "omarchy.audio" }]
+        left: [{ id: "workspaces" }],
+        center: [{ id: "clock", format: "dddd HH:mm" }],
+        right: [{ id: "audio" }]
       }
     },
     plugins: []
@@ -167,7 +167,7 @@ ShellRoot {
 
   // Exposed as a property so child plugins (notifications, future panels)
   // can read barSize/barHidden/position to anchor relative to the active bar.
-  readonly property string defaultBarId: "omarchy.bar"
+  readonly property string defaultBarId: "bar"
   readonly property string selectedBarId: {
     var config = shell.barConfig
     if (Util.isPlainObject(config)) {
@@ -367,10 +367,14 @@ ShellRoot {
     var metadata = manifest && Util.isPlainObject(manifest.omarchy) ? manifest.omarchy : null
     var sourceId = metadata ? String(metadata.clonedFrom || "") : ""
     var allowed = {
-      "omarchy.audio": ["omarchy.osd"],
-      "omarchy.media": ["omarchy.osd"],
-      "omarchy.monitor": ["omarchy.osd"],
-      "omarchy.network": ["omarchy.speedtest", "omarchy.wifiqr"]
+      "audio": ["osd"],
+      "media": ["osd"],
+      "monitor": ["osd"],
+      "network": ["speedtest", "wifiqr"],
+      "omarchy.audio": ["osd", "omarchy.osd"],
+      "omarchy.media": ["osd", "omarchy.osd"],
+      "omarchy.monitor": ["osd", "omarchy.osd"],
+      "omarchy.network": ["speedtest", "wifiqr", "omarchy.speedtest", "omarchy.wifiqr"]
     }
     var targets = allowed[sourceId] || []
     return targets.indexOf(String(requestedId || "")) !== -1
@@ -451,7 +455,7 @@ ShellRoot {
 
   function pluginFirstPartyServiceFor(cacheKey, pluginId, requestedId) {
     var id = String(requestedId || "")
-    var allowed = ["omarchy.idle", "omarchy.media", "omarchy.nightlight", "omarchy.notifications"]
+    var allowed = ["idle", "media", "nightlight", "notifications", "omarchy.idle", "omarchy.media", "omarchy.nightlight", "omarchy.notifications"]
     if (allowed.indexOf(id) === -1) return null
     var proxyKey = cacheKey + "::" + id
     if (_pluginFirstPartyServiceApis[proxyKey]) return _pluginFirstPartyServiceApis[proxyKey]
@@ -583,7 +587,7 @@ ShellRoot {
     // property, even though the resulting proxy is otherwise acyclic.
     var firstPartyServices = ({})
     if (barCapabilities) {
-      var serviceIds = ["omarchy.idle", "omarchy.media", "omarchy.nightlight", "omarchy.notifications"]
+      var serviceIds = ["idle", "media", "nightlight", "notifications", "omarchy.idle", "omarchy.media", "omarchy.nightlight", "omarchy.notifications"]
       for (var i = 0; i < serviceIds.length; i++) {
         var serviceId = serviceIds[i]
         firstPartyServices[serviceId] = shell.pluginFirstPartyServiceFor(cacheKey, key, serviceId)
@@ -1516,7 +1520,7 @@ ShellRoot {
   // --------------------------------------------------- image selector IPC
 
   function imagePickerItem() {
-    var loader = panelLoaders["omarchy.image-picker"]
+    var loader = panelLoaders["image-picker"] || panelLoaders["omarchy.image-picker"]
     return loader && loader.item ? loader.item : null
   }
 
@@ -1539,7 +1543,7 @@ ShellRoot {
         showLabels: showLabels,
         filterable: filterable
       })
-      return shell.summon("omarchy.image-picker", payload) ? "ok" : "unknown"
+      return (shell.summon("image-picker", payload) || shell.summon("omarchy.image-picker", payload)) ? "ok" : "unknown"
     }
 
     function preload(imageRowsB64: string,
@@ -1559,6 +1563,7 @@ ShellRoot {
       if (picker && typeof picker.closeSelector === "function") {
         picker.closeSelector(doneFile || "")
       } else {
+        shell.hide("image-picker")
         shell.hide("omarchy.image-picker")
       }
       return "ok"
