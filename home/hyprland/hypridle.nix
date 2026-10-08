@@ -9,7 +9,7 @@ let
       {
         ignore_inhibit = true;
         timeout = 150; 
-        on-timeout = "brightnessctl set 10% && hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
+        on-timeout = "brightnessctl set 10% && hyprctl keyword cursor:inactive_timeout 0.1 && run-screensaver";
         on-resume = "brightnessctl set 60% && hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
       }
       {
@@ -29,7 +29,7 @@ let
       {
         ignore_inhibit = true;
         timeout = 1500;
-        on-timeout = "hyprctl keyword cursor:inactive_timeout 0.1 && ~/.local/bin/run-screensaver";
+        on-timeout = "hyprctl keyword cursor:inactive_timeout 0.1 && run-screensaver";
         on-resume = "hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
       }
       {

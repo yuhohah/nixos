@@ -11,22 +11,5 @@
       gimp 
       spotify
     ];
-
-    fonts.packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.ubuntu
-      font-awesome
-      material-design-icons
-      noto-fonts-color-emoji
-    ];
-
-    fonts.fontconfig = {
-      enable = true;
-      defaultFonts = {
-        monospace = [ "JetBrainsMono Nerd Font Mono" "Noto Color Emoji" ];
-        sansSerif = [ "Ubuntu Nerd Font" "Noto Color Emoji" ];
-        serif = [ "Noto Serif" "Noto Color Emoji" ];
-      };
-    };
   };
 }

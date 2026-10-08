@@ -31,7 +31,7 @@ in
       hl.bind("${mod} + HOME", hl.dsp.exec_cmd("wallpaper"))
       hl.bind("${mod} + R", hl.dsp.exec_cmd("hyprctl reload"))
       hl.bind("${mod} + L", hl.dsp.exec_cmd("hyprlock"))
-      hl.bind("${mod} + ALT + Q", hl.dsp.exec_cmd("quickshell"))
+      hl.bind("${mod} + ALT + Q", hl.dsp.exec_cmd("quickshell-toggle"))
       
       -- Controles de Notebook
       hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"), { locked = true, repeating = true })
@@ -86,7 +86,7 @@ in
       hl.bind("${mod} + A", hl.dsp.exec_cmd("antigravity-ide"))
       hl.bind("${mod} + C", hl.dsp.exec_cmd("${editor}"))
       hl.bind("${mod} + code:34", hl.dsp.exec_cmd("${terminal} -e btop"))
-      hl.bind("${mod} + SHIFT + O", hl.dsp.exec_cmd("obsidian -disable-gpu"))
+      hl.bind("${mod} + SHIFT + O", hl.dsp.exec_cmd("obsidian --disable-gpu"))
       hl.bind("${mod} + SHIFT + M", hl.dsp.exec_cmd("spotify"))
       hl.bind("${mod} + V", hl.dsp.exec_cmd("vesktop"))
       hl.bind("${mod} + S", hl.dsp.exec_cmd("steam"))

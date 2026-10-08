@@ -94,6 +94,12 @@ let
 
     echo "$UPDATED" > "$DATA_FILE"
 
+    TARGET_USER=$(stat -c '%U' "${cfg.configDir}" 2>/dev/null || echo "")
+    TARGET_GROUP=$(stat -c '%G' "${cfg.configDir}" 2>/dev/null || echo "")
+    if [ -n "$TARGET_USER" ] && [ -n "$TARGET_GROUP" ]; then
+      chown "$TARGET_USER:$TARGET_GROUP" "$DATA_FILE" 2>/dev/null || true
+    fi
+
     TOTAL=$(echo "$UPDATED" | "$JQ" '.total')
     HOST_COUNT=$(echo "$UPDATED" | "$JQ" --arg h "$HOSTNAME" '.hosts[$h].generations_count')
     HOST_BIRTH=$(echo "$UPDATED" | "$JQ" -r --arg h "$HOSTNAME" '.hosts[$h].born_at')

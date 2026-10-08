@@ -14,7 +14,5 @@
         enableWideVine = true;
       };
     };
-
-    environment.variables.CHROME_FLAGS = "--password-store=basic";
   };
 }

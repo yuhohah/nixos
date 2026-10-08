@@ -8,6 +8,7 @@
     ../hyprland/autostart.nix
     ../hyprland/keybinds.nix
     ../hyprland/monitors.nix
+    ../hyprland/windowrules.nix
     ../hyprland/hypridle.nix
     ../hyprland/hyprlock.nix
     ../waybar/config.nix

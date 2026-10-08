@@ -5,8 +5,8 @@
     enable = true;
     settings = {
       terminal.shell = {
-        program = "zsh";
-        args = [ "-c" "exec zsh" ];
+        program = "${pkgs.zsh}/bin/zsh";
+        args = [ "-l" ];
       };
       font = {
         normal.family = "JetBrainsMono Nerd Font Mono";

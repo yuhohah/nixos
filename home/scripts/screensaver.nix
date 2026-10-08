@@ -3,6 +3,9 @@
 let
   terminalSaver = pkgs.writeShellScriptBin "terminal-saver" ''
     LOGO_FILE="$HOME/.config/fastfetch/logo.txt"
+    if [ ! -f "$LOGO_FILE" ]; then
+      LOGO_FILE="${../fastfetch/logo.txt}"
+    fi
 
     EFFECTS=("beams" "spotlights" "rain" "print" "burn" "colorshift" "laseretch" "unstable")
 
@@ -27,6 +30,9 @@ let
 in
 {
   home.packages = [ terminalSaver runScreensaver ];
+
+  # Compatibilidade para chamadas via ~/.local/bin/
+  home.file.".local/bin/run-screensaver".source = "${runScreensaver}/bin/run-screensaver";
 
   # Alacritty Configuration for terminal-saver
   home.file.".config/alacritty/screensaver.toml".source = ../alacritty/screensaver.toml;

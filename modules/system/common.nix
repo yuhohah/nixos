@@ -48,5 +48,34 @@
       
     nixpkgs.config.allowUnfree = true;
     system.stateVersion = "25.05"; # Retirado do common anterior
+
+    time.timeZone = "America/Sao_Paulo";
+
+    i18n = {
+      defaultLocale = "pt_BR.UTF-8";
+      extraLocaleSettings = {
+        LC_TIME = "pt_BR.UTF-8";
+        LC_MONETARY = "pt_BR.UTF-8";
+        LC_NUMERIC = "pt_BR.UTF-8";
+        LC_MEASUREMENT = "pt_BR.UTF-8";
+      };
+    };
+
+    fonts.packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+      nerd-fonts.ubuntu
+      font-awesome
+      material-design-icons
+      noto-fonts-color-emoji
+    ];
+
+    fonts.fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "JetBrainsMono Nerd Font Mono" "Noto Color Emoji" ];
+        sansSerif = [ "Ubuntu Nerd Font" "Noto Color Emoji" ];
+        serif = [ "Noto Serif" "Noto Color Emoji" ];
+      };
+    };
   };
 }

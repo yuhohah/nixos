@@ -3,17 +3,7 @@
 {
 
 
-home.file.".config/fastfetch/logo.txt".text = ''
- ██▓     █    ██  ▄▄▄       ███▄    █ 
-▓██▒     ██  ▓██▒▒████▄     ██ ▀█   █ 
-▒██░    ▓██  ▒██░▒██  ▀█▄  ▓██  ▀█ ██▒
-▒██░    ▓▓█  ░██░░██▄▄▄▄██ ▓██▒  ▐▌██▒
-░██████▒▒▒█████▓  ▓█   ▓██▒▒██░   ▓██░
-░ ▒░▓  ░░▒▓▒ ▒ ▒  ▒▒   ▓▒█░░ ▒░   ▒ ▒ 
-░ ░ ▒  ░░░▒░ ░ ░   ▒   ▒▒ ░░ ░░   ░ ▒░
-  ░ ░    ░░░ ░ ░   ░   ▒      ░   ░ ░ 
-    ░  ░   ░           ░  ░         ░ 
-''; 
+  home.file.".config/fastfetch/logo.txt".source = ./logo.txt; 
 
 programs.fastfetch = {
     enable = true;
