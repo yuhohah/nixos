@@ -52,11 +52,6 @@
     tray = "auto";
   };
 
-  services.activitywatch = {
-    enable = true;
-    # Isso garante que ele inicie automaticamente na sua sessão
-    package = pkgs.activitywatch;
-  };
 
   programs.git = {
     enable = true;
@@ -76,10 +71,13 @@ home.pointerCursor.enable = true;
     
   };
 
+  home.file."Templates/Novo Documento.txt".text = "";
+
   # Variáveis de ambiente para Wayland
   home.sessionVariables = {
     XCURSOR_SIZE = "24";
     XCURSOR_THEME = "Bibata-Modern-Classic";  # Mude se escolher outro tema
   };
+
 }
 
