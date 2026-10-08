@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 {
   options.my.system.networking.enable = lib.mkEnableOption "Networking Config";

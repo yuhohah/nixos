@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 {
   options.my.system.audio.enable = lib.mkEnableOption "Audio Config";
 

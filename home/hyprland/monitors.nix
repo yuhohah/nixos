@@ -1,4 +1,4 @@
-{ config, pkgs, osConfig, lib, ... }:
+{ osConfig, ... }:
 
 let
   hostname = osConfig.networking.hostName;

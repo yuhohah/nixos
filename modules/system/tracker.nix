@@ -140,8 +140,8 @@ let
     echo ""
   '';
 
-  # Script separado para aposentar um host manualmente antes de formatar
-  retireScript = pkgs.writeShellScript "retire-host" ''
+  # Script para aposentar um host manualmente antes de formatar
+  retireScript = pkgs.writeShellScriptBin "retire-host" ''
     set -euo pipefail
 
     DATA_FILE="${cfg.configDir}/generations.json"
@@ -175,6 +175,13 @@ let
       ' "$DATA_FILE")
 
     echo "$UPDATED" > "$DATA_FILE"
+
+    TARGET_USER=$(stat -c '%U' "${cfg.configDir}" 2>/dev/null || echo "")
+    TARGET_GROUP=$(stat -c '%G' "${cfg.configDir}" 2>/dev/null || echo "")
+    if [ -n "$TARGET_USER" ] && [ -n "$TARGET_GROUP" ]; then
+      chown "$TARGET_USER:$TARGET_GROUP" "$DATA_FILE" 2>/dev/null || true
+    fi
+
     echo "✝ Host '$HOSTNAME' deceased and moved to graveyard."
     echo "  You can format now. The history is saved in $DATA_FILE"
   '';
@@ -200,10 +207,6 @@ in
     };
 
     # Disponibiliza o comando retire-host no sistema
-    environment.systemPackages = [
-      (pkgs.writeShellScriptBin "retire-host" ''
-        exec ${retireScript} "$@"
-      '')
-    ];
+    environment.systemPackages = [ retireScript ];
   };
 }

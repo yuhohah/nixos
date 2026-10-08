@@ -1,9 +1,8 @@
-{ config, pkgs, hostName, ... }:
+{ pkgs, ... }:
 
 {
   home.username = "luan";
   home.homeDirectory = "/home/luan";
-  home.packages = with pkgs; [ brightnessctl networkmanagerapplet ];
 
   wayland.windowManager.hyprland = {
     enable = true;

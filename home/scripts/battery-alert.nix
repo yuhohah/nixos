@@ -1,8 +1,8 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 let
   batteryAlert = pkgs.writeShellScriptBin "battery-alert" ''
-    STATE_FILE="/tmp/battery_alert_state"
+    STATE_FILE="''${XDG_RUNTIME_DIR:-/tmp}/battery_alert_state"
     touch "$STATE_FILE"
 
     BATTERY_PATH=$(find /sys/class/power_supply/ -name "BAT*" | head -n 1)
@@ -42,7 +42,7 @@ in
 
   systemd.user.services.battery-alert = {
     Unit = {
-      Description = "Batery Monitor";
+      Description = "Battery Monitor";
       After = [ "graphical-session.target" ];
     };
     Service = {

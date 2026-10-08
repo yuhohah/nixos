@@ -1,4 +1,4 @@
-{ config, pkgs, osConfig ? {}, lib, ... }:
+{ pkgs, osConfig ? {}, ... }:
 
 let
   hostname = osConfig.networking.hostName or "nixos-btw";
