@@ -49,12 +49,13 @@
         },
         {
           "id": "audio"
+        },
+        {
+          "id": "power"
         }
       ]
     }
   },
-  "disabledPlugins": [
-    "battery"
-  ],
+  "disabledPlugins": [],
   "plugins": []
 }
