@@ -4,6 +4,10 @@
   home.username = "luan";
   home.homeDirectory = "/home/luan";
 
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
+
   wayland.windowManager.hyprland = {
     enable = true;
     systemd.enable = true;  # opcional, mas recomendado
