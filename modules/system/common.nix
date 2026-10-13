@@ -46,6 +46,8 @@
 
     boot.supportedFilesystems = [ "ntfs" "vfat" "exfat" ];
       
+    environment.localBinInPath = true;
+
     nixpkgs.config.allowUnfree = true;
     system.stateVersion = "25.05"; # Retirado do common anterior
 

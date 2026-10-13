@@ -16,7 +16,7 @@
         "PORT=20128"
         "OMNIROUTE_SERVER_HOST=127.0.0.1"
         "DATA_DIR=%h/.local/share/omniroute"
-        "PATH=${lib.makeBinPath [ pkgs.nodejs_24 pkgs.coreutils ]}:%h/.npm-global/bin"
+        "PATH=/run/current-system/sw/bin:${lib.makeBinPath [ pkgs.nodejs_24 pkgs.coreutils ]}:%h/.npm-global/bin"
       ];
       # Decrypted env file from agenix (if present)
       EnvironmentFile = "-%t/agenix/omniroute-env";
