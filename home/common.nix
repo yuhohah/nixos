@@ -18,6 +18,10 @@
     ./scripts/screenshot.nix
     ./scripts/screensaver.nix
     ./scripts/wallpaper.nix
+
+    # AI & Secrets
+    ./omniroute
+    ./secrets
   ];
 
 
