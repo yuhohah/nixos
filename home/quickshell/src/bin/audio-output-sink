@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-wpctl status 2>/dev/null | grep -E '\*\s+[0-9]+\.' | head -n1 || echo ""

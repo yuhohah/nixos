@@ -61,8 +61,19 @@ let
     fi
   '';
 
+  audioInputSetDefault = pkgs.writeShellScriptBin "audio-input-set-default" ''
+    id="$1"
+    if [ -n "$id" ]; then
+      ${pkgs.wireplumber}/bin/wpctl set-default "$id" 2>/dev/null || true
+    fi
+  '';
+
   audioSink = pkgs.writeShellScriptBin "audio-output-sink" ''
     ${pkgs.wireplumber}/bin/wpctl status 2>/dev/null | grep -E '\*\s+[0-9]+\.' | head -n1 || echo ""
+  '';
+
+  audioSinkAvailability = pkgs.writeShellScriptBin "audio-sink-availability" ''
+    echo "available"
   '';
 
   networkStatus = pkgs.writeShellScriptBin "network-status" ''
@@ -694,7 +705,9 @@ EOF
     bluetoothDevice
     bluetoothPower
     audioSetDefault
+    audioInputSetDefault
     audioSink
+    audioSinkAvailability
     networkStatus
     networkDns
     networkBand

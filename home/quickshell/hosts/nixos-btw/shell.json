@@ -49,6 +49,12 @@
         },
         {
           "id": "audio"
+        },
+        {
+          "id": "media"
+        },
+        {
+          "id": "monitor"
         }
       ]
     }
