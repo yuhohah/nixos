@@ -7,7 +7,6 @@ import qs.Commons
 
 import "plugins/bar"
 import "services"
-import "services/AuthServiceStore.js" as AuthServiceStore
 
 ShellRoot {
   id: shell
@@ -18,7 +17,6 @@ ShellRoot {
   // own empty copies.
   property PluginRegistry pluginRegistry: PluginRegistry { }
   property BarWidgetRegistry barWidgetRegistry: BarWidgetRegistry { }
-  property AppLibrary appLibrary: AppLibrary { }
 
   property string home: Quickshell.env("HOME")
 
@@ -279,7 +277,6 @@ ShellRoot {
   property var _pluginBarEntryShellApis: ({})
   property var _pluginRegistryApis: ({})
   property var _pluginBarWidgetRegistryApis: ({})
-  property var _pluginAppLibraryApis: ({})
   property var _pluginBarStateApis: ({})
   property var _pluginFirstPartyServiceApis: ({})
 
@@ -296,11 +293,6 @@ ShellRoot {
   Component {
     id: pluginBarWidgetRegistryApiComponent
     PluginBarWidgetRegistryApi { }
-  }
-
-  Component {
-    id: pluginAppLibraryApiComponent
-    PluginAppLibraryApi { }
   }
 
   Component {
@@ -418,25 +410,6 @@ ShellRoot {
     return true
   }
 
-  function pluginAppLibraryFor(cacheKey, pluginId) {
-    if (_pluginAppLibraryApis[cacheKey]) return _pluginAppLibraryApis[cacheKey]
-    var api = pluginAppLibraryApiComponent.createObject(null, {
-      ownerPluginId: pluginId,
-      _entryName: function(entry) { return shell.appLibrary.entryName(entry) },
-      _entrySubtext: function(entry) { return shell.appLibrary.entrySubtext(entry) },
-      _sortedEntries: function(query) { return shell.appLibrary.sortedEntries(query) },
-      _iconSource: function(icon) { return shell.appLibrary.iconSource(icon) },
-      _refreshIcons: function() { shell.appLibrary.refreshIcons() },
-      _launch: function(desktopId, name) { shell.appLibrary.launch(desktopId, name) },
-      _remove: function(desktopId, name) { shell.appLibrary.remove(desktopId, name) }
-    })
-    if (!api) return null
-    var next = ({})
-    for (var id in _pluginAppLibraryApis) next[id] = _pluginAppLibraryApis[id]
-    next[cacheKey] = api
-    _pluginAppLibraryApis = next
-    return api
-  }
 
   function pluginBarStateFor(cacheKey, pluginId) {
     if (_pluginBarStateApis[cacheKey]) return _pluginBarStateApis[cacheKey]
@@ -556,7 +529,6 @@ ShellRoot {
   function revokePluginShellApi(cacheKey) {
     var key = String(cacheKey || "")
     if (!key) return
-    _pluginAppLibraryApis = shell.cacheWithoutKey(_pluginAppLibraryApis, key, true)
     _pluginFirstPartyServiceApis = shell.cacheWithoutPrefix(_pluginFirstPartyServiceApis, key + "::")
     _pluginBarEntryShellApis = shell.cacheWithoutPrefix(_pluginBarEntryShellApis, key + ":")
     _pluginShellApis = shell.cacheWithoutKey(_pluginShellApis, key, true)
@@ -596,8 +568,7 @@ ShellRoot {
 
     var api = pluginShellApiComponent.createObject(null, {
       pluginId: key,
-      appLibrary: shell.manifestHasKind(manifest, "menu")
-        ? shell.pluginAppLibraryFor(cacheKey, key) : null,
+      appLibrary: null,
       bar: shell.pluginBarStateFor(cacheKey, key),
       barConfig: shell.publicBarConfig(),
       idleConfig: shell.publicIdleConfigFor(manifest),
@@ -885,10 +856,7 @@ ShellRoot {
   }
 
   function isAuthenticationService(manifest, pluginId) {
-    var key = String(pluginId || (manifest && manifest.id) || "")
-    return AuthServiceStore.isTrusted(key)
-      || (!!manifest && Array.isArray(manifest.__hostCapabilities)
-        && manifest.__hostCapabilities.indexOf("authentication") !== -1)
+    return false
   }
 
   function ensureService(pluginId) {
@@ -901,8 +869,6 @@ ShellRoot {
     if (!manifest.entryPoints || !manifest.entryPoints.service) return null
     var url = pluginRegistry.entryPointUrl(manifest, "service")
     if (!url) return null
-    var authenticationService = shell.isAuthenticationService(manifest, key)
-    if (authenticationService && AuthServiceStore.has(key)) return null
 
     var comp = Qt.createComponent(url, Component.PreferSynchronous)
     function finalize() {
@@ -910,10 +876,7 @@ ShellRoot {
         console.warn("service plugin load failed for " + key + ": " + comp.errorString())
         return
       }
-      // Authentication services and third-party services have no visual
-      // parent. Parenting either to serviceHost would let a plugin's object
-      // traversal walk between the host and credential-bearing QML.
-      var inst = comp.createObject(manifest.__isFirstParty && !authenticationService ? serviceHost : null)
+      var inst = comp.createObject(manifest.__isFirstParty ? serviceHost : null)
       if (!inst) {
         console.warn("service plugin createObject returned null for", key)
         return
@@ -923,24 +886,18 @@ ShellRoot {
       if ("manifest" in inst) inst.manifest = shell.publicPluginManifest(manifest)
       if ("barWidgetRegistry" in inst) inst.barWidgetRegistry = shell.pluginBarWidgetRegistryFor(manifest)
       if ("pluginRegistry" in inst) inst.pluginRegistry = shell.pluginRegistryFor(manifest)
-      if (authenticationService) {
-        // Never publish lock/polkit through ShellRoot._services. The private JS
-        // import retains their lifetime without adding a traversable property
-        // or QObject parent back to the host shell.
-        AuthServiceStore.put(key, inst)
-      } else {
-        var snext = ({})
-        for (var sk in _services) snext[sk] = _services[sk]
-        snext[key] = inst
-        _services = snext
-      }
+
+      var snext = ({})
+      for (var sk in _services) snext[sk] = _services[sk]
+      snext[key] = inst
+      _services = snext
     }
     if (comp.status === Component.Loading) {
       comp.statusChanged.connect(finalize)
       return null
     }
     finalize()
-    return authenticationService ? null : (_services[key] || null)
+    return _services[key] || null
   }
 
   function _syncServices() {
@@ -952,38 +909,14 @@ ShellRoot {
       if (!Array.isArray(m.kinds) || m.kinds.indexOf("service") === -1) continue
       if (!m.entryPoints || !m.entryPoints.service) continue
       if (!pluginRegistry.isEnabled(id)) continue
-      var authenticationService = shell.isAuthenticationService(m, id)
       if (_services[id]) {
-        if (authenticationService) {
-          // A service that gains a trusted authentication capability must move
-          // out of the host's public service map before it is recreated.
-          var published = _services[id]
-          if (published && typeof published.destroy === "function") published.destroy()
-          var withoutPublished = ({})
-          for (var publishedId in _services)
-            if (publishedId !== id) withoutPublished[publishedId] = _services[publishedId]
-          _services = withoutPublished
-        } else {
-          // A kept instance outlives the rescan; hand it the fresh manifest.
-          var kept = _services[id]
-          if (kept && "shell" in kept) kept.shell = shell.pluginShellFor(m)
-          if (kept && "manifest" in kept) kept.manifest = shell.publicPluginManifest(m)
-          continue
-        }
-      }
-      if (AuthServiceStore.has(id)) {
-        if (authenticationService) {
-          AuthServiceStore.updateManifest(id, shell.publicPluginManifest(m))
-          continue
-        }
-        // A service that loses its trusted authentication capability can move
-        // back to the ordinary service map only after the isolated copy dies.
-        AuthServiceStore.destroy(id)
+        var kept = _services[id]
+        if (kept && "shell" in kept) kept.shell = shell.pluginShellFor(m)
+        if (kept && "manifest" in kept) kept.manifest = shell.publicPluginManifest(m)
+        continue
       }
       ensureService(id)
     }
-    // Drop services for plugins that have been disabled or removed, or that
-    // no longer declare a service entry point.
     for (var existingId in _services) {
       var stillThere = plugins[existingId]
       var stillService = stillThere && Array.isArray(stillThere.kinds)
@@ -997,21 +930,6 @@ ShellRoot {
       for (var k in _services) if (k !== existingId) next[k] = _services[k]
       _services = next
     }
-    // Authentication services are retained outside the root object graph, so
-    // reconcile their disable/remove lifecycle separately from _services.
-    var authenticationIds = AuthServiceStore.ids()
-    for (var ai = 0; ai < authenticationIds.length; ai++) {
-      var authenticationId = authenticationIds[ai]
-      var authenticationManifest = plugins[authenticationId]
-      var stillAuthenticationService = authenticationManifest
-        && Array.isArray(authenticationManifest.kinds)
-        && authenticationManifest.kinds.indexOf("service") !== -1
-        && authenticationManifest.entryPoints
-        && authenticationManifest.entryPoints.service
-      if (stillAuthenticationService && pluginRegistry.isEnabled(authenticationId)
-          && shell.isAuthenticationService(authenticationManifest, authenticationId)) continue
-      AuthServiceStore.destroy(authenticationId)
-    }
   }
 
   function serviceKeepLoaded(pluginId) {
@@ -1020,9 +938,6 @@ ShellRoot {
     return !!(manifest && manifest.keepLoaded === true)
   }
 
-  // keepLoaded services (lock, idle, polkit) must survive plugin hot-reload.
-  // Destroying omarchy.lock drops the ext-session-lock client while Hyprland
-  // still holds the lock, which surfaces the crashed-lockscreen fallback.
   function unloadPluginServices() {
     var next = ({})
     for (var existingId in _services) {
@@ -1034,12 +949,6 @@ ShellRoot {
       if (inst && typeof inst.destroy === "function") inst.destroy()
     }
     _services = next
-    var authenticationIds = AuthServiceStore.ids()
-    for (var ai = 0; ai < authenticationIds.length; ai++) {
-      var authenticationId = authenticationIds[ai]
-      if (!serviceKeepLoaded(authenticationId))
-        AuthServiceStore.destroy(authenticationId)
-    }
   }
 
   Connections {
@@ -1055,13 +964,6 @@ ShellRoot {
     function onChanged() { shell.syncPluginApis() }
   }
 
-  Connections {
-    target: shell.appLibrary
-    function onAppsChanged() {
-      for (var id in shell._pluginAppLibraryApis)
-        shell._pluginAppLibraryApis[id].appsChanged()
-    }
-  }
 
   // Writes inline settings to a bar layout entry or top-level plugin entry in
   // shell.json. moduleName is the entry id; settings is the merged plugin
@@ -1517,62 +1419,6 @@ ShellRoot {
     }
   }
 
-  // --------------------------------------------------- image selector IPC
-
-  function imagePickerItem() {
-    var loader = panelLoaders["image-picker"] || panelLoaders["omarchy.image-picker"]
-    return loader && loader.item ? loader.item : null
-  }
-
-  IpcHandler {
-    target: "image-selector"
-
-    function open(imageDirs: string,
-                  imageRowsB64: string,
-                  selectedImage: string,
-                  selectionFile: string,
-                  doneFile: string,
-                  showLabels: string,
-                  filterable: string): string {
-      var payload = JSON.stringify({
-        imageDirs: imageDirs,
-        imageRows: Util.decodeBase64(imageRowsB64),
-        selectedImage: selectedImage,
-        selectionFile: selectionFile,
-        doneFile: doneFile,
-        showLabels: showLabels,
-        filterable: filterable
-      })
-      return (shell.summon("image-picker", payload) || shell.summon("omarchy.image-picker", payload)) ? "ok" : "unknown"
-    }
-
-    function preload(imageRowsB64: string,
-                     selectedImage: string,
-                     showLabels: string,
-                     filterable: string): string {
-      var picker = shell.imagePickerItem()
-      if (picker && typeof picker.preloadRows === "function") {
-        picker.preloadRows(Util.decodeBase64(imageRowsB64), selectedImage,
-                           showLabels, filterable)
-      }
-      return "ok"
-    }
-
-    function cancel(doneFile: string): string {
-      var picker = shell.imagePickerItem()
-      if (picker && typeof picker.closeSelector === "function") {
-        picker.closeSelector(doneFile || "")
-      } else {
-        shell.hide("image-picker")
-        shell.hide("omarchy.image-picker")
-      }
-      return "ok"
-    }
-
-    function ping(): string {
-      return "ok"
-    }
-  }
 
   // ---------------------------------------------------------- shell IPC
 
