@@ -12,11 +12,11 @@
     },
     "nixos-btw": {
       "born_at": "2025-10-22T23:14:30Z",
-      "generations_count": 293,
-      "last_generation": 293,
-      "last_rebuild": "2026-10-13T22:36:36Z"
+      "generations_count": 295,
+      "last_generation": 295,
+      "last_rebuild": "2026-10-13T23:21:14Z"
     }
   },
   "graveyard": [],
-  "total": 479
+  "total": 481
 }

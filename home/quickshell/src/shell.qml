@@ -114,7 +114,7 @@ ShellRoot {
   readonly property var barConfig: shellConfig && Util.isPlainObject(shellConfig.bar) ? shellConfig.bar : builtinShellConfig.bar
   onBarConfigChanged: {
     if (bar && "barConfig" in bar)
-      bar.barConfig = shell.barConfigFor(shell.activeBarManifest)
+      bar.barConfig = shell.barConfig
   }
   FileView {
     id: defaultsFile

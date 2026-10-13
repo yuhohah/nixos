@@ -202,11 +202,7 @@ QtObject {
   // A caller naming a widget that has been cloned means the clone that took
   // its place, the way resolveEnabledId routes calls to it.
   function findRelativeBarLocation(config, id, section) {
-    var location = findBarLocation(config, id, section)
-    if (location.found) return location
-    if (!Util.isPlainObject(config) || !Util.isPlainObject(config.bar)) return { found: false }
-    var clone = activeCloneFor(config, Util.canonicalWidgetId(String(id)))
-    return clone ? findBarLocation(config, clone, section) : { found: false }
+    return findBarLocation(config, id, section)
   }
 
   function findEntryLocation(config, id) {
@@ -423,19 +419,14 @@ QtObject {
       }
 
       if (value && manifest && manifest.__isFirstParty) {
-        var activeClone = activeCloneFor(config, key)
-        if (activeClone) {
-          restoreCloneSource(config, activeClone, key)
-          removeDisabled(config, key)
-        }
+        removeDisabled(config, key)
       }
 
       if (isBarOption) {
         if (value) {
           config.bar.id = key
         } else if (Util.canonicalWidgetId(String(config.bar.id || "")) === key) {
-          if (clonedFrom && clonedFrom !== "omarchy.bar") config.bar.id = clonedFrom
-          else delete config.bar.id
+          delete config.bar.id
         }
         return
       }
@@ -448,18 +439,10 @@ QtObject {
         var entry = { id: key }
         var insertedWithPlacement = false
         if (!location.found && isBarWidget) {
-          var sourceLocation = clonedFrom ? findEntryLocation(config, clonedFrom) : { found: false }
-          if (sourceLocation.kind === "bar") {
-            var sourceEntry = config.bar.layout[sourceLocation.section][sourceLocation.index]
-            var replacement = Util.isPlainObject(sourceEntry) ? Util.cloneJson(sourceEntry) : entry
-            replacement.id = key
-            config.bar.layout[sourceLocation.section][sourceLocation.index] = replacement
-          } else {
-            var section = defaultBarWidgetSection(manifest)
-            var target = barTarget(config, placement || {}, section)
-            config.bar.layout[target.section].splice(target.index, 0, entry)
-            insertedWithPlacement = true
-          }
+          var section = defaultBarWidgetSection(manifest)
+          var target = barTarget(config, placement || {}, section)
+          config.bar.layout[target.section].splice(target.index, 0, entry)
+          insertedWithPlacement = true
         } else if (!location.found && !isFirstParty) {
           config.plugins.push(entry)
         }
@@ -467,15 +450,10 @@ QtObject {
         if (isBarWidget && !insertedWithPlacement && placement && Object.keys(placement).length)
           moveBarEntry(config, key, placement)
 
-        if (clonedFrom && hasNonWidgetKind && !isDisabled(config, clonedFrom)) {
-          addDisabled(config, clonedFrom)
-          setCloneShouldRestoreSource(config, key, true)
-        }
         return
       }
 
-      if (clonedFrom) restoreCloneSource(config, key, clonedFrom)
-      else if (location.kind === "bar") config.bar.layout[location.section].splice(location.index, 1)
+      if (location.kind === "bar") config.bar.layout[location.section].splice(location.index, 1)
       else if (location.kind === "plugin") config.plugins.splice(location.index, 1)
 
       // Dropping the layout entry is the whole story for a widget. Anything
