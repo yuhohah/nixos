@@ -11,7 +11,7 @@ let
     if [ -n "$XDG_RUNTIME_DIR" ] && [ -r "$XDG_RUNTIME_DIR/agenix/omniroute-api-key" ]; then
       export OMNIROUTE_API_KEY="$(cat "$XDG_RUNTIME_DIR/agenix/omniroute-api-key")"
     fi
-    exec ${t3Pkg}/bin/t3 serve --host 127.0.0.1 --port 3773
+    exec ${t3Pkg}/bin/t3 serve --host 0.0.0.0 --port 3773
   '';
 in
 {
