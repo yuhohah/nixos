@@ -14,5 +14,12 @@
         trustedInterfaces = [ "waydroid0" ];
       };
     };
+
+    # Resolução mDNS (.local) para conexões diretas na rede local (ex: nixos-btw.local)
+    services.avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+    };
   };
 }

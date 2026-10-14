@@ -37,4 +37,21 @@
     fsType = "ntfs-3g";
     options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=000" "allow_other" ];
   };
+
+  # SSH para acesso remoto e túnel T3 Code + OmniRoute
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true;
+      PermitRootLogin = "no";
+    };
+  };
+
+  # Libera a porta SSH no firewall
+  networking.firewall.allowedTCPPorts = [ 22 ];
+
+  # Permite login sem senha a partir do notebook (arrow)
+  users.users.luan.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWIovLxUNhoNHtYwSVduhurWeQkttct4dOrNALPrhNB luan@arrow"
+  ];
 }
