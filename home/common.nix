@@ -25,6 +25,7 @@
 
     # AI & Secrets
     ./omniroute
+    ./t3code
     ./secrets
   ];
 
@@ -87,4 +88,3 @@ home.pointerCursor.enable = true;
   };
 
 }
-

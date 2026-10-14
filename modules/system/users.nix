@@ -13,6 +13,7 @@
       extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "usb" "docker" "wireshark"];
       home = "/home/luan";
       homeMode = "700";
+      linger = true;
       packages = with pkgs; [ tree ];
     };
   };

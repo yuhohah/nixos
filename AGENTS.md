@@ -1,0 +1,2 @@
+- Always validate nix changes
+- After a valid change always commit
