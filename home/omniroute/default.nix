@@ -40,8 +40,10 @@
     provider = {
       omniroute = {
         npm = "@ai-sdk/openai-compatible";
-        baseURL = "http://localhost:20128/v1";
-        apiKey = "{env:OMNIROUTE_API_KEY}";
+        options = {
+          baseURL = "http://localhost:20128/v1";
+          apiKey = "{env:OMNIROUTE_API_KEY}";
+        };
         models = {
           "free-combo" = {
             name = "OmniRoute Free Combo";
