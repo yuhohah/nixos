@@ -11,7 +11,7 @@
         enable = true;
         allowedTCPPorts = [ ];
         allowedUDPPorts = [ ];
-        trustedInterfaces = [ "waydroid0" "tailscale0" ];
+        trustedInterfaces = [ "tailscale0" ];
       };
     };
 

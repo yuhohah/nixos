@@ -1,40 +1,40 @@
 -- ============================================================================
--- Aparência, Animações e Dispositivos de Entrada
+-- Aparência, Efeitos e Input
 -- ============================================================================
 
-hl.config({
-  cursor = {
-    no_hardware_cursors = true,
-    default_monitor = "",
-  },
+local host = {}
+local ok, loaded = pcall(require, "host")
+if ok and type(loaded) == "table" then
+  host = loaded
+end
+local hostname = host.hostname or "nixos-btw"
 
+local kb_layout = "us,br,es"
+local kb_variant = "intl,abnt2,"
+
+if hostname == "arrow" then
+  kb_layout = "br,us"
+  kb_variant = "abnt2,"
+end
+
+hl.setup({
   general = {
-    gaps_in = 5,
-    gaps_out = 10,
-    border_size = 3,
-    col = {
-      active_border = "rgba(cba6f7ff)",     -- mauve (accent principal)
-      inactive_border = "rgba(595959aa)",
-    },
+    gaps_in = 4,
+    gaps_out = 8,
+    border_size = 2,
+    ["col.active_border"] = "rgba(cba6f7ee) rgba(b4befeee) 45deg",
+    ["col.inactive_border"] = "rgba(313244aa)",
     layout = "dwindle",
   },
 
   decoration = {
-    rounding = 12,
-    active_opacity = 1,
-    inactive_opacity = 0.85,
-    fullscreen_opacity = 1.0,
-
+    rounding = 8,
     blur = {
       enabled = true,
-      size = 6,
-      passes = 3,
-      new_optimizations = true,
+      size = 3,
+      passes = 1,
       vibrancy = 0.1696,
-      noise = 0.02,
-      xray = false,
     },
-
     shadow = {
       enabled = true,
       range = 12,
@@ -56,8 +56,8 @@ hl.config({
   },
 
   input = {
-    kb_layout = "us,br,es",
-    kb_variant = "intl,abnt2",
+    kb_layout = kb_layout,
+    kb_variant = kb_variant,
     kb_options = "caps:escape, grp:alt_shift_toggle",
     follow_mouse = 1,
     touchpad = {
@@ -68,15 +68,8 @@ hl.config({
     force_no_accel = true,
   },
 
-  animations = {
-    enabled = true,
-  }
+  cursor = {
+    no_hardware_cursors = false,
+    enable_hyprcursor = true,
+  },
 })
-
--- Animações e curvas
-hl.curve("myBezier", { type = "bezier", points = { {0.05, 0.9}, {0.1, 1.05} } })
-hl.animation({ leaf = "windows",    enabled = true, speed = 7,  bezier = "myBezier" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 7,  bezier = "default", style = "popin 80%" })
-hl.animation({ leaf = "border",     enabled = true, speed = 10, bezier = "default" })
-hl.animation({ leaf = "fade",       enabled = true, speed = 7,  bezier = "default" })
-hl.animation({ leaf = "workspaces", enabled = true, speed = 6,  bezier = "default" })

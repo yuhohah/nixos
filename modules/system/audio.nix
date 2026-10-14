@@ -23,12 +23,15 @@
         };
       };
 
-      extraConfig.pipewire-pulse."92-low-latency" = {
-        "pulse.properties" = {
-          "pulse.min.req" = "32/48000";
-          "pulse.default.req" = "32/48000";
-          "pulse.max.req" = "32/48000";
-          "pulse.min.quantum" = "32/48000";
+      # Baixa latência agressiva para desktop/jogos; poupa CPU/bateria e evita crackling no notebook
+      extraConfig.pipewire-pulse = lib.mkIf (!config.my.roles.laptop.enable) {
+        "92-low-latency" = {
+          "pulse.properties" = {
+            "pulse.min.req" = "32/48000";
+            "pulse.default.req" = "32/48000";
+            "pulse.max.req" = "32/48000";
+            "pulse.min.quantum" = "32/48000";
+          };
         };
       };
     };

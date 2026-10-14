@@ -17,7 +17,7 @@
       hypridle
       terminaltexteffects
       ntfs3g
-      exfat
+      exfatprogs
       
       # Dependências do Screenshot
       grim

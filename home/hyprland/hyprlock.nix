@@ -15,7 +15,7 @@
       # Background
       background = [
         {
-          path = "~/Pictures/wallpaper/1119050.jpg";
+          path = "${../../images/wallpaper/1119050.jpg}";
           blur_passes = 2;
           blur_size = 1;
           noise = 0.0117;
@@ -49,7 +49,7 @@
       # User picture
       image = [
         {
-          path = "~/Pictures/profile/perfil.png";
+          path = "${../../images/wallpaper/1119050.jpg}";
           border_size = 2;
           border_color = "rgba(205, 214, 244, 0.75)"; 
           size = 95;
@@ -104,7 +104,7 @@
         # Battery
         {
           monitor = "";
-          text = "cmd[update:5000] echo \"<span foreground='##cba6f7'>󰁹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";
+          text = "cmd[update:5000] echo \"<span foreground='##cba6f7'>󰭹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";
           color = "rgb(cdd6f4)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";
@@ -116,7 +116,7 @@
         # Uptime
         {
           monitor = "";
-          text = "cmd[update:60000] echo \"<span foreground='##fab387'>󱫐 $(uptime -p | sed 's/up //')</span>\"";
+          text = "cmd[update:60000] echo \"<span foreground='##fab387'>󰛐 $(uptime -p | sed 's/up //')</span>\"";
           color = "rgb(cdd6f4)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";

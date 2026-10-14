@@ -74,7 +74,6 @@
     # Injeção de perfil no Home Manager
     home-manager.users.luan.imports = [
       ../../home/waybar/config.nix
-      ../../home/vesktop/config.nix
     ];
   };
 }

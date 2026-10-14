@@ -11,5 +11,9 @@
       gimp 
       spotify
     ];
+
+    home-manager.users.luan.imports = [
+      ../../home/vesktop/config.nix
+    ];
   };
 }
