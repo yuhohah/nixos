@@ -58,23 +58,29 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    extraConfig = ''
-      Host nixos-btw
-        HostName nixos-btw.local
-        User luan
-        IdentityFile ~/.ssh/id_ed25519
-        ServerAliveInterval 30
-        ServerAliveCountMax 3
+    settings = {
+      "*" = {};
 
-      Host nixos-ai-tunnel
-        HostName nixos-btw.local
-        User luan
-        IdentityFile ~/.ssh/id_ed25519
-        LocalForward 3773 localhost:3773
-        LocalForward 20128 localhost:20128
-        ServerAliveInterval 30
-        ServerAliveCountMax 3
-    '';
+      "nixos-btw" = {
+        HostName = "nixos-btw.local";
+        User = "luan";
+        IdentityFile = "~/.ssh/id_ed25519";
+        ServerAliveInterval = 30;
+        ServerAliveCountMax = 3;
+      };
+
+      "nixos-ai-tunnel" = {
+        HostName = "nixos-btw.local";
+        User = "luan";
+        IdentityFile = "~/.ssh/id_ed25519";
+        LocalForward = [
+          "3773 localhost:3773"
+          "20128 localhost:20128"
+        ];
+        ServerAliveInterval = 30;
+        ServerAliveCountMax = 3;
+      };
+    };
   };
 
   home.stateVersion = "25.05";

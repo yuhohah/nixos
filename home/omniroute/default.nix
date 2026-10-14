@@ -20,7 +20,7 @@
       ];
       # Decrypted env file from agenix (if present)
       EnvironmentFile = "-%t/agenix/omniroute-env";
-      WorkingDirectory = "%h/.local/share/omniroute";
+      WorkingDirectory = "%h";
       ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/.local/share/omniroute";
       ExecStart = "${pkgs.nodejs_24}/bin/npx -y omniroute@3.8.51 serve --no-open --no-tray";
       Restart = "on-failure";
@@ -31,6 +31,9 @@
       WantedBy = [ "default.target" ];
     };
   };
+
+  # Garante a existência do diretório de dados do OmniRoute
+  xdg.dataFile."omniroute/.keep".text = "";
 
   # OpenCode configuration with OmniRoute provider
   xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
