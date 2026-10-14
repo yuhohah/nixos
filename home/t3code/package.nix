@@ -44,8 +44,12 @@ pkgs.stdenv.mkDerivation {
     mkdir -p $out/bin $out/lib/t3
     cp -r . $out/lib/t3/
     makeWrapper $out/lib/t3/t3 $out/bin/t3 \
-      --prefix PATH : ${lib.makeBinPath [ pkgs.git pkgs.openssh pkgs.nodejs_24 pkgs.coreutils pkgs.opencode ]} \
-      --prefix LD_LIBRARY_PATH : ${browserLibraryPath}
+      --prefix PATH : ${lib.makeBinPath [ pkgs.git pkgs.openssh pkgs.nodejs_24 pkgs.coreutils pkgs.opencode pkgs.python3 pkgs.cacert ]} \
+      --prefix LD_LIBRARY_PATH : ${browserLibraryPath} \
+      --set-default SSL_CERT_FILE "/etc/ssl/certs/ca-certificates.crt" \
+      --set-default NIX_SSL_CERT_FILE "/etc/ssl/certs/ca-certificates.crt" \
+      --set-default SSL_CERT_DIR "/etc/ssl/certs" \
+      --set-default REQUESTS_CA_BUNDLE "/etc/ssl/certs/ca-certificates.crt"
     runHook postInstall
   '';
   meta = with lib; {

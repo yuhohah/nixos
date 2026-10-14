@@ -48,6 +48,9 @@
       
     environment.localBinInPath = true;
 
+    # Compatibilidade SSL para binários e embedded runtimes (ex: antigravity-acp, python urllib)
+    environment.etc."ssl/cert.pem".source = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+
     nixpkgs.config.allowUnfree = true;
     system.stateVersion = "25.05"; # Retirado do common anterior
 
