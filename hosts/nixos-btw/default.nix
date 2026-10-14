@@ -69,6 +69,7 @@
         if ${pkgs.tailscale}/bin/tailscale status >/dev/null 2>&1; then
           ${pkgs.util-linux}/bin/flock /run/tailscale-services.lock \
             ${pkgs.tailscale}/bin/tailscale serve \
+              --bg \
               --https=443 \
               --yes \
               http://127.0.0.1:3773
