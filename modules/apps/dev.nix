@@ -9,7 +9,6 @@
       antigravity-ide 
       #android-studio 
       #lmstudio
-      (t3code.override { enableOpencode = true; })
     ];
 
     virtualisation.docker.enable = true;

@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, hostName ? null, ... }:
 
 {
   imports = [
@@ -9,7 +9,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     backupFileExtension = "backup";
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = { inherit inputs hostName; };
     users.luan = import ../../home;
   };
 }

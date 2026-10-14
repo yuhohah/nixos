@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, hostName ? "nixos-btw", ... }:
 
 {
   home.username = "luan";
@@ -22,8 +22,8 @@
     ./scripts/screenshot.nix
     ./scripts/screensaver.nix
     ./scripts/wallpaper.nix
-
-    # AI & Secrets
+  ] ++ lib.optionals (hostName == "nixos-btw") [
+    # AI Stack & Segredos (apenas no desktop servidor; arrow acessa remoto)
     ./omniroute
     ./t3code
     ./secrets
