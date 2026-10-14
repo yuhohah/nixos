@@ -7,7 +7,7 @@ let
     if [ -n "$XDG_RUNTIME_DIR" ] && [ -r "$XDG_RUNTIME_DIR/agenix/omniroute-api-key" ]; then
       export OMNIROUTE_API_KEY="$(cat "$XDG_RUNTIME_DIR/agenix/omniroute-api-key")"
     fi
-    exec ${t3Pkg}/bin/t3 --no-open --port 3773
+    exec ${t3Pkg}/bin/t3 --no-browser --port 3773
   '';
 in
 {
@@ -18,7 +18,7 @@ in
     Unit = {
       Description = "T3 Code Web Server";
       After = [ "network.target" "agenix.service" "omniroute.service" ];
-      Wants = [ "agenix.service" "omniroute.service" ];
+      Wants = [ "omniroute.service" ];
     };
 
     Service = {

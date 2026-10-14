@@ -46,6 +46,7 @@
 
     shellAliases = {
       ai-tunnel = "ssh -N nixos-ai-tunnel";
+      ai-tunnel-remote = "ssh -N nixos-ai-tunnel-ts";
     };
 
     oh-my-zsh = {
@@ -71,6 +72,19 @@
 
       "nixos-ai-tunnel" = {
         HostName = "nixos-btw.local";
+        User = "luan";
+        IdentityFile = "~/.ssh/id_ed25519";
+        LocalForward = [
+          "3773 localhost:3773"
+          "20128 localhost:20128"
+        ];
+        ServerAliveInterval = 30;
+        ServerAliveCountMax = 3;
+      };
+
+      # Conexão remota via Tailscale (para uso em redes externas / públicas)
+      "nixos-ai-tunnel-ts" = {
+        HostName = "nixos-btw";
         User = "luan";
         IdentityFile = "~/.ssh/id_ed25519";
         LocalForward = [

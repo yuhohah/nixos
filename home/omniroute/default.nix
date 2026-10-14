@@ -6,7 +6,6 @@
     Unit = {
       Description = "OmniRoute AI gateway and router";
       After = [ "network.target" "agenix.service" ];
-      Wants = [ "agenix.service" ];
     };
 
     Service = {

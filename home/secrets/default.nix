@@ -16,4 +16,6 @@
     omniroute-api-key.file = ../../secrets/omniroute-api-key.age;
     omniroute-env.file = ../../secrets/omniroute-env.age;
   };
+
+  systemd.user.services.agenix.Service.RemainAfterExit = true;
 }

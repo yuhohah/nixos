@@ -11,7 +11,7 @@
         enable = true;
         allowedTCPPorts = [ ];
         allowedUDPPorts = [ ];
-        trustedInterfaces = [ "waydroid0" ];
+        trustedInterfaces = [ "waydroid0" "tailscale0" ];
       };
     };
 
@@ -20,6 +20,13 @@
       enable = true;
       nssmdns4 = true;
       openFirewall = true;
+    };
+
+    # Tailscale VPN mesh para acesso remoto seguro de qualquer rede pública/externa
+    services.tailscale = {
+      enable = true;
+      openFirewall = true;
+      useRoutingFeatures = "both";
     };
   };
 }

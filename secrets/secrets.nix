@@ -6,10 +6,9 @@
 # (home/secrets/default.nix) using ~/.ssh/id_ed25519.
 let
   luan-arrow = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWIovLxUNhoNHtYwSVduhurWeQkttct4dOrNALPrhNB luan@arrow";
-  # TODO: add luan's ~/.ssh/id_ed25519.pub from nixos-btw, then run `agenix -r`.
-  # luan-nixos-btw = "ssh-ed25519 AAAA... luan@nixos-btw";
+  luan-nixos-btw = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIAFLkwSZo+6o951tDjYkAYW8khMXzFccWAtN5lMpVwp luan@nixos-btw";
 
-  users = [ luan-arrow ];
+  users = [ luan-arrow luan-nixos-btw ];
 in
 {
   # OpenCode -> OmniRoute API key (generated in the OmniRoute dashboard).
