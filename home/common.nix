@@ -36,6 +36,7 @@
   xdg.userDirs = {
     enable = true;
     createDirectories = true;
+    setSessionVariables = true;
     videos = "$HOME/Videos";
     music = "$HOME/Music";
     pictures = "$HOME/Pictures";
@@ -49,7 +50,7 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    dotDir = ".config/zsh";
+    dotDir = "${config.xdg.configHome}/zsh";
     history = {
       path = "${config.xdg.stateHome}/zsh/history";
       size = 10000;
