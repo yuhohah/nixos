@@ -1,4 +1,4 @@
-{ pkgs, lib, hostName ? "nixos-btw", ... }:
+{ pkgs, lib, config, hostName ? "nixos-btw", ... }:
 
 {
   home.username = "luan";
@@ -32,11 +32,29 @@
 
   wallpaper.dir = ../images/wallpaper;
 
+  xdg.enable = true;
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+    videos = "$HOME/Videos";
+    music = "$HOME/Music";
+    pictures = "$HOME/Pictures";
+    download = "$HOME/Downloads";
+    documents = "$HOME/Documents";
+    templates = "$HOME/Templates";
+  };
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    dotDir = ".config/zsh";
+    history = {
+      path = "${config.xdg.stateHome}/zsh/history";
+      size = 10000;
+      save = 10000;
+    };
     
     # Configuração do .zshrc
     initContent = ''    
@@ -116,7 +134,7 @@
    
   };
 
-home.pointerCursor.enable = true;
+  home.pointerCursor.enable = true;
   home.pointerCursor = {
 
     package = pkgs.bibata-cursors;
