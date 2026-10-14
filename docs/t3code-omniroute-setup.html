@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia de Configuração: OmniRoute + T3 Code Remoto</title>
+  <style>
+    :root {
+      --bg: #0f111a;
+      --card-bg: #1a1c29;
+      --card-border: #282b3d;
+      --accent: #7aa2f7;
+      --accent-hover: #89b4fa;
+      --success: #9ece6a;
+      --warning: #e0af68;
+      --danger: #f7768e;
+      --text: #c0caf5;
+      --text-muted: #7982a9;
+      --code-bg: #13141f;
+      --code-border: #222538;
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "JetBrains Mono", sans-serif;
+      line-height: 1.6;
+      padding: 2.5rem 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1f2335 0%, #1a1c29 100%);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #7aa2f7, #bb9af7, #7dcfff);
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .badge-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-done {
+      background: rgba(158, 206, 106, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(158, 206, 106, 0.3);
+    }
+
+    .badge-pending {
+      background: rgba(224, 175, 104, 0.15);
+      color: var(--warning);
+      border: 1px solid rgba(224, 175, 104, 0.3);
+    }
+
+    .badge-info {
+      background: rgba(122, 162, 247, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(122, 162, 247, 0.3);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .step-item:last-child {
+      border-bottom: none;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .step-number {
+      background: var(--accent);
+      color: #0f111a;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .check-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      user-select: none;
+    }
+
+    .check-label input {
+      accent-color: var(--success);
+      width: 17px;
+      height: 17px;
+      cursor: pointer;
+    }
+
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      position: relative;
+      margin: 0.5rem 0;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--code-border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
+
+    pre {
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: "JetBrains Mono", Consolas, "Fira Code", monospace;
+      font-size: 0.92rem;
+      color: #e0af68;
+    }
+
+    code {
+      font-family: inherit;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text);
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent);
+      color: #0f111a;
+    }
+
+    .callout {
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      margin: 0.75rem 0;
+    }
+
+    .callout-info {
+      background: rgba(122, 162, 247, 0.1);
+      border-left: 4px solid var(--accent);
+      color: #b4f9f8;
+    }
+
+    .callout-success {
+      background: rgba(158, 206, 106, 0.1);
+      border-left: 4px solid var(--success);
+      color: #c3e88d;
+    }
+
+    .callout-warning {
+      background: rgba(224, 175, 104, 0.1);
+      border-left: 4px solid var(--warning);
+      color: #ffc777;
+    }
+
+    .url-card {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .url-box {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .url-box:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .url-title {
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .url-link {
+      color: var(--accent);
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .summary-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .summary-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.95rem;
+    }
+
+    .summary-icon {
+      color: var(--success);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🚀 Configuração OmniRoute + T3 Code Remoto</h1>
+      <p class="subtitle">Guia passo a passo para executar a infraestrutura de IA no desktop (<code>nixos-btw</code>) e acessá-la no notebook (<code>arrow</code>) via túnel seguro SSH.</p>
+      <div class="badge-bar">
+        <span class="badge badge-done">✓ Arrow Configurado</span>
+        <span class="badge badge-done">✓ Git Sincronizado</span>
+        <span class="badge badge-pending">⏳ nixos-btw Pendente</span>
+        <span class="badge badge-info">Portas: 3773 (T3 Code) & 20128 (OmniRoute)</span>
+      </div>
+    </header>
+
+    <!-- Resumo do que já foi feito -->
+    <section class="card">
+      <h2>✨ O que já foi realizado no Notebook (Arrow)</h2>
+      <ul class="summary-list">
+        <li><span class="summary-icon">✓</span> <strong>Git Rebase & Push:</strong> As branches foram sincronizadas e o commit <code>feat(network): configure OpenSSH on nixos-btw...</code> já está no GitHub (<code>origin/main</code>).</li>
+        <li><span class="summary-icon">✓</span> <strong>OpenSSH & Firewall:</strong> <code>hosts/nixos-btw/default.nix</code> configurado para rodar OpenSSH na porta 22 e autorizar a chave pública do notebook automaticamente.</li>
+        <li><span class="summary-icon">✓</span> <strong>Avahi mDNS (.local):</strong> Habilitado em ambos os hosts para que a conexão funcione por <code>nixos-btw.local</code> sem precisar fixar IP.</li>
+        <li><span class="summary-icon">✓</span> <strong>SSH Tunnel & Alias:</strong> Criado o bloco <code>nixos-ai-tunnel</code> e o alias <code>ai-tunnel</code> no zsh para encaminhar as portas 3773 e 20128 num único comando.</li>
+        <li><span class="summary-icon">✓</span> <strong>Validação Nix:</strong> Compilação avaliada com sucesso (<code>nix eval</code> passou 100% para <code>arrow</code> e <code>nixos-btw</code>).</li>
+      </ul>
+    </section>
+
+    <!-- Passos a executar no Desktop -->
+    <section class="card">
+      <h2>🖥️ Passos para Executar no Desktop (nixos-btw)</h2>
+
+      <!-- Passo 1 -->
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">
+            <span class="step-number">1</span> Puxar as alterações no repositório
+          </div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>No terminal do <strong>nixos-btw</strong>, atualize o repositório local com as novas definições de rede e serviços:</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code>cd ~/Configuration/nixos
+git pull origin main</code></pre>
+        </div>
+      </div>
+
+      <!-- Passo 2 -->
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">
+            <span class="step-number">2</span> Configurar os Segredos do Agenix
+          </div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>O OmniRoute e o T3 Code utilizam segredos decriptados via chave SSH (<code>~/.ssh/id_ed25519</code>). Escolha uma das opções abaixo:</p>
+
+        <div class="callout callout-info">
+          <div>
+            <strong>Opção Recomendada (Chave própria com Agenix):</strong>
+            <ol style="margin-left: 1.25rem; margin-top: 0.35rem;">
+              <li>Obtenha a chave pública do desktop:
+                <div class="code-block" style="margin-top: 0.25rem;">
+                  <div class="code-header"><span>Bash (Desktop)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+                  <pre><code>cat ~/.ssh/id_ed25519.pub</code></pre>
+                </div>
+              </li>
+              <li>Adicione a linha em <code>secrets/secrets.nix</code> na lista <code>users = [ luan-arrow luan-nixos-btw ];</code></li>
+              <li>Re-cripte os segredos:
+                <div class="code-block" style="margin-top: 0.25rem;">
+                  <div class="code-header"><span>Bash (Desktop)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+                  <pre><code>cd ~/Configuration/nixos/secrets
+nix run github:ryantm/agenix -- -r
+git commit -am "chore: add nixos-btw to agenix recipients"</code></pre>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div>
+            <strong>Opção Rápida (Reutilizar chave do Arrow):</strong><br>
+            Se preferir não re-criptar os segredos agora, basta copiar a chave privada de <code>~/.ssh/id_ed25519</code> do notebook para o mesmo local no desktop.
+          </div>
+        </div>
+      </div>
+
+      <!-- Passo 3 -->
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">
+            <span class="step-number">3</span> Aplicar a Nova Configuração no Desktop
+          </div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>Compile e ative a configuração no desktop. Isso iniciará o <strong>OpenSSH</strong> na porta 22 e ativará os serviços em background com <strong>lingering</strong> (inicialização automática no boot sem precisar de login gráfico):</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash (Desktop)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code>cd ~/Configuration/nixos
+sudo nixos-rebuild switch --flake .#nixos-btw</code></pre>
+        </div>
+      </div>
+
+      <!-- Passo 4 -->
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">
+            <span class="step-number">4</span> Migrar o Banco de Dados do OmniRoute (Opcional)
+          </div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>Para não precisar reconectar manualmente seus provedores (Kiro AI, OpenRouter, NVIDIA NIM, Antigravity) no desktop, copie o banco de dados do notebook para o desktop:</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash (Executar no Notebook Arrow)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code># Copia o banco SQLite e configurações já autenticadas
+scp -r ~/.local/share/omniroute/ luan@nixos-btw.local:~/.local/share/</code></pre>
+        </div>
+      </div>
+
+      <!-- Passo 5 -->
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">
+            <span class="step-number">5</span> Confirmar Serviços Ativos no Desktop
+          </div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>Verifique se os serviços do T3 Code e OmniRoute estão rodando perfeitamente:</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash (Desktop)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code>systemctl --user status omniroute.service
+systemctl --user status t3code.service</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Como conectar no Notebook -->
+    <section class="card">
+      <h2>💻 Conectando e Utilizando a Partir do Notebook</h2>
+
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">1. Atualizar o Notebook (Arrow)</div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>Aplique o rebuild no notebook para carregar o alias do zsh e as configurações SSH:</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash (Notebook)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code>sudo nixos-rebuild switch --flake .#arrow</code></pre>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">2. Abrir o Túnel SSH</div>
+          <label class="check-label"><input type="checkbox"> Feito</label>
+        </div>
+        <p>Basta rodar no seu terminal:</p>
+        <div class="code-block">
+          <div class="code-header"><span>Bash (Notebook)</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+          <pre><code>ai-tunnel</code></pre>
+        </div>
+        <p class="subtitle" style="font-size: 0.9rem;">(Esse comando é um atalho para <code>ssh -N -L 3773:localhost:3773 -L 20128:localhost:20128 luan@nixos-btw.local</code>).</p>
+      </div>
+
+      <div class="step-item">
+        <div class="step-header">
+          <div class="step-title">3. Acessar as Interfaces no Navegador</div>
+        </div>
+        <p>Com o túnel aberto, acesse normalmente no seu navegador no notebook:</p>
+
+        <div class="url-card">
+          <a class="url-box" href="http://localhost:3773" target="_blank">
+            <span class="url-title">🤖 T3 Code Workspace</span>
+            <span class="url-link">http://localhost:3773</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Editor de código e chat de agentes remoto</span>
+          </a>
+
+          <a class="url-box" href="http://localhost:20128/dashboard" target="_blank">
+            <span class="url-title">📊 OmniRoute Dashboard</span>
+            <span class="url-link">http://localhost:20128/dashboard</span>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Monitoramento de cotas, Kiro, NVIDIA e OpenRouter</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Resolução de Problemas -->
+    <section class="card">
+      <h2>🛠️ Resolução de Problemas (Troubleshooting)</h2>
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <strong style="color: #fff;">1. O comando <code>ai-tunnel</code> diz "Could not resolve hostname nixos-btw.local":</strong>
+          <p style="font-size: 0.92rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Verifique o IP local do desktop rodando <code>ip -br a</code> no desktop. Você pode conectar diretamente pelo IP:
+            <code style="background: var(--code-bg); padding: 2px 6px; border-radius: 4px;">ssh -N -L 3773:localhost:3773 -L 20128:localhost:20128 luan@&lt;IP_DO_DESKTOP&gt;</code>.
+          </p>
+        </div>
+
+        <div>
+          <strong style="color: #fff;">2. Porta 3773 já em uso no notebook:</strong>
+          <p style="font-size: 0.92rem; color: var(--text-muted); margin-top: 0.25rem;">
+            Se o T3 Code estiver rodando localmente no notebook também, você pode mapear para outra porta local, por exemplo <code>3774:localhost:3773</code>, ou parar o serviço local no notebook com <code>systemctl --user stop t3code.service</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function copyCode(btn) {
+      const pre = btn.parentElement.nextElementSibling;
+      const code = pre.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = 'Copiado!';
+        btn.style.background = '#9ece6a';
+        btn.style.color = '#0f111a';
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
