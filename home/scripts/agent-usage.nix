@@ -2,9 +2,11 @@
 
 let
   quickshellAgentUsageGemini = pkgs.writeScriptBin "quickshell-agent-usage-gemini" ''#!${pkgs.python3}/bin/python3
-import os, sys, glob, json, datetime
+import os, sys, glob, json, datetime, sqlite3, re
 
-brain_dir = os.path.expanduser("~/.gemini/antigravity-ide/brain")
+brain_patterns = [
+    os.path.expanduser("~/.gemini/*/brain"),
+]
 state_dir = os.path.expanduser("~/.local/state/quickshell/agents")
 usage_dir = os.path.join(state_dir, "usage")
 config_file = os.path.expanduser("~/.config/quickshell/agents/gemini.json")
@@ -28,7 +30,7 @@ if os.path.isfile(config_file):
     except Exception:
         pass
 
-now = datetime.datetime.now(datetime.timezone.utc)
+now_utc = datetime.datetime.now(datetime.timezone.utc)
 local_now = datetime.datetime.now()
 today_str = local_now.strftime("%Y-%m-%d")
 
@@ -41,65 +43,120 @@ today_prompts = 0
 today_sessions_set = set()
 all_sessions = set()
 active_dates = set()
+prompt_timestamps = []
 
-today_tokens_by_model = {"gemini-2.5-pro": 0, "gemini-2.5-flash": 0}
-model_usage = {
-    "gemini-2.5-pro": {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0},
-    "gemini-2.5-flash": {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0}
-}
+today_tokens_by_model = {}
+model_usage = {}
 
-transcripts = glob.glob(os.path.join(brain_dir, "*", ".system_generated", "logs", "transcript.jsonl"))
+def get_models_for_conv(conv_db_path):
+    if not os.path.isfile(conv_db_path):
+        return {}, "gemini-3.8-flash"
+    try:
+        conn = sqlite3.connect(conv_db_path)
+        c = conn.cursor()
+        c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='executor_metadata';")
+        if not c.fetchone():
+            return {}, "gemini-3.8-flash"
+        c.execute("SELECT idx, data FROM executor_metadata ORDER BY idx")
+        mapping = {}
+        last_model = "gemini-3.8-flash"
+        for idx, data in c.fetchall():
+            found = re.findall(rb'((?:gemini|claude|gpt)-[a-zA-Z0-9\._-]+)', data)
+            models = [f.decode('latin1') for f in found if not any(x in f.decode('latin1') for x in ['handoff', 'sandbox', 'proxy', 'tools', 'code'])]
+            if models:
+                mapping[idx] = models[0]
+                last_model = models[0]
+        return mapping, last_model
+    except Exception:
+        return {}, "gemini-3.8-flash"
+
+brain_dirs = []
+for p in brain_patterns:
+    brain_dirs.extend(glob.glob(p))
+
+transcripts = []
+for bd in brain_dirs:
+    transcripts.extend(glob.glob(os.path.join(bd, "*", ".system_generated", "logs", "transcript.jsonl")))
 
 for t_path in transcripts:
-    conv_id = os.path.basename(os.path.dirname(os.path.dirname(os.path.dirname(t_path))))
+    parts = t_path.split(os.sep)
+    conv_id = parts[-4]
+    app_name = parts[-6]
     all_sessions.add(conv_id)
     session_has_today = False
     
+    db_path = os.path.expanduser(f"~/.gemini/{app_name}/conversations/{conv_id}.db")
+    mapping, default_model = get_models_for_conv(db_path)
+    user_idx = 0
+
     try:
         with open(t_path, "r", encoding="utf-8", errors="ignore") as f:
             for line in f:
                 if not line.strip(): continue
-                obj = json.loads(line)
-                step_type = obj.get("type", "")
+                try:
+                    obj = json.loads(line)
+                except Exception:
+                    continue
+                
+                stype = obj.get("type", "")
                 created = obj.get("created_at", "")
                 
-                content = obj.get("content", "")
-                thinking = obj.get("thinking", "")
-                char_count = len(content) + len(thinking)
-                step_tokens = max(1, char_count // 4)
-                
+                dt_obj = None
                 date_str = ""
                 if created:
                     try:
-                        dt = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone()
-                        date_str = dt.strftime("%Y-%m-%d")
+                        dt_obj = datetime.datetime.fromisoformat(created.replace("Z", "+00:00")).astimezone()
+                        date_str = dt_obj.strftime("%Y-%m-%d")
                     except Exception:
                         date_str = created[:10]
-                        
+
                 if date_str:
                     active_dates.add(date_str)
-                    if date_str in recent_tokens:
-                        recent_tokens[date_str] += step_tokens
                     if date_str == today_str:
                         session_has_today = True
 
-                if step_type == "USER_INPUT":
+                if stype == "USER_INPUT":
+                    user_idx += 1
                     total_prompts += 1
+                    if dt_obj:
+                        prompt_timestamps.append(dt_obj)
                     if date_str == today_str:
                         today_prompts += 1
                     if date_str in recent_prompts:
                         recent_prompts[date_str] += 1
-                    model_usage["gemini-2.5-pro"]["inputTokens"] += step_tokens
-                    if date_str == today_str:
-                        today_tokens_by_model["gemini-2.5-pro"] += step_tokens
-                elif step_type in ("MODEL_RESPONSE", "PLANNER_RESPONSE"):
-                    model_usage["gemini-2.5-pro"]["outputTokens"] += step_tokens
-                    if date_str == today_str:
-                        today_tokens_by_model["gemini-2.5-pro"] += step_tokens
+
+                curr_model = mapping.get(user_idx, default_model)
+                if curr_model not in model_usage:
+                    model_usage[curr_model] = {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0}
+                if curr_model not in today_tokens_by_model:
+                    today_tokens_by_model[curr_model] = 0
+
+                has_tok = any(k in obj for k in ("input_tokens", "output_tokens", "cache_read_tokens"))
+                if has_tok:
+                    in_tok = obj.get("input_tokens", 0) or 0
+                    out_tok = obj.get("output_tokens", 0) or 0
+                    cache_tok = obj.get("cache_read_tokens", 0) or 0
                 else:
-                    model_usage["gemini-2.5-flash"]["inputTokens"] += step_tokens
-                    if date_str == today_str:
-                        today_tokens_by_model["gemini-2.5-flash"] += step_tokens
+                    content = obj.get("content", "")
+                    thinking = obj.get("thinking", "")
+                    step_tok = max(1, (len(content) + len(thinking)) // 4)
+                    if stype == "USER_INPUT":
+                        in_tok = step_tok
+                        out_tok = 0
+                    else:
+                        in_tok = 0
+                        out_tok = step_tok
+                    cache_tok = 0
+
+                step_tot = in_tok + out_tok + cache_tok
+                model_usage[curr_model]["inputTokens"] += in_tok
+                model_usage[curr_model]["outputTokens"] += out_tok
+                model_usage[curr_model]["cacheReadInputTokens"] += cache_tok
+
+                if date_str in recent_tokens:
+                    recent_tokens[date_str] += step_tot
+                if date_str == today_str:
+                    today_tokens_by_model[curr_model] += step_tot
 
         if session_has_today:
             today_sessions_set.add(conv_id)
@@ -115,7 +172,7 @@ if os.path.isfile(history_file):
                 d = item.get("date", today_str)
                 in_tok = item.get("inputTokens", 0)
                 out_tok = item.get("outputTokens", 0)
-                m = item.get("model", "gemini-2.5-pro")
+                m = item.get("model", "gemini-3.8-flash")
                 if m not in model_usage:
                     model_usage[m] = {"inputTokens": 0, "outputTokens": 0, "cacheReadInputTokens": 0, "cacheCreationInputTokens": 0}
                 if m not in today_tokens_by_model:
@@ -137,13 +194,58 @@ if os.path.isfile(history_file):
 today_total_tokens = sum(today_tokens_by_model.values())
 recent_days = [{"date": d, "messageCount": recent_tokens[d]} for d in dates]
 
-next_session_reset = (now + datetime.timedelta(hours=3)).strftime("%Y-%m-%dT%H:00:00Z")
-days_until_sunday = (6 - now.weekday()) % 7 or 7
-next_weekly_reset = (now + datetime.timedelta(days=days_until_sunday)).strftime("%Y-%m-%dT00:00:00Z")
+# Clean up models with 0 today tokens
+today_tokens_by_model = {m: tok for m, tok in today_tokens_by_model.items() if tok > 0}
 
-session_pct = min(0.95, round(today_prompts / max(1, config.get("sessionLimit", 50)), 2))
+# Session calculation (5-hour window)
+cutoff_5h = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=5)
+prompts_5h = [t for t in prompt_timestamps if t.astimezone(datetime.timezone.utc) >= cutoff_5h]
+
+if prompts_5h:
+    first_prompt_5h = min(prompts_5h)
+    session_reset_dt = first_prompt_5h + datetime.timedelta(hours=5)
+    next_session_reset = session_reset_dt.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    session_pct = min(0.95, round(len(prompts_5h) / max(1, config.get("sessionLimit", 50)), 2))
+else:
+    session_pct = 0.0
+    next_session_reset = ""
+
+# Daily calculation (local midnight)
+local_midnight = local_now.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=1)
+next_daily_reset = local_midnight.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+daily_limit = config.get("dailyLimit", config.get("sessionLimit", 100))
+daily_pct = min(0.95, round(today_prompts / max(1, daily_limit), 2))
+
+# Weekly calculation (next Sunday midnight)
+days_to_sunday = (6 - local_now.weekday()) % 7
+if days_to_sunday == 0:
+    days_to_sunday = 7
+sunday_midnight = local_now.replace(hour=0, minute=0, second=0, microsecond=0) + datetime.timedelta(days=days_to_sunday)
+next_weekly_reset = sunday_midnight.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 weekly_prompts = sum(recent_prompts.values())
-weekly_pct = min(0.95, round(weekly_prompts / max(1, config.get("weeklyLimit", 500)), 2))
+weekly_limit = config.get("weeklyLimit", 500)
+weekly_pct = min(0.95, round(weekly_prompts / max(1, weekly_limit), 2))
+
+limits = [
+    {
+        "title": "Session",
+        "label": "Session (5-hour)",
+        "percent": session_pct,
+        "resetsAt": next_session_reset
+    },
+    {
+        "title": "Daily",
+        "label": "Daily (24-hour)",
+        "percent": daily_pct,
+        "resetsAt": next_daily_reset
+    },
+    {
+        "title": "Weekly",
+        "label": "Weekly (7-day)",
+        "percent": weekly_pct,
+        "resetsAt": next_weekly_reset
+    }
+]
 
 record = {
     "id": "gemini",
@@ -152,18 +254,7 @@ record = {
     "tierLabel": config.get("tier", "Advanced"),
     "usageStatusText": "",
     "authHelpText": "",
-    "limits": [
-        {
-            "label": "Session (5-hour)",
-            "percent": session_pct,
-            "resetsAt": next_session_reset
-        },
-        {
-            "label": "Weekly (7-day)",
-            "percent": weekly_pct,
-            "resetsAt": next_weekly_reset
-        }
-    ],
+    "limits": limits,
     "todayPrompts": today_prompts,
     "todaySessions": len(today_sessions_set) or 1,
     "todayTotalTokens": today_total_tokens,
@@ -259,7 +350,7 @@ in
         Description = "Watch Antigravity transcript changes for immediate agent metrics update";
       };
       Path = {
-        PathModified = "%h/.gemini/antigravity-ide/brain";
+        PathModified = "%h/.gemini";
         Unit = "agent-usage-tracker.service";
       };
       Install = {

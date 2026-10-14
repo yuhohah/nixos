@@ -144,7 +144,7 @@ Item {
   }
 
   function updateCommand(kind, agentIds) {
-    var command = ["bash", "-c", "export PATH=\"$HOME/.local/bin:$PATH\"; if command -v quickshell-agent-usage-update >/dev/null 2>&1; then exec quickshell-agent-usage-update \"$@\"; else exec omarchy-agent-usage-update \"$@\"; fi", "--"]
+    var command = ["bash", "-c", "export PATH=\"$HOME/.config/quickshell/bin:$HOME/.local/bin:$PATH\"; if command -v quickshell-agent-usage-update >/dev/null 2>&1; then exec quickshell-agent-usage-update \"$@\"; else exec omarchy-agent-usage-update \"$@\"; fi", "--"]
     if (kind === "force") command.push("--force")
     if (kind === "limits") command.push("--limits-only")
     var providers = settings && settings.providers ? settings.providers : {}
@@ -725,7 +725,23 @@ Item {
   // version and title-case the words around it.
   function friendlyModelName(id) {
     if (!id) return "Unknown"
-    var name = String(id).replace(/^claude-/, "").replace(/-\d{8}$/, "")
+    var cleanId = String(id).replace(/-\d{8}$/, "")
+    var known = {
+      "gemini-3.8-flash-high": "Gemini 3.8 Flash (High)",
+      "gemini-3.8-flash-medium": "Gemini 3.8 Flash (Medium)",
+      "gemini-3.8-flash-low": "Gemini 3.8 Flash (Low)",
+      "gemini-3.8-flash": "Gemini 3.8 Flash",
+      "gemini-3.7-flash-high": "Gemini 3.7 Flash (High)",
+      "gemini-3.7-flash": "Gemini 3.7 Flash",
+      "gemini-3.6-flash-medium": "Gemini 3.6 Flash (Medium)",
+      "gemini-2.5-pro": "Gemini 2.5 Pro",
+      "gemini-2.5-flash": "Gemini 2.5 Flash",
+      "claude-sonnet-4-6": "Claude Sonnet 4.6",
+      "claude-opus-4-6": "Claude Opus 4.6",
+      "claude-haiku-4-5": "Claude Haiku 4.5"
+    }
+    if (known[cleanId]) return known[cleanId]
+    var name = cleanId.replace(/^claude-/, "")
     var parts = name.split("-")
     var words = []
     var version = []

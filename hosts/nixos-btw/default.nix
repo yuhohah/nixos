@@ -9,6 +9,7 @@
 
   generationTracker.configDir = "/home/luan/Configuration/nixos";
 
+  # Sistema base
   my.system.core.enable = true;
   my.system.networking.enable = true;
   my.system.audio.enable = true;
@@ -16,8 +17,11 @@
   my.system.greetd.enable = true;
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
-  my.system.gaming.enable = true;
+  
+  # Role de jogos e usuário
+  my.roles.gaming.enable = true;
 
+  # Aplicativos
   my.apps.core.enable = true;
   my.apps.media.enable = true;
   my.apps.dev.enable = true;
@@ -27,13 +31,7 @@
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # Kernel modules para jogos e Waydroid
-  boot.kernelModules = [ "ntsync" "binder_linux" ];
-
-  boot.kernel.sysctl = {
-    "vm.max_map_count" = 2147483642; 
-  };
-
+  # Disco secundário específico da máquina
   fileSystems."/mnt/disk" = {
     device = "/dev/disk/by-uuid/CA28A08128A06E5F";
     fsType = "ntfs-3g";

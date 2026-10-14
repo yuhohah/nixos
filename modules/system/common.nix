@@ -8,14 +8,14 @@
     ./greetd.nix
     ./users.nix
     ./gvfs.nix
-    ./gaming.nix
     ./tracker.nix
+    ./home-manager.nix
+    ../roles/default.nix
 
     ../apps/core.nix
     ../apps/media.nix
     ../apps/dev.nix
     ../apps/browsers.nix
-    ../apps/laptop.nix
     ../apps/waydroid.nix
   ];
   

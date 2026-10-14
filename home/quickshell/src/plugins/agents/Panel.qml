@@ -60,7 +60,7 @@ Panel {
   }
 
   function launchAgent() {
-    if (root.bar) root.bar.run("export PATH=\"$HOME/.local/bin:$PATH\"; if command -v quickshell-agent >/dev/null 2>&1; then quickshell-agent --pick; else omarchy-agent --pick; fi")
+    if (root.bar) root.bar.run("export PATH=\"$HOME/.config/quickshell/bin:$HOME/.local/bin:$PATH\"; if command -v quickshell-agent >/dev/null 2>&1; then quickshell-agent --pick; else omarchy-agent --pick; fi")
     root.close()
   }
 
