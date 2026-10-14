@@ -25,6 +25,7 @@
     # Tailscale VPN mesh para acesso remoto seguro de qualquer rede pública/externa
     services.tailscale = {
       enable = true;
+      extraSetFlags = [ "--operator=luan" ];
       openFirewall = true;
       useRoutingFeatures = "both";
     };

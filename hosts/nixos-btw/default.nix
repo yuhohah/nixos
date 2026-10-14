@@ -54,4 +54,26 @@
   users.users.luan.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWIovLxUNhoNHtYwSVduhurWeQkttct4dOrNALPrhNB luan@arrow"
   ];
+
+  # Publica o T3 Code via HTTPS seguro na rede privada Tailscale (acesso direto pelo navegador de qualquer aparelho)
+  systemd.services.tailscale-service-t3 = {
+    description = "Publicar T3 Code via Tailscale Serve (HTTPS :443)";
+    after = [ "tailscaled.service" ];
+    wants = [ "tailscaled.service" ];
+    wantedBy = [ "multi-user.target" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "tailscale-serve-t3" ''
+        if ${pkgs.tailscale}/bin/tailscale status >/dev/null 2>&1; then
+          ${pkgs.util-linux}/bin/flock /run/tailscale-services.lock \
+            ${pkgs.tailscale}/bin/tailscale serve \
+              --https=443 \
+              --yes \
+              http://127.0.0.1:3773
+        fi
+      '';
+    };
+  };
 }

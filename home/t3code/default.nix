@@ -1,13 +1,13 @@
 { pkgs, lib, ... }:
 
 let
-  t3Pkg = pkgs.t3code.override { enableOpencode = true; };
+  t3Pkg = pkgs.callPackage ./package.nix { };
 
   t3Runner = pkgs.writeShellScript "t3code-start" ''
     if [ -n "$XDG_RUNTIME_DIR" ] && [ -r "$XDG_RUNTIME_DIR/agenix/omniroute-api-key" ]; then
       export OMNIROUTE_API_KEY="$(cat "$XDG_RUNTIME_DIR/agenix/omniroute-api-key")"
     fi
-    exec ${t3Pkg}/bin/t3 --no-browser --port 3773
+    exec ${t3Pkg}/bin/t3 serve --host 127.0.0.1 --port 3773
   '';
 in
 {
@@ -25,12 +25,13 @@ in
       Type = "simple";
       Environment = [
         "NODE_ENV=production"
-        "PATH=/run/current-system/sw/bin:${lib.makeBinPath [ pkgs.nodejs_24 pkgs.coreutils pkgs.git pkgs.openssh pkgs.curl ]}:%h/.local/bin:%h/.npm-global/bin"
+        "PATH=/run/current-system/sw/bin:${lib.makeBinPath [ pkgs.nodejs_24 pkgs.coreutils pkgs.git pkgs.openssh pkgs.curl pkgs.opencode ]}:%h/.local/bin:%h/.npm-global/bin"
       ];
       EnvironmentFile = "-%t/agenix/omniroute-env";
       WorkingDirectory = "%h";
       ExecStart = "${t3Runner}";
-      Restart = "on-failure";
+      KillMode = "mixed";
+      Restart = "always";
       RestartSec = 5;
     };
 
