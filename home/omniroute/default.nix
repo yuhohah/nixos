@@ -46,6 +46,24 @@
           "free-combo" = {
             name = "OmniRoute Free Combo";
           };
+          "auto/best-coding" = {
+            name = "OmniRoute Best Coding";
+          };
+          "auto/best-reasoning" = {
+            name = "OmniRoute Best Reasoning";
+          };
+          "auto/best-fast" = {
+            name = "OmniRoute Best Fast";
+          };
+          "auto/best-chat" = {
+            name = "OmniRoute Best Chat";
+          };
+          "combo" = {
+            name = "OmniRoute Combo";
+          };
+          "kiro/claude-sonnet-5" = {
+            name = "Claude Sonnet 5 (OmniRoute)";
+          };
         };
       };
     };
