@@ -1,19 +1,16 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
+
 {
-  options.my.apps.media.enable = lib.mkEnableOption "Media Apps Config";
+  environment.systemPackages = with pkgs; [
+    vlc 
+    qbittorrent 
+    vesktop 
+    obs-studio 
+    gimp 
+    spotify
+  ];
 
-  config = lib.mkIf config.my.apps.media.enable {
-    environment.systemPackages = with pkgs; [
-      vlc 
-      qbittorrent 
-      vesktop 
-      obs-studio 
-      gimp 
-      spotify
-    ];
-
-    home-manager.users.luan.imports = [
-      ../../home/vesktop/config.nix
-    ];
-  };
+  home-manager.users.luan.imports = [
+    ../../home/vesktop/config.nix
+  ];
 }

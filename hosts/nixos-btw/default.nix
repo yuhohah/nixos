@@ -5,6 +5,10 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/common.nix
+    ../../modules/apps/core.nix
+    ../../modules/apps/browsers.nix
+    ../../modules/apps/dev.nix
+    ../../modules/apps/media.nix
   ];
 
   generationTracker.configDir = "/home/luan/Configuration/nixos";
@@ -21,12 +25,12 @@
   # Role de jogos e usuário
   my.roles.gaming.enable = true;
 
-  # Aplicativos
-  my.apps.core.enable = true;
-  my.apps.media.enable = true;
-  my.apps.dev.enable = true;
-  my.apps.browsers.enable = true;
-  my.apps.waydroid.enable = false;
+  # Stack de AI e segredos (apenas no desktop workstation/servidor)
+  home-manager.users.luan.imports = [
+    ../../home/omniroute
+    ../../home/t3code
+    ../../home/secrets
+  ];
 
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;

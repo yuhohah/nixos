@@ -1,18 +1,13 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
+
 {
-  options.my.apps.browsers.enable = lib.mkEnableOption "Browsers Config";
+  programs.firefox.enable = true;
 
-  config = lib.mkIf config.my.apps.browsers.enable {
-    programs.firefox.enable = true;
+  environment.systemPackages = with pkgs; [
+    chromium 
+  ];
 
-    environment.systemPackages = with pkgs; [
-      chromium 
-    ];
-
-    nixpkgs.config = {
-      chromium = {
-        enableWideVine = true;
-      };
-    };
+  nixpkgs.config.chromium = {
+    enableWideVine = true;
   };
 }

@@ -11,12 +11,6 @@
     ./tracker.nix
     ./home-manager.nix
     ../roles/default.nix
-
-    ../apps/core.nix
-    ../apps/media.nix
-    ../apps/dev.nix
-    ../apps/browsers.nix
-    ../apps/waydroid.nix
   ];
   
   options.my.system.core.enable = lib.mkEnableOption "Core System Config";

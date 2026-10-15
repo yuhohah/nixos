@@ -5,6 +5,10 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/common.nix
+    ../../modules/apps/core.nix
+    ../../modules/apps/browsers.nix
+    ../../modules/apps/dev.nix
+    ../../modules/apps/media.nix
   ];
 
   generationTracker.configDir = "/home/luan/Configuration/nixos";
@@ -20,12 +24,6 @@
   
   # Role de hardware e usuário
   my.roles.laptop.enable = true;
-  
-  # Aplicativos
-  my.apps.core.enable = true;
-  my.apps.media.enable = true;
-  my.apps.dev.enable = true;
-  my.apps.browsers.enable = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   hardware.enableRedistributableFirmware = true;

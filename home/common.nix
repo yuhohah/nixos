@@ -22,13 +22,7 @@
     ./scripts/screenshot.nix
     ./scripts/screensaver.nix
     ./scripts/wallpaper.nix
-  ] ++ lib.optionals (hostName == "nixos-btw") [
-    # AI Stack & Segredos (apenas no desktop servidor; arrow acessa remoto)
-    ./omniroute
-    ./t3code
-    ./secrets
   ];
-
 
   wallpaper.dir = ../images/wallpaper;
 
