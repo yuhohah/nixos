@@ -17,13 +17,18 @@ if hostname == "arrow" then
   kb_variant = "abnt2,"
 end
 
-hl.setup({
+hl.config({
   general = {
     gaps_in = 4,
     gaps_out = 8,
     border_size = 2,
-    ["col.active_border"] = "rgba(cba6f7ee) rgba(b4befeee) 45deg",
-    ["col.inactive_border"] = "rgba(313244aa)",
+    col = {
+      active_border = {
+        colors = { "rgba(cba6f7ee)", "rgba(b4befeee)" },
+        angle = 45,
+      },
+      inactive_border = "rgba(313244aa)",
+    },
     layout = "dwindle",
   },
 
