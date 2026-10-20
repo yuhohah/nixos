@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import "BorderGeometry.js" as Geometry
+import "."
 
 // Color surfaces for the shell. Foundational palette (foreground, background,
 // accent, urgent) comes from theme/colors.toml. Per-surface roles come from
