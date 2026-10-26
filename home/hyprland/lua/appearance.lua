@@ -9,11 +9,11 @@ if ok and type(loaded) == "table" then
 end
 local hostname = host.hostname or "nixos-btw"
 
-local kb_layout = "us,br,es"
-local kb_variant = "intl,abnt2,"
+local kb_layout = "us"
+local kb_variant = "intl"
 
 if hostname == "arrow" then
-  kb_layout = "br,us"
+  kb_layout = "br,es"
   kb_variant = "abnt2,"
 end
 
