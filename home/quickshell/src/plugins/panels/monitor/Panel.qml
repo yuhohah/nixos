@@ -220,15 +220,16 @@ Panel {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: "monitor"
 
-    function brightness(percent: string): string { return root.brightnessIpc(percent) }
-    function state(): string { return root.stateIpc() }
-    function open() { root.open() }
-    function close() { root.close() }
-    function toggle() { root.toggle() }
-    function show() { root.open() }
-    function hide() { root.close() }
+    function brightness(percent: string): string { return root.ipcPanel().brightnessIpc(percent) }
+    function state(): string { return root.ipcPanel().stateIpc() }
+    function open() { root.ipcPanel().open() }
+    function close() { root.ipcPanel().close() }
+    function toggle() { root.ipcPanel().toggle() }
+    function show() { root.ipcPanel().open() }
+    function hide() { root.ipcPanel().close() }
   }
 
   function refresh() {
@@ -302,8 +303,8 @@ Panel {
   }
 
   function setScale(scale) {
-    var mon = root.focusedMonitor || "eDP-1"
-    Quickshell.execDetached(["hyprctl", "keyword", "monitor", mon + ",preferred,auto," + scale])
+    if (!root.focusedMonitor) return
+    Quickshell.execDetached([root.omarchyPath + "/bin/monitor-scaling", String(scale), root.focusedMonitor])
     refreshTimer.restart()
   }
 

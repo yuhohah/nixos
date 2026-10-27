@@ -14,7 +14,7 @@ QtObject {
   id: root
 
   readonly property string home: Quickshell.env("HOME")
-  readonly property string stateHome: home + "/.local/state"
+  readonly property string stateHome: Quickshell.env("XDG_STATE_HOME") || home + "/.local/state"
   readonly property string currentThemePath: stateHome + "/quickshell/current/theme"
 
   property color foreground: "#cdd6f4"
@@ -170,6 +170,7 @@ QtObject {
   // always the merge of theme (base) and user (override) — see mergeShell.
   property var themeShellValues: ({})
   property var userShellValues: ({})
+  property var displayShellValues: ({})
 
   // Single TOML walker for shell.toml. Both Color (surface roles) and Style
   // (typography, spacing, bar, control states) consume the resulting dict.
@@ -206,6 +207,7 @@ QtObject {
     var merged = {}
     for (var tk in themeShellValues) merged[tk] = themeShellValues[tk]
     for (var uk in userShellValues) merged[uk] = userShellValues[uk]
+    for (var dk in displayShellValues) merged[dk] = displayShellValues[dk]
     shellValues = merged
     Style.applyShellValues(merged)
   }
@@ -218,6 +220,16 @@ QtObject {
   function loadUserShell(raw) {
     userShellValues = parseShell(raw)
     mergeShell()
+  }
+
+  // Runtime display preferences override the immutable Home Manager config.
+  property FileView displayShellFile: FileView {
+    path: root.stateHome + "/quickshell/shell.toml"
+    watchChanges: true
+    printErrors: false
+    onLoaded: { root.displayShellValues = root.parseShell(text()); root.mergeShell() }
+    onFileChanged: reload()
+    onLoadFailed: { root.displayShellValues = ({}); root.mergeShell() }
   }
 
   // Startup load only. Runtime theme switches push the payload explicitly

@@ -605,43 +605,27 @@ let
     echo "$displays_json"
   '';
 
-  monitorScaling = pkgs.writeShellScriptBin "monitor-scaling" ''
-    scale="$1"
-    if [ -z "$scale" ]; then
-      echo "Usage: monitor-scaling <scale>" >&2
-      exit 1
-    fi
-    monitors_json=$(${pkgs.hyprland}/bin/hyprctl -j monitors 2>/dev/null || echo "[]")
-    focused_mon=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.focused == true)] | .[0].name) // (.[0].name // "")' 2>/dev/null)
-    [ -z "$focused_mon" ] && focused_mon="eDP-1"
-    ${pkgs.hyprland}/bin/hyprctl keyword monitor "$focused_mon,preferred,auto,$scale"
-  '';
+  monitorScaling = pkgs.writeScriptBin "monitor-scaling" (
+    "#!${pkgs.python3}/bin/python3\n" + builtins.replaceStrings
+      [ "@hyprctl@" ] [ "${pkgs.hyprland}/bin/hyprctl" ]
+      (builtins.readFile ./monitor-scaling.py)
+  );
 
   displayTextSize = pkgs.writeShellScriptBin "display-text-size" ''
     size="''${1:-12}"
-    config_file="$HOME/.config/quickshell/shell.toml"
-    mkdir -p "$(dirname "$config_file")"
-
-    if [ ! -f "$config_file" ]; then
-      cat <<EOF > "$config_file"
-[font]
-base-size = $size
-EOF
-    else
-      if grep -q "^\[font\]" "$config_file"; then
-        if grep -q "^base-size" "$config_file"; then
-          sed -i "s/^base-size *= *.*/base-size = $size/" "$config_file"
-        else
-          sed -i "/^\[font\]/a base-size = $size" "$config_file"
-        fi
-      else
-        cat <<EOF >> "$config_file"
-
-[font]
-base-size = $size
-EOF
-      fi
+    if ! [[ "$size" =~ ^[0-9]+$ ]] || [ "$size" -lt 9 ] || [ "$size" -gt 20 ]; then
+      echo "Text size must be an integer between 9 and 20 pixels" >&2
+      exit 1
     fi
+
+    # ~/.config/quickshell is managed by Home Manager and points into the
+    # read-only Nix store. Interactive preferences belong in writable state.
+    config_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/quickshell"
+    mkdir -p "$config_dir"
+    tmp_file=$(mktemp "$config_dir/.shell.toml.XXXXXX")
+    trap 'rm -f "$tmp_file"' EXIT
+    printf '[font]\nbase-size = %s\n' "$size" > "$tmp_file"
+    mv -f "$tmp_file" "$config_dir/shell.toml"
 
     if command -v gsettings >/dev/null 2>&1; then
       scale=$(${pkgs.gawk}/bin/awk -v s="$size" 'BEGIN { printf "%.2f", s / 12 }')

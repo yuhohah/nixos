@@ -212,20 +212,21 @@ Panel {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: "network"
 
-    function open() { root.open() }
-    function close() { root.close() }
-    function show() { root.open() }
-    function hide() { root.close() }
-    function toggle() { root.toggle() }
-    function toggleNetwork() { root.toggleNetwork() }
+    function open() { root.ipcPanel().open() }
+    function close() { root.ipcPanel().close() }
+    function show() { root.ipcPanel().open() }
+    function hide() { root.ipcPanel().close() }
+    function toggle() { root.ipcPanel().toggle() }
+    function toggleNetwork() { root.ipcPanel().toggleNetwork() }
     // Compat routes for configs that summon the centered cards through the
     // network target; both cards are their own plugins now.
-    function showQr() { root.summonWifiQr(true) }
-    function speedTest() { root.summonSpeedTest() }
-    function openCaptivePortal() { root.openCaptivePortal() }
-    function checkConnectivity() { root.checkConnectivity() }
+    function showQr() { root.ipcPanel().summonWifiQr(true) }
+    function speedTest() { root.ipcPanel().summonSpeedTest() }
+    function openCaptivePortal() { root.ipcPanel().openCaptivePortal() }
+    function checkConnectivity() { root.ipcPanel().checkConnectivity() }
   }
 
   function activateHeader() {

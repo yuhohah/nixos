@@ -2,12 +2,12 @@
 
 let
   quickshellAgentUsageGemini = pkgs.writeScriptBin "quickshell-agent-usage-gemini" ''#!${pkgs.python3}/bin/python3
-import os, sys, glob, json, datetime, sqlite3, re
+import os, sys, glob, json, datetime, sqlite3, re, tempfile
 
 brain_patterns = [
     os.path.expanduser("~/.gemini/*/brain"),
 ]
-state_dir = os.path.expanduser("~/.local/state/quickshell/agents")
+state_dir = os.path.join(os.environ.get("XDG_STATE_HOME", os.path.expanduser("~/.local/state")), "quickshell/agents")
 usage_dir = os.path.join(state_dir, "usage")
 config_file = os.path.expanduser("~/.config/quickshell/agents/gemini.json")
 if not os.path.isfile(config_file):
@@ -256,7 +256,7 @@ record = {
     "authHelpText": "",
     "limits": limits,
     "todayPrompts": today_prompts,
-    "todaySessions": len(today_sessions_set) or 1,
+    "todaySessions": len(today_sessions_set),
     "todayTotalTokens": today_total_tokens,
     "todayTokensByModel": today_tokens_by_model,
     "recentDays": recent_days,
@@ -267,15 +267,27 @@ record = {
 }
 
 out_path = os.path.join(usage_dir, "gemini.json")
-tmp_path = out_path + ".tmp"
-with open(tmp_path, "w", encoding="utf-8") as f:
-    json.dump(record, f, indent=2)
-os.replace(tmp_path, out_path)
+# Each monitor can start a collector. Give each writer its own temporary
+# file in the destination directory, then publish a complete record atomically.
+tmp_path = None
+try:
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=usage_dir,
+                                     prefix=".gemini-", suffix=".tmp", delete=False) as f:
+        tmp_path = f.name
+        json.dump(record, f, indent=2)
+    os.replace(tmp_path, out_path)
+finally:
+    if tmp_path and os.path.exists(tmp_path):
+        os.unlink(tmp_path)
 '';
 
   omarchyAgentUsageGemini = pkgs.writeShellScriptBin "omarchy-agent-usage-gemini" ''
     exec quickshell-agent-usage-gemini "$@"
   '';
+
+  quickshellAgentUsageT3code = pkgs.writeScriptBin "quickshell-agent-usage-t3code" (
+    "#!${pkgs.python3}/bin/python3\n" + builtins.readFile ./agent-usage-t3code.py
+  );
 
   quickshellAgentUsageUpdate = pkgs.writeShellScriptBin "quickshell-agent-usage-update" ''
     USAGE_DIR="''${XDG_STATE_HOME:-$HOME/.local/state}/quickshell/agents/usage"
@@ -284,6 +296,7 @@ os.replace(tmp_path, out_path)
     if command -v quickshell-agent-usage-gemini >/dev/null 2>&1; then
       quickshell-agent-usage-gemini "$@" || true
     fi
+    ${quickshellAgentUsageT3code}/bin/quickshell-agent-usage-t3code "$@"
   '';
 
   omarchyAgentUsageUpdate = pkgs.writeShellScriptBin "omarchy-agent-usage-update" ''
@@ -305,6 +318,7 @@ os.replace(tmp_path, out_path)
 
   agentPackages = [
     quickshellAgentUsageGemini
+    quickshellAgentUsageT3code
     omarchyAgentUsageGemini
     quickshellAgentUsageUpdate
     omarchyAgentUsageUpdate
@@ -328,7 +342,8 @@ in
       };
       Service = {
         Type = "oneshot";
-        ExecStart = "${quickshellAgentUsageGemini}/bin/quickshell-agent-usage-gemini";
+        ExecStart = "${quickshellAgentUsageUpdate}/bin/quickshell-agent-usage-update";
+        Environment = "PATH=${lib.makeBinPath [ quickshellAgentUsageGemini pkgs.coreutils ]}";
       };
     };
 

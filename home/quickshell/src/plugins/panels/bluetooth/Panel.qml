@@ -647,14 +647,15 @@ Panel {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: "bluetooth"
 
-    function open() { root.open() }
-    function close() { root.close() }
-    function show() { root.open() }
-    function hide() { root.close() }
-    function toggle() { root.toggle() }
-    function toggleBluetooth() { root.toggleBluetooth() }
+    function open() { root.ipcPanel().open() }
+    function close() { root.ipcPanel().close() }
+    function show() { root.ipcPanel().open() }
+    function hide() { root.ipcPanel().close() }
+    function toggle() { root.ipcPanel().toggle() }
+    function toggleBluetooth() { root.ipcPanel().toggleBluetooth() }
   }
 
   BarIconButton {

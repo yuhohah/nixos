@@ -175,23 +175,25 @@ Panel {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: "power"
 
-    function open() { root.open() }
-    function close() { root.close() }
-    function show() { root.open() }
-    function hide() { root.close() }
-    function toggle() { root.toggle() }
-    function togglePercentage() { root.togglePercentage() }
+    function open() { root.ipcPanel().open() }
+    function close() { root.ipcPanel().close() }
+    function show() { root.ipcPanel().open() }
+    function hide() { root.ipcPanel().close() }
+    function toggle() { root.ipcPanel().toggle() }
+    function togglePercentage() { root.ipcPanel().togglePercentage() }
+  }
+
+  // Reject the request before changing state. Closing synchronously from
+  // onOpenedChanged re-enters the opened binding on machines without a battery.
+  function open() {
+    if (batteryPresent) controller.show()
   }
 
   onOpenedChanged: {
     if (opened) {
-      if (!batteryPresent) {
-        close()
-        return
-      }
-
       refresh()
       var idx = profiles.indexOf(activeProfile)
       profileIndex = idx >= 0 ? idx : 0

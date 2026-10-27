@@ -12,6 +12,21 @@ Item {
   property QtObject bar: null
   property string moduleName: ""
   property var settings: ({})
+
+  // Every monitor has a widget instance, but IPC targets are process-wide.
+  // Wait for host injection and let only the first live instance register.
+  readonly property bool ipcEnabled: {
+    if (!bar || typeof bar.moduleWidgets !== "function") return false
+    var widgets = bar.moduleWidgets(moduleName)
+    return widgets.length > 0 && widgets[0] === root
+  }
+
+  // Resolve at call time so commands follow the focused monitor and hide
+  // can still reach a popup that was opened on another monitor.
+  function ipcPanel() {
+    return bar && typeof bar.findPanelWidget === "function"
+      ? bar.findPanelWidget(moduleName) || root : root
+  }
   property string ipcTarget: ""
   property bool manageIpc: true
   property alias controller: panelController
@@ -46,14 +61,14 @@ Item {
   }
 
   IpcHandler {
-    enabled: root.manageIpc && root.ipcTarget !== ""
+    enabled: root.manageIpc && root.ipcEnabled && root.ipcTarget !== ""
     target: root.ipcTarget
 
-    function open(): void { root.open() }
-    function close(): void { root.close() }
-    function show(): void { root.open() }
-    function hide(): void { root.close() }
-    function toggle(): void { root.toggle() }
+    function open(): void { root.ipcPanel().open() }
+    function close(): void { root.ipcPanel().close() }
+    function show(): void { root.ipcPanel().open() }
+    function hide(): void { root.ipcPanel().close() }
+    function toggle(): void { root.ipcPanel().toggle() }
   }
 
 }

@@ -16,6 +16,21 @@ Item {
   property string moduleName: ""
   property var settings: ({})
 
+  // Every monitor has a widget instance, but IPC targets are process-wide.
+  // Wait for host injection and let only the first live instance register.
+  readonly property bool ipcEnabled: {
+    if (!bar || typeof bar.moduleWidgets !== "function") return false
+    var widgets = bar.moduleWidgets(moduleName)
+    return widgets.length > 0 && widgets[0] === root
+  }
+
+  // Resolve at call time so commands follow the focused monitor and hide
+  // can still reach a popup that was opened on another monitor.
+  function ipcPanel() {
+    return bar && typeof bar.findPanelWidget === "function"
+      ? bar.findPanelWidget(moduleName) || root : root
+  }
+
   // Bar geometry, lifted off the host. Widgets read these constantly to pick
   // between horizontal/vertical layouts; defining them on the base keeps the
   // `bar ? bar.x : fallback` ternary out of every widget body.

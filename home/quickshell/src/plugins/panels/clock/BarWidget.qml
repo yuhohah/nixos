@@ -131,16 +131,17 @@ BarWidget {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: "clock"
 
     function refresh(): void { root.broadcast("refresh") }
-    function cycleFormat(): void { root.cycleFormat() }
-    function toggleWeekStart(): void { root.toggleWeekStart() }
-    function open(): void { root.open() }
-    function close(): void { root.close() }
-    function show(): void { root.open() }
-    function hide(): void { root.close() }
-    function toggle(): void { root.togglePanel() }
+    function cycleFormat(): void { root.ipcPanel().cycleFormat() }
+    function toggleWeekStart(): void { root.ipcPanel().toggleWeekStart() }
+    function open(): void { root.ipcPanel().open() }
+    function close(): void { root.ipcPanel().close() }
+    function show(): void { root.ipcPanel().open() }
+    function hide(): void { root.ipcPanel().close() }
+    function toggle(): void { root.ipcPanel().togglePanel() }
   }
 
   WidgetButton {

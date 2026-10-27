@@ -324,14 +324,15 @@ Panel {
   }
 
   IpcHandler {
+    enabled: root.ipcEnabled
     target: root.ipcTarget
-    function open(): void { root.open() }
-    function close(): void { root.close() }
-    function show(): void { root.open() }
-    function hide(): void { root.close() }
-    function toggle(): void { root.toggle() }
-    function refresh(): string { root.refreshNow(); return "ok" }
-    function next(): string { root.selectProvider(root.providerIndex + 1); return "ok" }
+    function open(): void { root.ipcPanel().open() }
+    function close(): void { root.ipcPanel().close() }
+    function show(): void { root.ipcPanel().open() }
+    function hide(): void { root.ipcPanel().close() }
+    function toggle(): void { root.ipcPanel().toggle() }
+    function refresh(): string { root.ipcPanel().refreshNow(); return "ok" }
+    function next(): string { root.ipcPanel().selectProvider(root.ipcPanel().providerIndex + 1); return "ok" }
   }
 
   BarIconButton {
