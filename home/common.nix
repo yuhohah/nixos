@@ -32,9 +32,9 @@
     createDirectories = true;
     setSessionVariables = true;
     videos = "$HOME/Videos";
-    desktop = "$HOME";
-    music = "$HOME";
-    publicShare = "$HOME";
+    desktop = config.home.homeDirectory;
+    music = config.home.homeDirectory;
+    publicShare = config.home.homeDirectory;
     pictures = "$HOME/Pictures";
     download = "$HOME/Downloads";
     documents = "$HOME/Documents";
