@@ -32,7 +32,9 @@
     createDirectories = true;
     setSessionVariables = true;
     videos = "$HOME/Videos";
-    music = "$HOME/Music";
+    desktop = "$HOME";
+    music = "$HOME";
+    publicShare = "$HOME";
     pictures = "$HOME/Pictures";
     download = "$HOME/Downloads";
     documents = "$HOME/Documents";
