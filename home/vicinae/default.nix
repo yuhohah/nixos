@@ -44,6 +44,7 @@
       providers = {
         "calculator".enabled = true;
         "manage-shortcuts".enabled = false;
+        "browser-extension".entrypoints."shortcut-active-tab".enabled = false;
         "files".enabled = false;
         "raycast-compat".enabled = false;
         "@knoopx/store.vicinae.nix".enabled = false;
