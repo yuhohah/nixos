@@ -21,6 +21,22 @@
   my.system.greetd.enable = true;
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
+
+  # Oculta as saídas ALC887 e mantém apenas o microfone Razer.
+  services.pipewire.wireplumber.extraConfig."51-audio-devices" = {
+    "monitor.alsa.rules" = [
+      {
+        matches = [
+          { "node.name" = "~alsa_output[.]pci-0000_0a_00[.]3[.].*"; }
+          {
+            "media.class" = "Audio/Source";
+            "node.name" = "!~alsa_input[.]usb-Razer_Razer_USB_Sound_Card_.*";
+          }
+        ];
+        actions.update-props."node.disabled" = true;
+      }
+    ];
+  };
   
   # Role de jogos e usuário
   my.roles.gaming.enable = true;
