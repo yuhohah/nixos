@@ -63,7 +63,7 @@ hl.config({
   input = {
     kb_layout = kb_layout,
     kb_variant = kb_variant,
-    kb_options = "caps:escape, grp:alt_shift_toggle",
+    kb_options = "grp:alt_shift_toggle",
     follow_mouse = 1,
     touchpad = {
       natural_scroll = true,
