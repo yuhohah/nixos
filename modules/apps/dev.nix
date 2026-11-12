@@ -9,6 +9,8 @@
     antigravity-ide 
     codex
     opencode
+    android-studio
+    notepad-next
   ];
 
   virtualisation.docker.enable = true;
