@@ -58,6 +58,12 @@
     options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=000" "allow_other" ];
   };
 
+  fileSystems."/mnt/Extra" = {
+    device = "/dev/disk/by-uuid/67dbb860-fcae-41ba-a7ce-29e2543921f7";
+    fsType = "ext4";
+    options = [ "defaults" "noatime" ];
+  };
+
   # SSH para acesso remoto e túnel T3 Code + OmniRoute
   services.openssh = {
     enable = true;
