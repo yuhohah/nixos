@@ -58,7 +58,6 @@
     # Variáveis de ambiente para desempenho gráfico e Proton
     environment.sessionVariables = {
       PROTON_USE_NTSYNC = "1";
-      RADV_PERFTEST = "ngc,sam";
       mesa_glthread = "true";
     };
 

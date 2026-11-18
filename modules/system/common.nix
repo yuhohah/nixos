@@ -26,6 +26,11 @@
 
     services.resolved.enable = true;
 
+    zramSwap = {
+      enable = true;
+      memoryPercent = 50;
+    };
+
     nix.settings = {
       experimental-features = [ "nix-command" "flakes" ];
       accept-flake-config = true;
