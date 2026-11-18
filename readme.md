@@ -55,12 +55,12 @@ The configuration is structured around reusable system modules, user profiles in
 
 | Host | Profile / Role | Key Features |
 | :--- | :--- | :--- |
-| **`nixos-btw`** | **Desktop Workstation & AI Server** | • High-performance gaming with **Steam**, **GameMode**, **Gamescope**, and `ntsync` kernel tuning.<br>• Host for **OmniRoute** and **T3 Code** daemons.<br>• **Tailscale Serve** HTTPS gateway (`:443`) & OpenSSH remote access.<br>• Secondary NTFS storage mount (`/mnt/disk`). |
+| **`nixos-btw`** | **Desktop Workstation & AI Server** | • High-performance gaming with **Steam**, **GameMode**, **Gamescope**, and `ntsync` kernel tuning.<br>• Host for **T3 Code** daemon.<br>• **Tailscale Serve** HTTPS gateway (`:443`) & OpenSSH remote access.<br>• Secondary NTFS storage mount (`/mnt/disk` via `ntfs3`). |
 | **`arrow`** | **Mobile Laptop** | • Tuned for mobility and battery life with **TLP**, **UPower**, and **ACPI**.<br>• Dynamic screen brightness via `brightnessctl` and display setup with `wdisplays`.<br>• Automated low-battery notification daemon (`battery-alert`).<br>• Seamless remote AI tunneling via SSH aliases (`ai-tunnel`, `ai-tunnel-remote`). |
 
 ### Composable Roles
 
-- **`my.roles.gaming`**: Enables 32-bit graphics acceleration, AMD performance governor optimizations, Proton `PROTON_USE_NTSYNC=1`, `RADV_PERFTEST=ngc,sam`, CoreCtrl, MangoHud, and Steam hardware integration.
+- **`my.roles.gaming`**: Enables 32-bit graphics acceleration, AMD performance governor optimizations, Proton `PROTON_USE_NTSYNC=1`, `mesa_glthread=true`, CoreCtrl, MangoHud, and Steam hardware integration.
 - **`my.roles.laptop`**: Manages power profiles, aggressive CPU scaling on battery, Bluetooth auto-power policies, and specialized system utilities.
 
 ---
@@ -84,7 +84,7 @@ Instead of unmaintainable text strings in Nix, the Hyprland compositor is cleanl
 The status bar and desktop panels are implemented in **Quickshell (QML)** (`home/quickshell/`):
 
 - **Interactive Control Panels**: Direct flyout panels for network scanning, audio output switching & per-app volume mixer, Bluetooth pairing, and display brightness.
-- **Agent Usage Tracker**: Real-time telemetry widget tracking AI model token quotas and daily usage.
+- **Agent Usage Tracker**: Real-time telemetry widget tracking local T3 Code token and session usage.
 - **Per-Host Shell Layouts**: Separate, declarative `shell.json` definitions for desktop (`nixos-btw`) and laptop (`arrow`).
 - **Dynamic Toggle**: Toggled cleanly via `quickshell-toggle` or bound hotkey (`Super + Alt + Q`).
 
@@ -104,21 +104,20 @@ The status bar and desktop panels are implemented in **Quickshell (QML)** (`home
 
 The setup integrates a multi-device AI workflow between the workstation server and client laptop:
 
-- **[OmniRoute](https://github.com/dromerob/omniroute)**: AI proxy and routing service running as a systemd user unit on `nixos-btw` to manage multiple AI providers under a single endpoint.
 - **[T3 Code](https://github.com/pingdotgg/t3-code)**: Local collaborative web and desktop coding environment served as an automated background service.
 - **Tailscale Serve**: Automatically publishes the T3 Code service over encrypted HTTPS on port `443` on the private Tailscale network.
 - **Remote AI SSH Tunneling**: The laptop (`arrow`) connects directly via one-command SSH tunnels:
   ```bash
-  ai-tunnel        # Forwards T3 Code (:3773) and OmniRoute (:20128) over LAN / mDNS
+  ai-tunnel        # Forwards T3 Code (:3773) over LAN / mDNS
   ai-tunnel-remote # Connects remotely via Tailscale IP
   ```
 - **Hermetic `shell.nix` DevShell**:
   ```bash
   nix-shell
   ```
-  Provides Node.js 24, T3, OmniRoute CLI, OpenCode, and automatically decrypts runtime API keys.
+  Provides Node.js 24, pinned T3 Code CLI, and OpenCode.
 - **Secret Encryption via Agenix**:
-  API keys and sensitive tokens are encrypted using SSH ed25519 public keys (`secrets/secrets.nix`) and safely decrypted into memory at `/run/user/1000/agenix/`.
+  Sensitive tokens are encrypted using SSH ed25519 public keys (`secrets/secrets.nix`) and safely decrypted into memory at `/run/user/1000/agenix/`.
 
 ---
 
@@ -177,13 +176,12 @@ The flake features a custom NixOS generation tracking engine (`modules/system/tr
 │   ├── mako/                  # Notification daemon setup
 │   ├── alacritty/             # Terminal configuration
 │   ├── scripts/               # Custom declarative utility scripts
-│   ├── omniroute/             # OmniRoute service & CLI setup
 │   ├── t3code/                # T3 Code service definition & package wrapper
 │   └── secrets/               # Agenix decryption hooks for user services
 │
 ├── secrets/                   # Agenix encrypted secrets (.age) and recipient keys
 ├── images/                    # System showcase screenshots and wallpapers
-└── docs/                      # Setup guides, remote access instructions, and ADRs
+└── docs/                      # Architecture documentation and ADRs
 ```
 
 ---
@@ -237,7 +235,7 @@ sudo nixos-rebuild switch --flake .#arrow
 
 ```bash
 nix-shell
-# Launches shell with Node.js 24, OmniRoute, T3 Code CLI, and decrypted keys
+# Launches shell with Node.js 24, pinned T3 Code CLI, and OpenCode
 ```
 
 ### 3. Connect Laptop to Desktop AI Stack
@@ -248,14 +246,13 @@ ai-tunnel
 ```
 Then access:
 - **T3 Code**: [http://localhost:3773](http://localhost:3773)
-- **OmniRoute Dashboard**: [http://localhost:20128/dashboard](http://localhost:20128/dashboard)
 
 ### 4. Manage Secrets (Agenix)
 
 To edit or add secrets:
 ```bash
 cd secrets
-nix run github:ryantm/agenix -- -e omniroute-api-key.age
+nix run github:ryantm/agenix -- -e <secret>.age
 ```
 To re-encrypt for all recipients defined in `secrets/secrets.nix`:
 ```bash

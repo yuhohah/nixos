@@ -8,13 +8,6 @@
     "$HOME/.local/bin"
   ];
 
-  wayland.windowManager.hyprland = {
-    enable = true;
-    systemd.enable = true;  # opcional, mas recomendado
-    configType = "lua";
-    # xwayland.enable = true;  # se precisar de X11 apps
-  };
-
   imports = [
     ./theme.nix
 
@@ -54,9 +47,10 @@
     };
     
     # Configuração do .zshrc
-    initContent = ''    
+    initContent = ''
+      if [[ -o interactive && "''${TERM:-}" != "dumb" ]]; then
         fastfetch
-      
+      fi
     '';
 
     shellAliases = {
@@ -91,7 +85,6 @@
         IdentityFile = "~/.ssh/id_ed25519";
         LocalForward = [
           "3773 localhost:3773"
-          "20128 localhost:20128"
         ];
         ServerAliveInterval = 30;
         ServerAliveCountMax = 3;
@@ -104,7 +97,6 @@
         IdentityFile = "~/.ssh/id_ed25519";
         LocalForward = [
           "3773 localhost:3773"
-          "20128 localhost:20128"
         ];
         ServerAliveInterval = 30;
         ServerAliveCountMax = 3;

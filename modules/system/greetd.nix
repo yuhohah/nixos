@@ -7,41 +7,17 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+          command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd '${pkgs.uwsm}/bin/uwsm start -e -D Hyprland hyprland.desktop'";
           user = "greeter";
-        };
-        initial_session = {
-          command = "Hyprland";
-          user = "luan";
         };
       };
     };
 
     environment.sessionVariables = {
-      XDG_SESSION_TYPE = "wayland";
-      XDG_CURRENT_DESKTOP = "Hyprland";
-      XDG_SESSION_DESKTOP = "Hyprland";
       GTK_THEME = "Adwaita-dark";
       MOZ_ENABLE_WAYLAND = "1";
       QT_QPA_PLATFORM = "wayland";
       QT_STYLE_OVERRIDE = "adwaita-dark";
-    };
-
-    xdg.portal = {
-      enable = true;
-      wlr.enable = false;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-hyprland
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      config = {
-        common = {
-          default = [ "hyprland" "gtk" ];
-        };
-        hyprland = {
-          default = [ "hyprland" "gtk" ];
-        };
-      };
     };
   };
 }

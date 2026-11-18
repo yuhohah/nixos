@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "author": "Omarchy",
   "license": "MIT",
-  "description": "Google Gemini usage, limits, and pace in a native Omarchy bar panel.",
+  "description": "T3 Code local token and session usage in a native Omarchy bar panel.",
   "kinds": ["bar-widget"],
   "activation": "on-demand",
   "entryPoints": {
@@ -19,7 +19,7 @@
     "allowMultiple": false,
     "defaults": {
       "providers": {
-        "gemini": { "enabled": true }
+        "t3code": { "enabled": true }
       },
       "refreshIntervalSec": 900,
       "syncMode": "Off",

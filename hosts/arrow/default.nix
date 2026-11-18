@@ -32,15 +32,14 @@
         echo "=========================================================="
         echo " Conectando ao túnel SSH com nixos-btw (100.99.213.109)"
         echo "   - T3 Code:   http://localhost:3773"
-        echo "   - OmniRoute: http://localhost:20128/dashboard"
         echo "=========================================================="
         echo ""
         if [ "''${1:-}" = "-s" ] || [ "''${1:-}" = "--shell" ]; then
           shift
-          exec ssh -v -L 3773:localhost:3773 -L 20128:localhost:20128 luan@100.99.213.109 "$@"
+          exec ssh -v -L 3773:localhost:3773 luan@100.99.213.109 "$@"
         else
           echo "Pressione Ctrl+C para encerrar o túnel."
-          exec ssh -v -N -L 3773:localhost:3773 -L 20128:localhost:20128 luan@100.99.213.109 "$@"
+          exec ssh -v -N -L 3773:localhost:3773 luan@100.99.213.109 "$@"
         fi
       '')
 
@@ -48,10 +47,9 @@
         echo "=========================================================="
         echo " Conectando ao shell remoto com túnel SSH (100.99.213.109)"
         echo "   - T3 Code:   http://localhost:3773"
-        echo "   - OmniRoute: http://localhost:20128/dashboard"
         echo "=========================================================="
         echo ""
-        exec ssh -v -L 3773:localhost:3773 -L 20128:localhost:20128 luan@100.99.213.109 "$@"
+        exec ssh -v -L 3773:localhost:3773 luan@100.99.213.109 "$@"
       '')
     ];
 
@@ -69,7 +67,6 @@
         IdentityFile = "~/.ssh/id_ed25519";
         LocalForward = [
           "3773 localhost:3773"
-          "20128 localhost:20128"
         ];
         ServerAliveInterval = 30;
         ServerAliveCountMax = 3;
@@ -83,7 +80,7 @@
     xdg.desktopEntries.ai-tunnel = {
       name = "AI SSH Tunnel (nixos-btw)";
       genericName = "SSH Tunnel";
-      comment = "Conecta ao túnel SSH do nixos-btw (T3 Code e OmniRoute)";
+      comment = "Conecta ao túnel SSH do nixos-btw (T3 Code)";
       exec = "alacritty -e tunnel-btw";
       terminal = false;
       icon = "network-vpn";

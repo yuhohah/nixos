@@ -15,4 +15,4 @@ for host in nixos-btw arrow; do
 done
 ```
 
-The T3 Code collector reads `~/.t3/userdata/statev2.sqlite` in read-only mode, falling back to `state.sqlite` for older prompt/session counts. Override the directory with `T3CODE_USERDATA_DIR`. It uses T3's saved per-turn token snapshots; these do not represent account quotas or a complete billing ledger. It reads message roles and timestamps, not prompt text. Both collectors write records under `$XDG_STATE_HOME/quickshell/agents/usage` (default `~/.local/state`).
+The T3 Code collector reads `~/.t3/userdata/statev2.sqlite` in read-only mode, falling back to `state.sqlite` for older prompt/session counts. Override the directory with `T3CODE_USERDATA_DIR`. It uses T3's saved per-turn token snapshots; these do not represent account quotas or a complete billing ledger. It reads message roles and timestamps, not prompt text, and writes records under `$XDG_STATE_HOME/quickshell/agents/usage` (default `~/.local/state`).

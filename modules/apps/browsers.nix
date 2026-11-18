@@ -7,7 +7,10 @@ let
     "--use-gl=angle"
     "--use-angle=vulkan"
     "--disable-vulkan-surface"
-    "--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,AcceleratedVideoDecodeLinuxGL,WaylandWindowDecorations,WebRTCPipeWireCapturer"
+    "--disable-gl-extensions=EGL_EXT_image_dma_buf_import,EGL_EXT_image_dma_buf_import_modifiers"
+    "--disable-gpu-memory-buffer-compositor-resources"
+    "--disable-gpu-memory-buffer-video-frames"
+    "--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,WaylandWindowDecorations,WebRTCPipeWireCapturer"
   ];
 in
 {

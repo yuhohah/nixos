@@ -60,7 +60,6 @@
 
     # Injeção de perfil no Home Manager
     home-manager.users.luan.imports = [
-      ../../home/waybar/notebook.nix
       ../../home/scripts/battery-alert.nix
     ];
   };

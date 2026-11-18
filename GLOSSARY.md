@@ -9,7 +9,7 @@ O subsistema de interface gráfica implementado em Quickshell/QML, responsável 
 _Avoid_: Window manager, interface de usuário genérica
 
 **Agent Usage Tracker**:
-O coletor de métricas que monitora o consumo de tokens e a cota diária do assistente a partir dos transcripts de sessões e atualiza o estado do widget na barra.
+O coletor de métricas que monitora o consumo local de tokens e sessões do T3 Code e atualiza o estado do widget na barra.
 _Avoid_: Gemini CLI, AI chat script
 
 **Desktop Helper**:

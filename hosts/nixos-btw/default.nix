@@ -43,7 +43,6 @@
 
   # Stack de AI e segredos (apenas no desktop workstation/servidor)
   home-manager.users.luan.imports = [
-    ../../home/omniroute
     ../../home/t3code
     ../../home/secrets
   ];
@@ -54,8 +53,8 @@
   # Disco secundário específico da máquina
   fileSystems."/mnt/disk" = {
     device = "/dev/disk/by-uuid/CA28A08128A06E5F";
-    fsType = "ntfs-3g";
-    options = [ "rw" "uid=1000" "gid=100" "dmask=000" "fmask=000" "allow_other" ];
+    fsType = "ntfs3";
+    options = [ "rw" "uid=1000" "gid=100" "dmask=027" "fmask=137" "noatime" "nofail" ];
   };
 
   fileSystems."/mnt/Extra" = {
@@ -64,7 +63,7 @@
     options = [ "defaults" "noatime" ];
   };
 
-  # SSH para acesso remoto e túnel T3 Code + OmniRoute
+  # SSH para acesso remoto e túnel T3 Code
   services.openssh = {
     enable = true;
     settings = {

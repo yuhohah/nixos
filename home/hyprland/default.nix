@@ -20,6 +20,8 @@ in
 {
   wayland.windowManager.hyprland = {
     enable = true;
+    # A sessão systemd é gerenciada pelo UWSM (programs.hyprland.withUWSM = true)
+    systemd.enable = false;
     configType = "lua";
 
     # Delega a execução para o entrypoint Lua modular validado

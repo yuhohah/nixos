@@ -8,9 +8,6 @@ let
     export NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
     export SSL_CERT_DIR=/etc/ssl/certs
     export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-    if [ -n "$XDG_RUNTIME_DIR" ] && [ -r "$XDG_RUNTIME_DIR/agenix/omniroute-api-key" ]; then
-      export OMNIROUTE_API_KEY="$(cat "$XDG_RUNTIME_DIR/agenix/omniroute-api-key")"
-    fi
     exec ${t3Pkg}/bin/t3 serve --host 0.0.0.0 --port 3773
   '';
 in
@@ -21,8 +18,7 @@ in
   systemd.user.services.t3code = {
     Unit = {
       Description = "T3 Code Web Server";
-      After = [ "network.target" "agenix.service" "omniroute.service" ];
-      Wants = [ "omniroute.service" ];
+      After = [ "network.target" ];
     };
 
     Service = {
@@ -35,7 +31,6 @@ in
         "SSL_CERT_DIR=/etc/ssl/certs"
         "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
       ];
-      EnvironmentFile = "-%t/agenix/omniroute-env";
       WorkingDirectory = "%h";
       ExecStart = "${t3Runner}";
       KillMode = "mixed";

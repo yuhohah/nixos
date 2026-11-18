@@ -69,10 +69,5 @@
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642;
     };
-
-    # Injeção de perfil no Home Manager
-    home-manager.users.luan.imports = [
-      ../../home/waybar/config.nix
-    ];
   };
 }

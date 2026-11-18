@@ -12,10 +12,7 @@
 
   age.identityPaths = [ "/home/luan/.ssh/id_ed25519" ];
 
-  age.secrets = {
-    omniroute-api-key.file = ../../secrets/omniroute-api-key.age;
-    omniroute-env.file = ../../secrets/omniroute-env.age;
-  };
+  age.secrets = { };
 
   systemd.user.services.agenix.Service.RemainAfterExit = true;
 }

@@ -21,7 +21,10 @@
       };
     in {
       devShells.${system}.default = import ./shell.nix {
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ (import ./overlays/ai-tools.nix) ];
+        };
       };
 
       nixosConfigurations = {

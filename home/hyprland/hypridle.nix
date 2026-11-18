@@ -14,7 +14,7 @@ let
       }
       {
         timeout = 480;  
-        on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
+        on-timeout = "loginctl lock-session; hyprctl dispatch dpms off";
         on-resume = "hyprctl dispatch dpms on";
       }
       {
@@ -34,7 +34,7 @@ let
       }
       {
         timeout = 2500;
-        on-timeout = "hyprctl dispatch dpms off && loginctl lock-session";
+        on-timeout = "loginctl lock-session; hyprctl dispatch dpms off";
         on-resume = "hyprctl dispatch dpms on";
       }
       {
