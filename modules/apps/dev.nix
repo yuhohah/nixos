@@ -13,7 +13,10 @@
     notepad-next
   ];
 
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    enableOnBoot = false;
+  };
   programs.nix-ld.enable = true;
   programs.wireshark.enable = true;
 }

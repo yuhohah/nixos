@@ -61,7 +61,7 @@ BarWidget {
 
   function launchMonitor() {
     if (root.bar) {
-      root.bar.run("omarchy-launch-floating-terminal-with-presentation btop")
+      root.bar.run("alacritty -e btop")
     }
   }
 

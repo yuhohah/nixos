@@ -11,9 +11,7 @@
       vulkan-validation-layers
       vulkan-extension-layer
       mesa
-      rocmPackages.clr.icd
       mesa-demos
-      rocmPackages.rocm-smi
       gpu-viewer
       gamemode
       mangohud
@@ -28,16 +26,18 @@
         general = { renice = 10; };
         gpu = {
           apply_gpu_optimisations = "accept-responsibility";
-          gpu_device = 0;
+          gpu_device = 1;
           amd_performance_level = "high";
         };
       };
     };
 
-    # Controle de GPU
-    programs.corectrl = {
-      enable = true;
-    };
+    # Controle e OverDrive de GPU AMD (usa ppfeaturemask seguro padrão 0xfffd7fff)
+    programs.corectrl.enable = true;
+    hardware.amdgpu.overdrive.enable = true;
+
+    # Permissões para GameMode (renice/GPU) e CoreCtrl sem pedir senha
+    users.users.luan.extraGroups = [ "gamemode" "corectrl" ];
 
     # Drivers e aceleração gráfica 32-bit
     hardware.graphics = {

@@ -16,7 +16,18 @@ BarWidget {
   property bool highLoad: cpuUsage >= 80
 
   function readCpu() {
-    if (!statProc.running) statProc.running = true
+    if (!cpuProc.running) cpuProc.running = true
+  }
+
+  function parseCpuOutput(raw) {
+    if (!raw) return
+    var lines = String(raw || "").split("\n")
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i]
+      if (line.indexOf("S ") === 0) parseStat(line.slice(2))
+      else if (line.indexOf("L ") === 0) parseLoadAvg(line.slice(2))
+      else if (line.indexOf("F ") === 0) parseFreq(line.slice(2))
+    }
   }
 
   function parseStat(raw) {
@@ -67,7 +78,7 @@ BarWidget {
 
   function launchMonitor() {
     if (root.bar) {
-      root.bar.run("omarchy-launch-floating-terminal-with-presentation btop")
+      root.bar.run("alacritty -e btop")
     }
   }
 
@@ -76,29 +87,11 @@ BarWidget {
   implicitHeight: button.implicitHeight
 
   Process {
-    id: statProc
-    command: ["cat", "/proc/stat"]
+    id: cpuProc
+    command: ["awk", "BEGIN { if ((getline l < \"/proc/stat\") > 0) print \"S \" l; if ((getline l < \"/proc/loadavg\") > 0) print \"L \" l; if ((getline l < \"/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq\") > 0) print \"F \" l }"]
     stdout: StdioCollector {
       waitForEnd: true
-      onStreamFinished: root.parseStat(text)
-    }
-  }
-
-  Process {
-    id: loadProc
-    command: ["cat", "/proc/loadavg"]
-    stdout: StdioCollector {
-      waitForEnd: true
-      onStreamFinished: root.parseLoadAvg(text)
-    }
-  }
-
-  Process {
-    id: freqProc
-    command: ["cat", "/sys/devices/system/cpu/cpu0/cpufreq/scaling_cur_freq"]
-    stdout: StdioCollector {
-      waitForEnd: true
-      onStreamFinished: root.parseFreq(text)
+      onStreamFinished: root.parseCpuOutput(text)
     }
   }
 
@@ -107,11 +100,7 @@ BarWidget {
     running: true
     repeat: true
     triggeredOnStart: true
-    onTriggered: {
-      root.readCpu()
-      if (!loadProc.running) loadProc.running = true
-      if (!freqProc.running) freqProc.running = true
-    }
+    onTriggered: root.readCpu()
   }
 
   WidgetButton {

@@ -10,7 +10,7 @@
       isNormalUser = true;
       description = "Luan";
       group = "luan";
-      extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "usb" "docker" "wireshark"];
+      extraGroups = [ "wheel" "networkmanager" "audio" "video" "storage" "docker" "wireshark" ];
       home = "/home/luan";
       homeMode = "700";
       linger = true;

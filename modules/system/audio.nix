@@ -22,14 +22,14 @@
         };
       };
 
-      # Baixa latência agressiva para desktop/jogos; poupa CPU/bateria e evita crackling no notebook
+      # Baixa latência estável para desktop/jogos (evita underruns de 32/48000); poupa CPU/bateria no notebook
       extraConfig.pipewire-pulse = lib.mkIf (!config.my.roles.laptop.enable) {
         "92-low-latency" = {
           "pulse.properties" = {
-            "pulse.min.req" = "32/48000";
-            "pulse.default.req" = "32/48000";
-            "pulse.max.req" = "32/48000";
-            "pulse.min.quantum" = "32/48000";
+            "pulse.min.req" = "128/48000";
+            "pulse.default.req" = "128/48000";
+            "pulse.max.req" = "1024/48000";
+            "pulse.min.quantum" = "128/48000";
           };
         };
       };

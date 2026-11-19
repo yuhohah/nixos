@@ -57,7 +57,7 @@ hl.config({
     disable_hyprland_logo = true,
     animate_manual_resizes = true,
     animate_mouse_windowdragging = true,
-    vrr = 1,
+    vrr = 2,
   },
 
   input = {
@@ -73,8 +73,12 @@ hl.config({
     force_no_accel = true,
   },
 
+  render = {
+    direct_scanout = 2,
+  },
+
   cursor = {
-    no_hardware_cursors = true,
+    no_hardware_cursors = false,
     enable_hyprcursor = true,
   },
 })

@@ -62,15 +62,17 @@ BarWidget {
         anchors.verticalCenter: parent.verticalCenter
 
         property bool needsScroll: implicitWidth > scrollClip.width
+        onTextChanged: if (!scrollAnim.running) x = 0
 
         NumberAnimation on x {
           id: scrollAnim
-          running: labelText.needsScroll && !root.popupOpen && !root.bar.vertical
+          running: root.hasMedia && root.activePlayer !== null && root.activePlayer.isPlaying && labelText.needsScroll && !root.popupOpen && !root.bar.vertical
           loops: Animation.Infinite
           duration: Math.max(6000, labelText.implicitWidth * 25)
           from: scrollClip.width
           to: -labelText.implicitWidth
           easing.type: Easing.Linear
+          onRunningChanged: if (!running) labelText.x = 0
         }
       }
     }

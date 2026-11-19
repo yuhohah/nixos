@@ -24,11 +24,26 @@
       efi.canTouchEfiVariables = true;
     };
 
-    services.resolved.enable = true;
+    services.resolved = {
+      enable = true;
+      # Evita conflito na porta 5353 com o avahi-daemon
+      settings.Resolve.MulticastDNS = false;
+    };
+    services.fstrim.enable = true;
+
+    fileSystems."/".options = [ "noatime" ];
 
     zramSwap = {
       enable = true;
       memoryPercent = 50;
+    };
+
+    # Tuning de memória para ZRAM (latência zero, evita readahead de 8 páginas e stutter de kswapd)
+    boot.kernel.sysctl = {
+      "vm.page-cluster" = 0;
+      "vm.swappiness" = 100;
+      "vm.watermark_boost_factor" = 0;
+      "vm.watermark_scale_factor" = 125;
     };
 
     nix.settings = {
@@ -70,6 +85,7 @@
       nerd-fonts.ubuntu
       font-awesome
       material-design-icons
+      noto-fonts
       noto-fonts-color-emoji
     ];
 

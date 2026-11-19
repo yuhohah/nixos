@@ -46,11 +46,11 @@ let
   };
 
   quickshellToggle = pkgs.writeShellScriptBin "quickshell-toggle" ''
-    if pgrep -f "quickshell" > /dev/null 2>&1; then
-      pkill -f "quickshell"
+    if pkill -x ".quickshell-wra" 2>/dev/null || pkill -x "quickshell" 2>/dev/null; then
+      exit 0
     else
       export PATH="$HOME/.config/quickshell/bin:$PATH"
-      ${quickshellWrapped}/bin/quickshell &
+      nohup ${quickshellWrapped}/bin/quickshell >/dev/null 2>&1 &
     fi
   '';
 in

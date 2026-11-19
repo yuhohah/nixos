@@ -90,7 +90,7 @@ let
       exit 0
     fi
 
-    if [ -d "/sys/class/net/$iface/wireless" ] || [ -f "/proc/net/wireless" ] && grep -q "$iface:" /proc/net/wireless 2>/dev/null; then
+    if [ -d "/sys/class/net/$iface/wireless" ]; then
       type="wifi"
     else
       type="ethernet"
@@ -466,34 +466,59 @@ let
     capacity=$(cat "$bat_dir/capacity" 2>/dev/null || echo "")
     status=$(cat "$bat_dir/status" 2>/dev/null || echo "")
     cycle_count=$(cat "$bat_dir/cycle_count" 2>/dev/null || echo "")
-    charge_now=$(cat "$bat_dir/charge_now" 2>/dev/null || cat "$bat_dir/energy_now" 2>/dev/null || echo "")
-    charge_full=$(cat "$bat_dir/charge_full" 2>/dev/null || cat "$bat_dir/energy_full" 2>/dev/null || echo "")
     voltage_now=$(cat "$bat_dir/voltage_now" 2>/dev/null || echo "")
-    current_now=$(cat "$bat_dir/current_now" 2>/dev/null || cat "$bat_dir/power_now" 2>/dev/null || echo "")
     threshold=$(cat "$bat_dir/charge_control_end_threshold" 2>/dev/null || echo "")
 
     size_wh=""
-    if [ -n "$charge_full" ] && [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
-      size_wh=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f Wh\", ($charge_full * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
-    fi
-
     rate_w=""
-    if [ -n "$current_now" ] && [ "$current_now" -gt 0 ] 2>/dev/null; then
-      if [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
-        rate_w=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f W\", ($current_now * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
-      fi
-    fi
-
     time_str="—"
-    if [ -n "$current_now" ] && [ "$current_now" -gt 0 ] 2>/dev/null && [ -n "$charge_now" ]; then
-      if [ "$status" = "Discharging" ]; then
-        mins=$(( (charge_now * 60) / current_now ))
-        time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
-      elif [ "$status" = "Charging" ] && [ -n "$charge_full" ]; then
-        remaining=$(( charge_full - charge_now ))
-        if [ "$remaining" -gt 0 ]; then
-          mins=$(( (remaining * 60) / current_now ))
-          time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+
+    if [ -f "$bat_dir/energy_full" ] || [ -f "$bat_dir/energy_now" ]; then
+      energy_now=$(cat "$bat_dir/energy_now" 2>/dev/null || echo "")
+      energy_full=$(cat "$bat_dir/energy_full" 2>/dev/null || echo "")
+      power_now=$(cat "$bat_dir/power_now" 2>/dev/null || echo "")
+
+      if [ -n "$energy_full" ] && [ "$energy_full" -gt 0 ] 2>/dev/null; then
+        size_wh=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f Wh\", $energy_full / 1000000 }" 2>/dev/null || echo "")
+      fi
+      if [ -n "$power_now" ] && [ "$power_now" -gt 0 ] 2>/dev/null; then
+        rate_w=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f W\", $power_now / 1000000 }" 2>/dev/null || echo "")
+        if [ -n "$energy_now" ]; then
+          if [ "$status" = "Discharging" ]; then
+            mins=$(( (energy_now * 60) / power_now ))
+            time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+          elif [ "$status" = "Charging" ] && [ -n "$energy_full" ]; then
+            remaining=$(( energy_full - energy_now ))
+            if [ "$remaining" -gt 0 ]; then
+              mins=$(( (remaining * 60) / power_now ))
+              time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+            fi
+          fi
+        fi
+      fi
+    else
+      charge_now=$(cat "$bat_dir/charge_now" 2>/dev/null || echo "")
+      charge_full=$(cat "$bat_dir/charge_full" 2>/dev/null || echo "")
+      current_now=$(cat "$bat_dir/current_now" 2>/dev/null || echo "")
+
+      if [ -n "$charge_full" ] && [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
+        size_wh=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f Wh\", ($charge_full * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
+      fi
+      if [ -n "$current_now" ] && [ "$current_now" -gt 0 ] 2>/dev/null; then
+        if [ -n "$voltage_now" ] && [ "$voltage_now" -gt 0 ] 2>/dev/null; then
+          rate_w=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.1f W\", ($current_now * $voltage_now) / 1000000000000 }" 2>/dev/null || echo "")
+        fi
+        if [ -n "$charge_now" ]; then
+          if [ "$status" = "Discharging" ]; then
+            mins=$(( (charge_now * 60) / current_now ))
+            time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+          elif [ "$status" = "Charging" ] && [ -n "$charge_full" ]; then
+            remaining=$(( charge_full - charge_now ))
+            if [ "$remaining" -gt 0 ]; then
+              mins=$(( (remaining * 60) / current_now ))
+              time_str="$(( mins / 60 ))h $(( mins % 60 ))m"
+            fi
+          fi
         fi
       fi
     fi
@@ -544,11 +569,26 @@ let
 
   systemStats = pkgs.writeShellScriptBin "system-stats" ''
     cpu_temp=""
+    temp_raw=""
     if [ -d "/sys/class/thermal" ]; then
-      temp_raw=$(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | sort -nr | head -n1)
-      if [ -n "$temp_raw" ] && [ "$temp_raw" -gt 0 ] 2>/dev/null; then
-        cpu_temp=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.0f°C\", $temp_raw / 1000 }")
+      temp_raw=$(cat /sys/class/thermal/thermal_zone*/temp 2>/dev/null | sort -nr | head -n1 || true)
+    fi
+    if [ -z "$temp_raw" ] && [ -d "/sys/class/hwmon" ]; then
+      for hw in /sys/class/hwmon/hwmon*; do
+        name=$(cat "$hw/name" 2>/dev/null || echo "")
+        case "$name" in
+          k10temp|coretemp|zenpower|cpu_thermal)
+            temp_raw=$(cat "$hw"/temp*_input 2>/dev/null | sort -nr | head -n1 || true)
+            [ -n "$temp_raw" ] && break
+            ;;
+        esac
+      done
+      if [ -z "$temp_raw" ]; then
+        temp_raw=$(cat /sys/class/hwmon/hwmon*/temp1_input 2>/dev/null | sort -nr | head -n1 || true)
       fi
+    fi
+    if [ -n "$temp_raw" ] && [ "$temp_raw" -gt 0 ] 2>/dev/null; then
+      cpu_temp=$(${pkgs.gawk}/bin/awk "BEGIN { printf \"%.0f°C\", $temp_raw / 1000 }")
     fi
 
     uptime_str=""
@@ -585,24 +625,21 @@ let
     fi
 
     monitors_json=$(${pkgs.hyprland}/bin/hyprctl -j monitors all 2>/dev/null || echo "[]")
-    internal_mon=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.name | test("^(eDP|LVDS)"))] | .[0].name) // (.[0].name // "")' 2>/dev/null)
-    external_mon=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.name | test("^(eDP|LVDS)") | not)] | .[0].name) // ""' 2>/dev/null)
-    internal_enabled=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r "([.[] | select(.name == \"$internal_mon\" and .disabled == false)] | .[0].name) // \"\"" 2>/dev/null)
-    mirror_enabled=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.mirrorOf != "none" and .mirrorOf != "")] | .[0].name) // ""' 2>/dev/null)
-    focused_mon=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.focused == true)] | .[0].name) // (.[0].name // "")' 2>/dev/null)
-    focused_scale=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -r '([.[] | select(.focused == true)] | .[0].scale) // (.[0].scale // 1)' 2>/dev/null)
-    displays_json=$(echo "$monitors_json" | ${pkgs.jq}/bin/jq -c '[.[] | {name: .name, description: .description, focused: .focused, enabled: (.disabled | not), width: .width, height: .height, scale: .scale}]' 2>/dev/null)
-
-    [ -z "$displays_json" ] && displays_json="[]"
 
     echo "$brightness"
-    echo "$internal_mon"
-    echo "$external_mon"
-    echo "$internal_enabled"
-    echo "$mirror_enabled"
-    echo "$focused_mon"
-    echo "$focused_scale"
-    echo "$displays_json"
+    if ! printf '%s\n' "$monitors_json" | ${pkgs.jq}/bin/jq -r '
+      (([.[] | select(.name | test("^(eDP|LVDS)"))][0].name) // (.[0].name // "")) as $internal
+      | (([.[] | select(.name | test("^(eDP|LVDS)") | not)][0].name) // "") as $external
+      | (([.[] | select(.name == $internal and .disabled == false)][0].name) // "") as $internal_enabled
+      | (([.[] | select(.mirrorOf != "none" and .mirrorOf != "")][0].name) // "") as $mirror
+      | (([.[] | select(.focused == true)][0].name) // (.[0].name // "")) as $focused
+      | (([.[] | select(.focused == true)][0].scale) // (.[0].scale // 1)) as $scale
+      | ([.[] | {name: .name, description: .description, focused: .focused, enabled: (.disabled | not), width: .width, height: .height, scale: .scale}] | tojson) as $displays
+      | [$internal, $external, $internal_enabled, $mirror, $focused, ($scale | tostring), $displays]
+      | join("\n")
+    ' 2>/dev/null; then
+      printf '\n\n\n\n\n1\n[]\n'
+    fi
   '';
 
   monitorScaling = pkgs.writeScriptBin "monitor-scaling" (

@@ -374,7 +374,7 @@ Panel {
   Timer {
     id: refreshTimer
     interval: 3000
-    running: true
+    running: root.opened
     repeat: true
     triggeredOnStart: true
     onTriggered: root.refresh()
