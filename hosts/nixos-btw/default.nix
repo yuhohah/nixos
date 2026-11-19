@@ -21,6 +21,7 @@
   my.system.greetd.enable = true;
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
+  my.system.apparmor.enable = true;
 
   # Oculta as saídas ALC887 e mantém apenas o microfone Razer.
   services.pipewire.wireplumber.extraConfig."51-audio-devices" = {

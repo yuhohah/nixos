@@ -21,6 +21,7 @@
   my.system.greetd.enable = true;
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
+  my.system.apparmor.enable = true;
   
   # Role de hardware e usuário
   my.roles.laptop.enable = true;

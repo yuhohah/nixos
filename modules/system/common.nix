@@ -8,6 +8,7 @@
     ./greetd.nix
     ./users.nix
     ./gvfs.nix
+    ./apparmor.nix
     ./tracker.nix
     ./home-manager.nix
     ../roles/default.nix
