@@ -89,7 +89,7 @@
     options = [ "defaults" "noatime" ];
   };
 
-  # SSH restrito à interface tailscale0 e autenticação somente por chave (arrow)
+  # SSH restrito à interface tailscale0 e autenticação somente por chave
   services.openssh = {
     enable = true;
     openFirewall = false;
@@ -98,10 +98,28 @@
       KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
       AllowUsers = [ "luan" ];
+      ClientAliveInterval = 30;
+      ClientAliveCountMax = 3;
     };
   };
 
-  # Permite login sem senha a partir do notebook (arrow)
+  # Mosh para sessões móveis resilientes (Wi-Fi <-> 4G/5G), restrito à interface tailscale0
+  programs.mosh = {
+    enable = true;
+    openFirewall = false;
+  };
+
+  # Multiplexador de terminal para manter sessões ativas ao acessar pelo celular
+  programs.tmux = {
+    enable = true;
+    clock24 = true;
+    historyLimit = 10000;
+    extraConfig = ''
+      set -g mouse on
+    '';
+  };
+
+  # Chaves SSH autorizadas (notebook arrow; adicione aqui a chave pública Ed25519 do celular)
   users.users.luan.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDWIovLxUNhoNHtYwSVduhurWeQkttct4dOrNALPrhNB luan@arrow"
   ];
