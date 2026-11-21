@@ -5,13 +5,7 @@
   imports = [
     ./hardware-configuration.nix
     ../../modules/system/common.nix
-    ../../modules/apps/core.nix
-    ../../modules/apps/browsers.nix
-    ../../modules/apps/dev.nix
-    ../../modules/apps/media.nix
   ];
-
-  generationTracker.configDir = "/home/luan/Configuration/nixos";
 
   # Sistema base
   my.system.core.enable = true;
@@ -22,6 +16,16 @@
   my.system.users.enable = true;
   my.system.gvfs.enable = true;
   my.system.apparmor.enable = true;
+  my.system.tracker = {
+    enable = true;
+    configDir = "/home/luan/Configuration/nixos";
+  };
+
+  # Aplicativos
+  my.apps.core.enable = true;
+  my.apps.browsers.enable = true;
+  my.apps.dev.enable = true;
+  my.apps.media.enable = true;
 
   # Oculta as saídas ALC887 e mantém apenas o microfone Razer.
   services.pipewire.wireplumber.extraConfig."51-audio-devices" = {
@@ -38,15 +42,36 @@
       }
     ];
   };
-  
+
   # Role de jogos e usuário
   my.roles.gaming.enable = true;
 
-  # Stack de AI e segredos (apenas no desktop workstation/servidor)
-  home-manager.users.luan.imports = [
-    ../../home/t3code
-    ../../home/secrets
-  ];
+  # Stack de AI, segredos e layout desktop
+  home-manager.users.luan = {
+    imports = [
+      ../../home/t3code
+      ../../home/secrets
+    ];
+
+    my.quickshell.configFile = ../../home/quickshell/hosts/nixos-btw/shell.json;
+
+    my.hyprland = {
+      keyboard = {
+        layout = "us";
+        variant = "intl";
+      };
+      monitors = [
+        { output = "HDMI-A-1"; mode = "1920x1080@144"; position = "0x0"; scale = "1"; }
+        { output = "HDMI-A-2"; mode = "1920x1080@74.973"; position = "1920x0"; scale = "1"; }
+      ];
+      workspaces = [
+        { workspace = "1"; monitor = "HDMI-A-1"; }
+        { workspace = "2"; monitor = "HDMI-A-2"; }
+        { workspace = "3"; monitor = "HDMI-A-1"; }
+        { workspace = "4"; monitor = "HDMI-A-2"; }
+      ];
+    };
+  };
 
   # Kernel mais recente
   boot.kernelPackages = pkgs.linuxPackages_latest;

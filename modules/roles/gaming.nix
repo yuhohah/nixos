@@ -49,7 +49,7 @@
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true;
-      dedicatedServer.openFirewall = true;
+      dedicatedServer.openFirewall = false;
       gamescopeSession.enable = true;
     };
 
@@ -69,5 +69,9 @@
     boot.kernel.sysctl = {
       "vm.max_map_count" = 2147483642;
     };
+
+    home-manager.users.luan.my.hyprland.autostart = [
+      "corectrl --minimize-systray"
+    ];
   };
 }

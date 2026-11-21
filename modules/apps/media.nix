@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   vesktopWaylandVulkan = pkgs.symlinkJoin {
@@ -20,16 +20,20 @@ let
   };
 in
 {
-  environment.systemPackages = with pkgs; [
-    vlc
-    qbittorrent
-    vesktopWaylandVulkan
-    obs-studio
-    gimp
-    spotify
-  ];
+  options.my.apps.media.enable = lib.mkEnableOption "Media and communication applications";
 
-  home-manager.users.luan.imports = [
-    ../../home/vesktop/config.nix
-  ];
+  config = lib.mkIf config.my.apps.media.enable {
+    environment.systemPackages = with pkgs; [
+      vlc
+      qbittorrent
+      vesktopWaylandVulkan
+      obs-studio
+      gimp
+      spotify
+    ];
+
+    home-manager.users.luan.imports = [
+      ../../home/vesktop/config.nix
+    ];
+  };
 }

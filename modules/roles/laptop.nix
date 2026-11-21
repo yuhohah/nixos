@@ -58,9 +58,21 @@
       };
     };
 
+    # Poupa CPU/bateria desativando perfil de baixa latência do PipeWire por padrão
+    my.system.audio.lowLatency.enable = lib.mkDefault false;
+
     # Injeção de perfil no Home Manager
-    home-manager.users.luan.imports = [
-      ../../home/scripts/battery-alert.nix
-    ];
+    home-manager.users.luan = {
+      imports = [
+        ../../home/scripts/battery-alert.nix
+      ];
+
+      my.hypridle = {
+        screensaverTimeout = lib.mkDefault 150;
+        lockTimeout = lib.mkDefault 480;
+        suspendTimeout = lib.mkDefault 900;
+        dimOnIdle = lib.mkDefault true;
+      };
+    };
   };
 }

@@ -1,7 +1,10 @@
 { config, lib, ... }:
 
 {
-  options.my.system.networking.enable = lib.mkEnableOption "Networking Config";
+  options.my.system.networking = {
+    enable = lib.mkEnableOption "Networking Config";
+    mdns.enable = lib.mkEnableOption "mDNS (.local) discovery via Avahi (opens UDP 5353)";
+  };
 
   config = lib.mkIf config.my.system.networking.enable {
     networking = {
@@ -15,8 +18,8 @@
       };
     };
 
-    # Resolução mDNS (.local) para conexões diretas na rede local (ex: nixos-btw.local)
-    services.avahi = {
+    # Resolução mDNS (.local) opcional — desativada por padrão para não expor UDP 5353 em redes públicas
+    services.avahi = lib.mkIf config.my.system.networking.mdns.enable {
       enable = true;
       nssmdns4 = true;
       openFirewall = true;

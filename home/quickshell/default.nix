@@ -1,12 +1,7 @@
-{ config, lib, pkgs, osConfig ? {}, ... }:
+{ config, lib, pkgs, ... }:
 
 let
-  hostname = osConfig.networking.hostName or "nixos-btw";
-
-  hostShellJson =
-    if hostname == "arrow"
-    then ./hosts/arrow/shell.json
-    else ./hosts/nixos-btw/shell.json;
+  cfg = config.my.quickshell;
 
   internalHelpers = config.desktopHelpers.packages ++ config.agentUsage.packages;
 
@@ -25,7 +20,7 @@ let
     mkdir -p $out/bin
     cp -r ${./src}/* $out/
     chmod -R u+w $out
-    cp -f ${hostShellJson} $out/shell.json
+    cp -f ${cfg.configFile} $out/shell.json
 
     # Injeta os binários utilitários hermeticamente dentro de ~/.config/quickshell/bin
     for pkg in ${lib.concatStringsSep " " internalHelpers}; do
@@ -60,13 +55,21 @@ in
     ../scripts/agent-usage.nix
   ];
 
-  home.packages = [
-    quickshellWrapped
-    quickshellToggle
-  ];
+  options.my.quickshell.configFile = lib.mkOption {
+    type = lib.types.path;
+    default = ./hosts/nixos-btw/shell.json;
+    description = "Path to the host-specific Quickshell shell.json layout.";
+  };
 
-  xdg.configFile."quickshell" = {
-    source = quickshellConfig;
-    force = true;
+  config = {
+    home.packages = [
+      quickshellWrapped
+      quickshellToggle
+    ];
+
+    xdg.configFile."quickshell" = {
+      source = quickshellConfig;
+      force = true;
+    };
   };
 }

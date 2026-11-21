@@ -7,15 +7,10 @@ local ok, loaded = pcall(require, "host")
 if ok and type(loaded) == "table" then
   host = loaded
 end
-local hostname = host.hostname or "nixos-btw"
 
-local kb_layout = "us"
-local kb_variant = "intl"
-
-if hostname == "arrow" then
-  kb_layout = "br,es"
-  kb_variant = "abnt2,"
-end
+local keyboard = type(host.keyboard) == "table" and host.keyboard or {}
+local kb_layout = keyboard.layout or "us"
+local kb_variant = keyboard.variant or "intl"
 
 hl.config({
   general = {

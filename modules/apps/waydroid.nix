@@ -1,16 +1,20 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  virtualisation.waydroid.enable = true;
-  virtualisation.waydroid.package = pkgs.waydroid-nftables;
+  options.my.apps.waydroid.enable = lib.mkEnableOption "Waydroid Android container support";
 
-  environment.systemPackages = with pkgs; [
-    git 
-    lzip 
-    python3 
-    curl 
-    jq
-  ];
+  config = lib.mkIf config.my.apps.waydroid.enable {
+    virtualisation.waydroid.enable = true;
+    virtualisation.waydroid.package = pkgs.waydroid-nftables;
 
-  networking.firewall.trustedInterfaces = [ "waydroid0" ];
+    environment.systemPackages = with pkgs; [
+      git
+      lzip
+      python3
+      curl
+      jq
+    ];
+
+    networking.firewall.trustedInterfaces = [ "waydroid0" ];
+  };
 }

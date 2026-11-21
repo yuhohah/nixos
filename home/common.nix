@@ -1,4 +1,4 @@
-{ pkgs, lib, config, hostName ? "nixos-btw", ... }:
+{ pkgs, lib, config, ... }:
 
 {
   home.username = "luan";
@@ -54,8 +54,8 @@
     '';
 
     shellAliases = {
-      ai-tunnel = "ssh -N nixos-ai-tunnel";
-      ai-tunnel-remote = "ssh -N nixos-ai-tunnel-ts";
+      ai-tunnel = lib.mkDefault "ssh -N nixos-ai-tunnel";
+      ai-tunnel-remote = lib.mkDefault "ssh -N nixos-ai-tunnel-ts";
     };
 
     oh-my-zsh = {
@@ -71,8 +71,9 @@
     settings = {
       "*" = {};
 
+      # Conexão via Tailscale MagicDNS
       "nixos-btw" = {
-        HostName = "nixos-btw.local";
+        HostName = "nixos-btw";
         User = "luan";
         IdentityFile = "~/.ssh/id_ed25519";
         ServerAliveInterval = 30;
@@ -80,7 +81,7 @@
       };
 
       "nixos-ai-tunnel" = {
-        HostName = "nixos-btw.local";
+        HostName = "nixos-btw";
         User = "luan";
         IdentityFile = "~/.ssh/id_ed25519";
         LocalForward = [
@@ -90,7 +91,7 @@
         ServerAliveCountMax = 3;
       };
 
-      # Conexão remota via Tailscale (para uso em redes externas / públicas)
+      # Alias legado mantido por compatibilidade (também via MagicDNS)
       "nixos-ai-tunnel-ts" = {
         HostName = "nixos-btw";
         User = "luan";

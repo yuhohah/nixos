@@ -1,6 +1,11 @@
 { config, lib, ... }:
 {
-  options.my.system.audio.enable = lib.mkEnableOption "Audio Config";
+  options.my.system.audio = {
+    enable = lib.mkEnableOption "Audio Config";
+    lowLatency.enable = lib.mkEnableOption "Low-latency PipeWire PulseAudio profile" // {
+      default = true;
+    };
+  };
 
   config = lib.mkIf config.my.system.audio.enable {
     services.pipewire = {
@@ -22,8 +27,8 @@
         };
       };
 
-      # Baixa latência estável para desktop/jogos (evita underruns de 32/48000); poupa CPU/bateria no notebook
-      extraConfig.pipewire-pulse = lib.mkIf (!config.my.roles.laptop.enable) {
+      # Baixa latência estável para desktop/jogos (evita underruns de 32/48000); desativável em laptops
+      extraConfig.pipewire-pulse = lib.mkIf config.my.system.audio.lowLatency.enable {
         "92-low-latency" = {
           "pulse.properties" = {
             "pulse.min.req" = "128/48000";

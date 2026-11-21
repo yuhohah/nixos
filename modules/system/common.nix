@@ -12,6 +12,7 @@
     ./tracker.nix
     ./home-manager.nix
     ../roles/default.nix
+    ../apps/default.nix
   ];
   
   options.my.system.core.enable = lib.mkEnableOption "Core System Config";
@@ -27,8 +28,11 @@
 
     services.resolved = {
       enable = true;
-      # Evita conflito na porta 5353 com o avahi-daemon
-      settings.Resolve.MulticastDNS = false;
+      settings.Resolve = {
+        # Evita exposição nas portas 5353 (mDNS) e 5355 (LLMNR)
+        MulticastDNS = false;
+        LLMNR = false;
+      };
     };
     services.fstrim.enable = true;
 

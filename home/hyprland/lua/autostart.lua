@@ -7,12 +7,13 @@ local ok, loaded = pcall(require, "host")
 if ok and type(loaded) == "table" then
   host = loaded
 end
-local hostname = host.hostname or "nixos-btw"
+
+local extra_autostart = type(host.autostart) == "table" and host.autostart or {}
 
 hl.on("hyprland.start", function()
   hl.exec_cmd("awww-daemon")
-  if hostname == "nixos-btw" then
-    hl.exec_cmd("corectrl --minimize-systray")
+  for _, cmd in ipairs(extra_autostart) do
+    hl.exec_cmd(cmd)
   end
   hl.exec_cmd("quickshell")
 end)

@@ -1,14 +1,16 @@
 # generation-tracker.nix
 # Módulo NixOS — tracker de generations + cemitério de hosts.
 #
-# Uso no configuration.nix:
-#   imports = [ ./modules/system/tracker.nix ];
-#   generationTracker.configDir = "/home/luan/Configuration/nixos";
+# Uso no host:
+#   my.system.tracker = {
+#     enable = true;
+#     configDir = "/home/luan/Configuration/nixos";
+#   };
 
 { config, lib, pkgs, ... }:
 
 let
-  cfg = config.generationTracker;
+  cfg = config.my.system.tracker;
 
   trackerScript = pkgs.writeShellScript "track-generation" ''
     set -euo pipefail
@@ -187,7 +189,8 @@ let
   '';
 in
 {
-  options.generationTracker = {
+  options.my.system.tracker = {
+    enable = lib.mkEnableOption "NixOS Generation Tracker";
     configDir = lib.mkOption {
       type = lib.types.str;
       description = ''
@@ -198,7 +201,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     system.activationScripts.generationTracker = {
       supportsDryActivation = false;
       text = ''

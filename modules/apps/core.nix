@@ -1,35 +1,39 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    # Principais Dependências do Sistema
-    wget
-    tree
-    neovim
-    awww 
-    nautilus
-    pavucontrol
-    home-manager
-    btop
-    bash
-    hypridle
-    terminaltexteffects
-    ntfs3g
-    exfatprogs
-    
-    # Dependências do Screenshot
-    grim
-    slurp
-    wl-clipboard
-    wayfreeze
-    satty
-    jq
-    libnotify
-    
-    libratbag
-    piper 
-    aisleriot
-  ];
+  options.my.apps.core.enable = lib.mkEnableOption "Core desktop and system utility applications";
 
-  security.pam.services.hyprlock = {};
+  config = lib.mkIf config.my.apps.core.enable {
+    environment.systemPackages = with pkgs; [
+      # Principais Dependências do Sistema
+      wget
+      tree
+      neovim
+      awww
+      nautilus
+      pavucontrol
+      home-manager
+      btop
+      bash
+      hypridle
+      terminaltexteffects
+      ntfs3g
+      exfatprogs
+
+      # Dependências do Screenshot
+      grim
+      slurp
+      wl-clipboard
+      wayfreeze
+      satty
+      jq
+      libnotify
+
+      libratbag
+      piper
+      aisleriot
+    ];
+
+    security.pam.services.hyprlock = {};
+  };
 }

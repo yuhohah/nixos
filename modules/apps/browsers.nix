@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   chromiumWaylandVulkanArgs = lib.concatStringsSep " " [
@@ -14,15 +14,19 @@ let
   ];
 in
 {
-  programs.firefox.enable = true;
+  options.my.apps.browsers.enable = lib.mkEnableOption "Web browsers (Firefox and Chromium)";
 
-  environment.systemPackages = [
-    (pkgs.chromium.override {
-      commandLineArgs = chromiumWaylandVulkanArgs;
-    })
-  ];
+  config = lib.mkIf config.my.apps.browsers.enable {
+    programs.firefox.enable = true;
 
-  nixpkgs.config.chromium = {
-    enableWideVine = true;
+    environment.systemPackages = [
+      (pkgs.chromium.override {
+        commandLineArgs = chromiumWaylandVulkanArgs;
+      })
+    ];
+
+    nixpkgs.config.chromium = {
+      enableWideVine = true;
+    };
   };
 }
