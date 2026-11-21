@@ -16,6 +16,15 @@ hl.window_rule({
   min_size = "1 1",
 })
 
+-- Screensaver em tela cheia em todos os monitores (sem inibir idle)
+hl.window_rule({
+  name = "screensaver-fullscreen",
+  match = { class = "^(screensaver)$" },
+  fullscreen = true,
+  no_anim = true,
+  idle_inhibit = "none",
+})
+
 -- Efeito blur e opacidade para o Quickshell Desktop Shell
 hl.layer_rule({
   name = "quickshell-blur",

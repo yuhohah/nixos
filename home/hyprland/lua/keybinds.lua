@@ -17,7 +17,7 @@ hl.bind(mod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind("PRINT", hl.dsp.exec_cmd("screenshot smart"))
 hl.bind(mod .. " + HOME", hl.dsp.exec_cmd("wallpaper"))
 hl.bind(mod .. " + R", hl.dsp.exec_cmd("hyprctl reload"))
-hl.bind(mod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+hl.bind(mod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mod .. " + ALT + Q", hl.dsp.exec_cmd("quickshell-toggle"))
 
 -- Controles de Notebook (Áudio / Brilho)
@@ -29,7 +29,7 @@ hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl s +10%"), { locked
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl s 10%-"), { locked = true, repeating = true })
 hl.bind("XF86KbdBrightnessUp", hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set +10%"), { locked = true, repeating = true })
 hl.bind("XF86KbdBrightnessDown", hl.dsp.exec_cmd("brightnessctl -d *::kbd_backlight set 10%-"), { locked = true, repeating = true })
-hl.bind("XF86ScreenSaver", hl.dsp.exec_cmd("hyprlock"), { locked = true })
+hl.bind("XF86ScreenSaver", hl.dsp.exec_cmd("loginctl lock-session"), { locked = true })
 
 -- Eventos de Mouse
 hl.bind(mod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true } )

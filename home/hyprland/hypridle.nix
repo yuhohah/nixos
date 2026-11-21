@@ -5,13 +5,13 @@ let
 
   screensaverOnTimeout =
     if cfg.dimOnIdle
-    then "brightnessctl set ${cfg.dimLevel} && hyprctl keyword cursor:inactive_timeout 0.1 && run-screensaver"
-    else "hyprctl keyword cursor:inactive_timeout 0.1 && run-screensaver";
+    then "brightnessctl -s set ${cfg.dimLevel}; run-screensaver"
+    else "run-screensaver";
 
   screensaverOnResume =
     if cfg.dimOnIdle
-    then "brightnessctl set ${cfg.resumeBrightness} && hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'"
-    else "hyprctl keyword cursor:inactive_timeout 0 && pkill -f 'alacritty.*screensaver'";
+    then "brightnessctl -r || brightnessctl set ${cfg.resumeBrightness}; stop-screensaver"
+    else "stop-screensaver";
 in
 {
   options.my.hypridle = {
@@ -23,12 +23,23 @@ in
     lockTimeout = lib.mkOption {
       type = lib.types.ints.positive;
       default = 2500;
-      description = "Idle timeout (seconds) before locking session and turning DPMS off.";
+      description = "Idle timeout (seconds) before locking session.";
+    };
+    dpmsTimeout = lib.mkOption {
+      type = lib.types.ints.positive;
+      default = cfg.lockTimeout + 30;
+      defaultText = lib.literalExpression "config.my.hypridle.lockTimeout + 30";
+      description = "Idle timeout (seconds) before turning monitors off via DPMS (runs after lock).";
     };
     suspendTimeout = lib.mkOption {
       type = lib.types.ints.positive;
       default = 35000;
       description = "Idle timeout (seconds) before suspending the system.";
+    };
+    ignoreInhibit = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Ignore idle inhibit locks consistently across screensaver, lock, DPMS and suspend.";
     };
     dimOnIdle = lib.mkOption {
       type = lib.types.bool;
@@ -43,7 +54,7 @@ in
     resumeBrightness = lib.mkOption {
       type = lib.types.str;
       default = "60%";
-      description = "Brightness level restored on resume when dimOnIdle is enabled.";
+      description = "Fallback brightness level restored on resume when dimOnIdle is enabled.";
     };
   };
 
@@ -53,25 +64,33 @@ in
 
       settings = {
         general = {
-          # Tempo antes de travar (em segundos)
-          lock_cmd = "pidof hyprlock || hyprlock";
+          # Garante encerramento do screensaver antes de travar e aguarda lock antes de suspender
+          lock_cmd = "stop-screensaver; pidof hyprlock || hyprlock";
           before_sleep_cmd = "loginctl lock-session";
           after_sleep_cmd = "hyprctl dispatch dpms on";
+          inhibit_sleep = 3;
         };
 
         listener = [
           {
-            ignore_inhibit = true;
+            ignore_inhibit = cfg.ignoreInhibit;
             timeout = cfg.screensaverTimeout;
             on-timeout = screensaverOnTimeout;
             on-resume = screensaverOnResume;
           }
           {
+            ignore_inhibit = cfg.ignoreInhibit;
             timeout = cfg.lockTimeout;
-            on-timeout = "loginctl lock-session; hyprctl dispatch dpms off";
+            on-timeout = "loginctl lock-session";
+          }
+          {
+            ignore_inhibit = cfg.ignoreInhibit;
+            timeout = cfg.dpmsTimeout;
+            on-timeout = "hyprctl dispatch dpms off";
             on-resume = "hyprctl dispatch dpms on";
           }
           {
+            ignore_inhibit = cfg.ignoreInhibit;
             timeout = cfg.suspendTimeout;
             on-timeout = "systemctl suspend";
           }
