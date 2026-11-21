@@ -49,7 +49,7 @@
       # User picture
       image = [
         {
-          path = "${../../images/wallpaper/1119050.jpg}";
+          path = "${../../images/profile/profile.jpg}";
           border_size = 2;
           border_color = "rgba(205, 214, 244, 0.75)"; 
           size = 95;
