@@ -8,7 +8,7 @@ let
     export NIX_SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
     export SSL_CERT_DIR=/etc/ssl/certs
     export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
-    exec ${t3Pkg}/bin/t3 serve --host 0.0.0.0 --port 3773
+    exec ${t3Pkg}/bin/t3 serve --host 127.0.0.1 --port 3773
   '';
 in
 {

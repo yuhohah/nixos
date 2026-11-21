@@ -89,17 +89,17 @@
     options = [ "defaults" "noatime" ];
   };
 
-  # SSH para acesso remoto e túnel T3 Code
+  # SSH restrito à interface tailscale0 e autenticação somente por chave (arrow)
   services.openssh = {
     enable = true;
+    openFirewall = false;
     settings = {
-      PasswordAuthentication = true;
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
       PermitRootLogin = "no";
+      AllowUsers = [ "luan" ];
     };
   };
-
-  # Libera a porta SSH no firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
 
   # Permite login sem senha a partir do notebook (arrow)
   users.users.luan.openssh.authorizedKeys.keys = [
