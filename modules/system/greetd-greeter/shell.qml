@@ -325,6 +325,7 @@ ShellRoot {
           anchors.margins: 2
           source: GreeterConfig.avatarPath
           fillMode: Image.PreserveAspectCrop
+          autoTransform: true
           smooth: true
           asynchronous: false
           layer.enabled: true
@@ -508,7 +509,7 @@ ShellRoot {
         anchors.bottom: parent.bottom
         anchors.leftMargin: 30
         anchors.bottomMargin: 30
-        text: "󰭹 " + root.batteryText
+        text: (root.batteryText === "AC" ? "󰚥 " : "󰁹 ") + root.batteryText
         color: "#cba6f7"
         font.family: "JetBrainsMono Nerd Font Mono"
         font.pixelSize: 16
@@ -520,7 +521,7 @@ ShellRoot {
         anchors.bottom: parent.bottom
         anchors.rightMargin: 30
         anchors.bottomMargin: 30
-        text: "󰛐 " + root.uptimeText
+        text: "󰅐 " + root.uptimeText
         color: "#fab387"
         font.family: "JetBrainsMono Nerd Font Mono"
         font.pixelSize: 16

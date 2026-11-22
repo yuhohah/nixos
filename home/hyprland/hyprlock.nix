@@ -6,15 +6,14 @@
     
     settings = {
       general = {
-        disable_loading_bar = false;
-        grace = 0;
         hide_cursor = true;
-        no_fade_in = false;
+        ignore_empty_input = true;
       };
 
       # Background
       background = [
         {
+          monitor = "";
           path = "${../../images/wallpaper/1119050.jpg}";
           blur_passes = 2;
           blur_size = 1;
@@ -36,8 +35,10 @@
           fade_on_empty = false;
           font_color = "rgb(cdd6f4)";
           inner_color = "rgb(30, 30, 46)";
-          # outer_color = "rgb(166, 227, 161)";  
           outer_color = "rgb(203, 166, 247)";
+          check_color = "rgb(166, 227, 161)";
+          fail_color = "rgb(243, 139, 168)";
+          fail_text = "<i>Senha incorreta ($ATTEMPTS)</i>";
           outline_thickness = 3;
           placeholder_text = "<span foreground='##a6adc8'>Senha...</span>";
           shadow_passes = 2;
@@ -49,9 +50,10 @@
       # User picture
       image = [
         {
+          monitor = "";
           path = "${../../images/profile/profile.jpg}";
           border_size = 2;
-          border_color = "rgba(205, 214, 244, 0.75)"; 
+          border_color = "rgba(205, 214, 244, 0.75)";
           size = 95;
           rounding = -1;
           rotate = 0;
@@ -67,60 +69,59 @@
         # Relógio
         {
           monitor = "";
-          text = "cmd[update:1000] echo \"<span foreground='##cba6f7'>$(date +'%H:%M:%S')</span>\"";
-          color = "rgb(205, 214, 244)";
+          text = "cmd[update:1000] date +'%H:%M:%S'";
+          color = "rgb(cba6f7)";
           font_size = 70;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "0, 200";
           halign = "center";
           valign = "center";
         }
-        
+
         # Data
         {
           monitor = "";
-          text = "cmd[update:3600000] echo \"<span foreground='##a6adc8'>$(date +'%A, %d de %B')</span>\"";
-          color = "rgb(cdd6f4)";
+          text = "cmd[update:60000] date +'%A, %d de %B'";
+          color = "rgb(a6adc8)";
           font_size = 20;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "0, 100";
           halign = "center";
           valign = "center";
         }
-        
+
         # Username
         {
           monitor = "";
           text = "$USER";
-          # color = "rgba(166, 227, 161)";  # verde (backup)
-          color = "rgba(203, 166, 247, 1)";     # mauve (accent)
+          color = "rgba(203, 166, 247, 1)";
           font_size = 18;
           font_family = "JetBrainsMono Nerd Font Mono";
           position = "0, -60";
           halign = "center";
           valign = "center";
         }
-        
-        # Battery
+
+        # Battery (valign = bottom usa Y positivo para subir da borda inferior)
         {
           monitor = "";
-          text = "cmd[update:5000] echo \"<span foreground='##cba6f7'>󰭹 $(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'AC')%</span>\"";
-          color = "rgb(cdd6f4)";
+          text = "cmd[update:5000] cap=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -n1); [ -n \"$cap\" ] && echo \"󰁹 \${cap}%\" || echo \"󰚥 AC\"";
+          color = "rgb(cba6f7)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";
-          position = "30, -30";
+          position = "30, 30";
           halign = "left";
           valign = "bottom";
         }
-        
-        # Uptime
+
+        # Uptime (lê /proc/uptime diretamente; coreutils uptime não suporta -p)
         {
           monitor = "";
-          text = "cmd[update:60000] echo \"<span foreground='##fab387'>󰛐 $(uptime -p | sed 's/up //')</span>\"";
-          color = "rgb(cdd6f4)";
+          text = "cmd[update:60000] awk '{s=int($1); d=int(s/86400); h=int((s%86400)/3600); m=int((s%3600)/60); if (d>0) printf \"󰅐 %dd %dh %dm\\n\", d, h, m; else if (h>0) printf \"󰅐 %dh %dm\\n\", h, m; else printf \"󰅐 %dm\\n\", m}' /proc/uptime";
+          color = "rgb(fab387)";
           font_size = 16;
           font_family = "JetBrainsMono Nerd Font Mono";
-          position = "-30, -30";
+          position = "-30, 30";
           halign = "right";
           valign = "bottom";
         }
